@@ -1,5 +1,6 @@
 package com.nsg.nsgdtlibrary.Classes;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -32,40 +33,30 @@ import androidx.fragment.app.Fragment;
 
 public class NSGTiledLayerOnMap extends Fragment {
     GoogleMap mMap;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    private String BASE_MAP_URL_FORMAT;
+    public NSGTiledLayerOnMap() { }
+    @SuppressLint("ValidFragment")
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT) {
+        this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.maplite, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googlemap) {
-                mMap=googlemap;
-                String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator +"DubaiBasemap"+".mbtiles";
-                TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
-                TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions()
-                        .tileProvider(tileProvider));
-                tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
-                tileOverlay.setVisible(true);
-                CameraPosition googlePlex = CameraPosition.builder()
-                        .target(new LatLng(24.984836, 55.071661))
-                        .zoom(15)
-                        .tilt(45)
-                        .build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
-                mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(24.984836, 55.071661))
-                        .title("").snippet("DP World Operations Training Center")
-                        .icon(bitmapDescriptorFromVector(getActivity(),R.drawable.red_marker)));
-            }
-
-        });
+    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+         View rootView = inflater.inflate(R.layout.maplite, container, false);
+         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                public void onMapReady(GoogleMap googlemap) {
+                    NSGTiledLayerOnMap.this.mMap = googlemap;
+                    TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
+                    TileOverlay tileOverlay = NSGTiledLayerOnMap.this.mMap.addTileOverlay((new TileOverlayOptions()).tileProvider(tileProvider));
+                    tileOverlay.setTransparency(0.5F - tileOverlay.getTransparency());
+                    tileOverlay.setVisible(true);
+                    CameraPosition googlePlex = CameraPosition.builder().target(new LatLng(24.984836D, 55.071661D)).zoom(15.0F).tilt(45.0F).build();
+                    NSGTiledLayerOnMap.this.mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+                    NSGTiledLayerOnMap.this.mMap.addMarker((new MarkerOptions()).position(new LatLng(24.984836D, 55.071661D)).title("").snippet("DP World Operations Training Center").icon(NSGTiledLayerOnMap.this.bitmapDescriptorFromVector(NSGTiledLayerOnMap.this.getActivity(), R.drawable.red_marker)));
+                }
+            });
 
         return rootView;
     }
