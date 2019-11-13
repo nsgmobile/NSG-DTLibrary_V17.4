@@ -91,7 +91,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
     private LatLng SourcePosition, DestinationPosition,currentGpsPosition,nearestPositionPoint;
     private double sourceLat, sourceLng, destLat, destLng;
     private int enteredMode,routeDeviationDistance;
-    private String SourcePoint,DestinationPoint,tokenResponse,etaResponse,MESSAGE;
+    private String SourcePoint,DestinationPoint,tokenResponse,etaResponse,MESSAGE="";
     private String BASE_MAP_URL_FORMAT;
     private SqlHandler sqlHandler;
     private TextToSpeech textToSpeech;
@@ -206,7 +206,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                             @Override
                             public void run() {
                                 GetRouteDetails();
-                                if(MESSAGE.equals("Sucess")){
+                                if(MESSAGE!=null && MESSAGE.equals("Sucess")){
                                     getAllEdgesData();
                                     addMarkers();
                                     getValidRouteData();
