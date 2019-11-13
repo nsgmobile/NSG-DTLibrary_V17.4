@@ -1,19 +1,18 @@
-package com.nsg.nsgdtlibrary.Classes;
+package com.nsg.nsgdtlibrary.Classes.activities;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-
 import com.google.android.gms.maps.model.Tile;
 import com.google.android.gms.maps.model.TileProvider;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
 /**
- * Created by sailaja.ch on 03/09/2019
+ * Created by sailaja.ch NSGI on 27/09/2019 *
+ * Modified on 13/11/2019
+ *
  */
 public class ExpandedMBTilesTileProvider implements TileProvider {
     private final File source ;
