@@ -206,7 +206,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                             @Override
                             public void run() {
                                 GetRouteDetails();
-                                if(MESSAGE!=null && MESSAGE.equals("Sucess")){
+                                if(MESSAGE.equals("Sucess") && MESSAGE!=null){
                                     getAllEdgesData();
                                     addMarkers();
                                     getValidRouteData();
