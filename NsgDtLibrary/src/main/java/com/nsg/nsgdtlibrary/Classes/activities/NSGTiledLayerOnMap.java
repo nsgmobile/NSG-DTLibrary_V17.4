@@ -346,7 +346,9 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                         StrictMode.setThreadPolicy(policy);
                         try {
                             String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
+                            Log.e("Test","Test"+httprequest);
                             String FeatureResponse = HttpPost(httprequest,SourcePoint,DestinationPoint);
+                            Log.e("Test","Test"+FeatureResponse);
                             JSONObject jsonObject = null;
                             try {
                                 if(FeatureResponse!=null){
