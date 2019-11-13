@@ -814,6 +814,19 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
         return edgeDataList;
     }
     @Override
+    public void onDestroy() {
+
+
+        //Close the Text to Speech Library
+        if(textToSpeech != null) {
+
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+           // Log.d(TAG, "TTS Destroyed");
+        }
+        super.onDestroy();
+    }
+    @Override
     public void onDetach() {
         Callback = null;
         super.onDetach();
