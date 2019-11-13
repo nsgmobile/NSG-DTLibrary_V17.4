@@ -140,38 +140,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
         this.SourcePoint=String.valueOf(v1).concat(" ").concat(String.valueOf(v2));
         this.DestinationPoint=String.valueOf(v3).concat(" ").concat(String.valueOf(v4));
     }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int ttsLang = textToSpeech.setLanguage(Locale.US);
-                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
-                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                       // Toast.makeText(getContext(), "TTS-- The Language is not supported!", Toast.LENGTH_SHORT).show();
-                    } else {
-                       // Toast.makeText(getContext(), "TTS-- Language Supported.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                  //  Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            sqlHandler = new SqlHandler(getContext());// Sqlite handler
-            Callback = (FragmentToActivity) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement FragmentToActivity");
-        }
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.car_icon_32);
@@ -258,6 +227,38 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
             });
 
         return rootView;
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = textToSpeech.setLanguage(Locale.US);
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        // Toast.makeText(getContext(), "TTS-- The Language is not supported!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Toast.makeText(getContext(), "TTS-- Language Supported.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    //  Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            sqlHandler = new SqlHandler(getContext());// Sqlite handler
+            Callback = (FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
     }
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
