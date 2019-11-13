@@ -34,7 +34,6 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -103,7 +102,6 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
     private ImageButton change_map_options;
     private double vehicleSpeed;
     private double maxSpeed=30;
-
     private List points;
     private List<LatLng> convertedPoints;
     private List<EdgeDataT> edgeDataList;
@@ -126,6 +124,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
 
     StringBuilder time= new StringBuilder();
     public interface FragmentToActivity { String communicate(String comm);}
+    private NSGTiledLayerOnMap.FragmentToActivity Callback;
     public NSGTiledLayerOnMap() { }
     @SuppressLint("ValidFragment")
     public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,double v1, double v2, double v3, double v4, int mode, int radius) {
@@ -152,12 +151,12 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                     int ttsLang = textToSpeech.setLanguage(Locale.US);
                     if (ttsLang == TextToSpeech.LANG_MISSING_DATA
                             || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Toast.makeText(getContext(), "TTS-- The Language is not supported!", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getContext(), "TTS-- The Language is not supported!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "TTS-- Language Supported.", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getContext(), "TTS-- Language Supported.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -167,7 +166,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
         super.onAttach(context);
         try {
             sqlHandler = new SqlHandler(getContext());// Sqlite handler
-           // Callback = (NSGTiledLayerOnMap)getContext();
+            Callback = (FragmentToActivity) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement FragmentToActivity");
@@ -808,5 +807,16 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
         edgeDataList = (List<EdgeDataT>) SqlHandler.getDataRows(EdgeDataT.MAPPING, EdgeDataT.class, c1);
         sqlHandler.closeDataBaseConnection();
         return edgeDataList;
+    }
+    @Override
+    public void onDetach() {
+        Callback = null;
+        super.onDetach();
+    }
+    private void sendData(String comm)
+    {
+        Log.e("SendData","SendData ------- "+ comm);
+        Callback.communicate(comm);
+
     }
 }

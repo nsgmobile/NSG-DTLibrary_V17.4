@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
  * Modified on 13/11/2019
  *
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements NSGTiledLayerOnMap.FragmentToActivity{
     private String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator +"DubaiBasemap"+".mbtiles";
     private double srcLatitude=55.067291;
     private double srcLongitude=24.978782;
@@ -32,6 +32,11 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,srcLatitude,srcLongitude,destLatitude,desLongitude,enteredMode,bufferSize));
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public String communicate(String comm) {
+        return null;
     }
 }
 
