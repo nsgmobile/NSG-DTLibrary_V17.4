@@ -188,6 +188,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 public void onMapReady(GoogleMap googlemap) {
                     NSGTiledLayerOnMap.this.mMap = googlemap;
+                    NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
                     TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
                     TileOverlay tileOverlay = NSGTiledLayerOnMap.this.mMap.addTileOverlay((new TileOverlayOptions()).tileProvider(tileProvider));
                     tileOverlay.setTransparency(0.5F - tileOverlay.getTransparency());
