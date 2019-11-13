@@ -635,8 +635,9 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                               // Intent i=new Intent(getActivity(),NSGTiledLayerOnMap.class);
+                               // Intent i=new Intent(getContext(),NSGTiledLayerOnMap.class);
                                // startActivity(i);
+                                getActivity().onBackPressed();
                                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                     // TODO: Consider calling
                                     //    ActivityCompat#requestPermissions
