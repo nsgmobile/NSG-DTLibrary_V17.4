@@ -205,7 +205,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                             @Override
                             public void run() {
                                 GetRouteDetails();
-                                if(MESSAGE.equals("Sucess") && MESSAGE!=null){
+                                if(MESSAGE.equals("Sucess") ){
                                     getAllEdgesData();
                                     addMarkers();
                                     getValidRouteData();
@@ -321,10 +321,8 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
 
                     }
                 }
-                Log.e("AllPoints","AllPoints"+AllPointsList.size());
 
                 for (int pntCount = 0; pntCount < AllPointsList.size(); pntCount++) {
-                    Log.e("AllPoints","AllPoints"+AllPointsList.get(pntCount));
                     String data = String.valueOf(AllPointsList.get(pntCount));
                     String dataStr = data.replace("[", "");
                     dataStr = dataStr.replace("]", "");
@@ -527,10 +525,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
             double x= currentGpsPosition.longitude;
             double y= currentGpsPosition.longitude;
             LatLng source=new LatLng(FirstLongitude,FirstLatitude);
-
-            Log.e("Source","Source"+source);
             LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
-            Log.e("destination","destination"+destination);
             nearestPositionPoint= Util.findNearestPoint(currentGpsPosition,source,destination);
             OldNearestGpsList.add(nearestPositionPoint);
         }
@@ -640,8 +635,14 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Intent i=new Intent(getActivity(),NSGTiledLayerOnMap.class);
-                                startActivity(i);
+                               // Intent i=new Intent(getActivity(),NSGTiledLayerOnMap.class);
+                               // startActivity(i);
+                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    return;
+                                }
+                                mMap.setMyLocationEnabled(false);
                             }
                         });
                 AlertDialog alert = builder.create();
