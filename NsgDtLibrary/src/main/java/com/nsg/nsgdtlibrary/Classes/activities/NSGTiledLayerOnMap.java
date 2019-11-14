@@ -815,8 +815,6 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
     }
     @Override
     public void onDestroy() {
-
-
         //Close the Text to Speech Library
         if(textToSpeech != null) {
 
