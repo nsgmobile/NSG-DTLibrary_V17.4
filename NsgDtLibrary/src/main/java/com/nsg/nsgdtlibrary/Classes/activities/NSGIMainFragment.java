@@ -652,7 +652,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                         StrictMode.setThreadPolicy(policy);
                         try {
                             String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
+                            Log.e("URL","URL"+httprequest);
                             String FeatureResponse = HttpPost(httprequest,SourcePoint,DestinationPoint);
+                            Log.e("URL Response","URL Response "+ FeatureResponse);
                             JSONObject jsonObject = null;
                             try {
                                 if(FeatureResponse!=null){
@@ -661,6 +663,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                                     jsonObject = new JSONObject(FeatureResponse);
                                     String ID = String.valueOf(jsonObject.get("$id"));
                                     MESSAGE = jsonObject.getString("Message");
+                                    Log.e("URL Response","URL MESSAGE "+ MESSAGE);
                                     String Status = jsonObject.getString("Status");
                                     String TotalDistance = jsonObject.getString("TotalDistance");
                                     JSONArray jSonRoutes = new JSONArray(jsonObject.getString("Route"));
