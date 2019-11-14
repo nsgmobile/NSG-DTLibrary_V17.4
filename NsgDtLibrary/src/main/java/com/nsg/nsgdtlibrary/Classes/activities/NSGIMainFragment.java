@@ -229,7 +229,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void run() {
                             GetRouteDetails();
-                            if(MESSAGE.equals("Sucess")){
+                            if(MESSAGE!=null && MESSAGE.equals("Sucess")){
                                 sendTokenRequest();
                                 getAllEdgesData();
                                 addMarkers();
