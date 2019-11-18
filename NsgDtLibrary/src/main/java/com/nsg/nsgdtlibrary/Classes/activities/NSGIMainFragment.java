@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
@@ -251,11 +252,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                                             mMap.getUiSettings().setCompassEnabled(true);
                                             mMap.getUiSettings().setMyLocationButtonEnabled(true);
                                             mMap.getUiSettings().setMapToolbarEnabled(true);
-                                            // mMap.getUiSettings().setZoomGesturesEnabled(true);
-                                            //  mMap.getUiSettings().setScrollGesturesEnabled(true);
-                                            // mMap.getUiSettings().setTiltGesturesEnabled(true);
-                                            // mMap.getUiSettings().setRotateGesturesEnabled(true);
-                                            // mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                            mMap.getUiSettings().setZoomGesturesEnabled(true);
+                                            mMap.getUiSettings().setScrollGesturesEnabled(true);
+                                            mMap.getUiSettings().setTiltGesturesEnabled(true);
+                                            mMap.getUiSettings().setRotateGesturesEnabled(true);
+                                            mMap.getUiSettings().setMyLocationButtonEnabled(true);
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
                                                 public void onMyLocationChange(Location location) {
@@ -263,7 +264,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                                                         mPositionMarker.remove();
                                                     }
                                                     // currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
-                                                    vehicleSpeed=location.getSpeed();
+                                                    vehicleSpeed =location.getSpeed();
                                                     getLatLngPoints();
                                                     currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                                     MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
@@ -273,6 +274,48 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                                         }
 
                                 }else if(enteredMode==2){
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                            // TODO: Consider calling
+                                            //    ActivityCompat#requestPermissions
+                                            return;
+                                        }
+                                        mMap.setMyLocationEnabled(true);
+                                        mMap.setBuildingsEnabled(true);
+                                        mMap.getUiSettings().setZoomControlsEnabled(true);
+                                        mMap.getUiSettings().setCompassEnabled(true);
+                                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                        mMap.getUiSettings().setMapToolbarEnabled(true);
+                                        mMap.getUiSettings().setZoomGesturesEnabled(true);
+                                        mMap.getUiSettings().setScrollGesturesEnabled(true);
+                                        mMap.getUiSettings().setTiltGesturesEnabled(true);
+                                        mMap.getUiSettings().setRotateGesturesEnabled(true);
+                                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                            @Override
+                                            public void onMyLocationChange(Location location) {
+                                                if (mPositionMarker != null) {
+                                                    mPositionMarker.remove();
+                                                }
+                                                currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
+                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(currentGpsPosition)
+                                                        .title("currentLocation"));
+
+                                                moveVechile(mPositionMarker,location);
+                                                //animateMarkerToFinalDestination(mPositionMarker, currentGpsPosition, new LatLngInterpolator.LinearFixed());
+                                                CameraPosition googlePlex = CameraPosition.builder()
+                                                        .target(currentGpsPosition)
+                                                        .zoom(18)
+                                                        .tilt(45)
+                                                        .build();
+                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+
+
+                                            }
+                                        });
+                                    }
+
                                 }
                             }else{
                                 dialog.dismiss();
@@ -449,7 +492,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         for(int i=0;i<OldNearestGpsList.size();i++){
 
         }
-
         if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
             OldGps=OldNearestGpsList.get(0);
             int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
@@ -483,16 +525,21 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                 .title("currentLocation")
                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.green_marker_24)));
 
+
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps);
         mPositionMarker = mMap.addMarker(new MarkerOptions()
                 .position(nearestPositionPoint)
                 .title("currentLocation")
                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)).flat(true).rotation(bearing).anchor(0.5f, 0.5f));
 
-
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(new LatLng(nearestPositionPoint.latitude, nearestPositionPoint.longitude))
+                .bearing(bearing).tilt(65.5f).zoom(20)
+                .build();
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
         if(nearestPointValuesList.size()>1) {
             getTextImplementation(currentGpsPosition,new LatLng(24.979878,55.067205));
-           // verifyRouteDeviation(10);
+            verifyRouteDeviation(50);
             LatLng centeredLatLng= animateLatLngZoom(nearestPositionPoint,20,10,10);
             animateCarMove(mPositionMarker, OldGps,centeredLatLng, 5000);
         }
@@ -512,6 +559,53 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         brng = (brng + 360) % 360;
         return brng;
     }
+    public void moveVechile(final Marker myMarker, final Location finalPosition) {
+
+        final LatLng startPosition = myMarker.getPosition();
+
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        final Interpolator interpolator = new AccelerateDecelerateInterpolator();
+        final float durationInMs = 3000;
+        final boolean hideMarker = false;
+
+        handler.post(new Runnable() {
+            long elapsed;
+            float t;
+            float v;
+
+            @Override
+            public void run() {
+                // Calculate progress using interpolator
+                elapsed = SystemClock.uptimeMillis() - start;
+                t = elapsed / durationInMs;
+                v = interpolator.getInterpolation(t);
+
+                LatLng currentPosition = new LatLng(
+                        startPosition.latitude * (1 - t) + (finalPosition.getLatitude()) * t,
+                        startPosition.longitude * (1 - t) + (finalPosition.getLongitude()) * t);
+                myMarker.setPosition(currentPosition);
+                myMarker.setRotation(finalPosition.getBearing());
+                myMarker.setAnchor(0.5f,0.5f);
+
+
+                // Repeat till progress is completeelse
+                if (t < 1) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                    // handler.postDelayed(this, 100);
+                } else {
+                    if (hideMarker) {
+                        myMarker.setVisible(false);
+                    } else {
+                        myMarker.setVisible(true);
+                    }
+                }
+            }
+        });
+
+    }
+
     private void rotateMarker(final Marker marker, final float toRotation) {
         if(!isMarkerRotating) {
             final Handler handler = new Handler();
@@ -560,7 +654,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void getTextImplementation(LatLng currentGpsPosition, LatLng DestinationPosition){
+    public void getTextImplementation(LatLng currentGpsPosition,LatLng DestinationPosition){
         double resultTotalDistance=showDistance(new LatLng(sourceLat,sourceLng),new LatLng(destLat,destLng));
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
         LatLng cameraPosition=OldNearestGpsList.get(GpsIndex);
@@ -570,18 +664,31 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         resultTotalTime=DecimalUtils.round(resultTotalTime,0);
         int seconds = (int) ((resultTotalTime / 1000) % 60);
         int minutes = (int) ((resultTotalTime / 1000) / 60);
+
         String directionText= String.valueOf(getKeysFromValue(nearestValuesMap,cameraPosition.toString()));
+        Log.e("Direction Text","Direction Text"+directionText);
         double resultRaminingDistance=showDistance(currentGpsPosition,new LatLng(destLat,destLng));
         ETACalclator etaCalculator=new ETACalclator();
-        double resultTime=etaCalculator.cal_time(resultRaminingDistance, vehicleSpeed);
+        double speedKMPH= mphTOkmph(vehicleSpeed);
+        String finalSpeed=String.format("%.0f", speedKMPH);
+
+        double resultTime=etaCalculator.cal_time(resultRaminingDistance, speedKMPH);
+        // resultTime=DecimalUtils.round(resultTime,1);
         String resultDistanceMts=String.format("%.0f", resultRaminingDistance);
         double elapsedTime = resultTotalTime-resultTime;
+
+
+
         time.append("Distance").append(finalResultMts+"Meters").append("\n").append("Speed").append(maxSpeed +"KMPH").append("\n").append("Estimated Time").append(resultTime+"Sec").append("Elapsed Time").append(elapsedTime).append("\n");
         sendData(time.toString());
+
         tv.setText("Estimated Time : "+ resultTotalTime +"Sec" );
         tv1.setText("Distance : "+ resultDistanceMts +" Meters ");
-        tv2.setText("Speed : "+ vehicleSpeed +"KM ");
+        tv2.setText("Speed : "+ finalSpeed +"KM ");
         tv3.setText("Direction : "+  directionText);
+
+
+        //Speech implementation
         String data=" in "+ resultDistanceMts +" Meters "+ directionText;
         int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
         if (speechStatus == TextToSpeech.ERROR) {
@@ -590,20 +697,33 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         if(time!=null){
             sendTokenRequest();
         }
+        // Log.e("Direction Text","Direction Text"+currentGpsPoint);
+        // LatLng lastPoint=OldNearestGpsList.get(OldNearestGpsList.size()-1);
+        // Log.e("last Point","last Point--------- "+ lastPoint);
+        Log.e("currentGpsPositiont","currentGpsPosition--------- "+ currentGpsPosition);
+        Log.e("currentGpsPositiont","currentGpsPosition--------- "+ DestinationPosition);
         if (currentGpsPosition.equals(DestinationPosition)) {
+            Log.e("last Point","last Point--------- "+ "TRUE");
             lastDistance= showDistance(cameraPosition,DestinationPosition);
+            Log.e("lastDistance","lastDistance--------- "+ lastDistance );
             if (lastDistance <5) {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
 
                 mMap.setMyLocationEnabled(false);
+                //Speech implementation
                 String data1=" Your Destination Reached ";
                 int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
                 if (speechStatus1 == TextToSpeech.ERROR) {
-
+                    Log.e("TTS", "Error in converting Text to Speech!");
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
@@ -612,7 +732,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Intent i=new Intent(getActivity(), NSGIMainFragment.class);
+                                Intent i=new Intent(getActivity(),NSGIMainFragment.class);
                                 startActivity(i);
                             }
                         });
@@ -620,6 +740,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                 alert.show();
             }
         }else{
+            Log.e("last Point","last Point--------- "+ "FALSE");
         }
     }
     public Bitmap fromDrawable(final Drawable drawable) {
@@ -640,7 +761,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         }
         return keys;
     }
-
+    double mphTOkmph(double mph)
+    {
+        return mph * 1.60934;
+    }
     private void GetRouteDetails(){
         try{
             getActivity().runOnUiThread(new Runnable() {
