@@ -539,7 +539,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                 .build();
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
         if(nearestPointValuesList.size()>1) {
-            getTextImplementation(currentGpsPosition,new LatLng(24.979878,55.067205));
+            getTextImplementation(currentGpsPosition,new LatLng(destLat,destLng));
             verifyRouteDeviation(100);
             LatLng centeredLatLng= animateLatLngZoom(nearestPositionPoint,20,10,10);
             animateCarMove(mPositionMarker, OldGps,centeredLatLng, 5000);
