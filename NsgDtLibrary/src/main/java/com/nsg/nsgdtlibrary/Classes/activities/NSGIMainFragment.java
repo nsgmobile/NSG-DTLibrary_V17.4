@@ -248,7 +248,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                                                      return;
                                             }
                                             mMap.setMyLocationEnabled(true);
-                                            mMap.getUiSettings().setZoomControlsEnabled(false);
+                                            mMap.setBuildingsEnabled(true);
+                                            mMap.getUiSettings().setZoomControlsEnabled(true);
                                             mMap.getUiSettings().setCompassEnabled(true);
                                             mMap.getUiSettings().setMyLocationButtonEnabled(true);
                                             mMap.getUiSettings().setMapToolbarEnabled(true);
@@ -539,7 +540,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(currentPlace));
         if(nearestPointValuesList.size()>1) {
             getTextImplementation(currentGpsPosition,new LatLng(24.979878,55.067205));
-            verifyRouteDeviation(50);
+            verifyRouteDeviation(100);
             LatLng centeredLatLng= animateLatLngZoom(nearestPositionPoint,20,10,10);
             animateCarMove(mPositionMarker, OldGps,centeredLatLng, 5000);
         }
