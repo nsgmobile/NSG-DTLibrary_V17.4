@@ -453,10 +453,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
             String SecondShortestDistance = String.valueOf(distancesList.get(1));
             boolean answerFirst= hash_map.containsKey(FirstShortestDistance);
             if (answerFirst) {
-                System.out.println("The list contains " + FirstShortestDistance);
+
                 FirstCordinate = (String)hash_map.get(FirstShortestDistance);
                 key= String.valueOf(getKeysFromValue(AllPointEdgeNo,FirstCordinate));
-                Log.e("KEY ", "KEY " + key);
+
             } else {
                 System.out.println(""+ "FALSE");
             }
@@ -577,7 +577,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void run() {
-                // Calculate progress using interpolator
                 elapsed = SystemClock.uptimeMillis() - start;
                 t = elapsed / durationInMs;
                 v = interpolator.getInterpolation(t);
@@ -588,9 +587,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                 myMarker.setPosition(currentPosition);
                 myMarker.setRotation(finalPosition.getBearing());
                 myMarker.setAnchor(0.5f,0.5f);
-
-
-                // Repeat till progress is completeelse
                 if (t < 1) {
                     // Post again 16ms later.
                     handler.postDelayed(this, 16);
@@ -667,14 +663,12 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         int minutes = (int) ((resultTotalTime / 1000) / 60);
 
         String directionText= String.valueOf(getKeysFromValue(nearestValuesMap,cameraPosition.toString()));
-        Log.e("Direction Text","Direction Text"+directionText);
         double resultRaminingDistance=showDistance(currentGpsPosition,new LatLng(destLat,destLng));
         ETACalclator etaCalculator=new ETACalclator();
         double speedKMPH= mphTOkmph(vehicleSpeed);
         String finalSpeed=String.format("%.0f", speedKMPH);
 
         double resultTime=etaCalculator.cal_time(resultRaminingDistance, speedKMPH);
-        // resultTime=DecimalUtils.round(resultTime,1);
         String resultDistanceMts=String.format("%.0f", resultRaminingDistance);
         double elapsedTime = resultTotalTime-resultTime;
 
@@ -688,8 +682,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         tv2.setText("Speed : "+ finalSpeed +"KM ");
         tv3.setText("Direction : "+  directionText);
 
-
-        //Speech implementation
         String data=" in "+ resultDistanceMts +" Meters "+ directionText;
         int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
         if (speechStatus == TextToSpeech.ERROR) {
@@ -698,15 +690,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         if(time!=null){
             sendTokenRequest();
         }
-        // Log.e("Direction Text","Direction Text"+currentGpsPoint);
-        // LatLng lastPoint=OldNearestGpsList.get(OldNearestGpsList.size()-1);
-        // Log.e("last Point","last Point--------- "+ lastPoint);
-        Log.e("currentGpsPositiont","currentGpsPosition--------- "+ currentGpsPosition);
-        Log.e("currentGpsPositiont","currentGpsPosition--------- "+ DestinationPosition);
         if (currentGpsPosition.equals(DestinationPosition)) {
-            Log.e("last Point","last Point--------- "+ "TRUE");
             lastDistance= showDistance(cameraPosition,DestinationPosition);
-            Log.e("lastDistance","lastDistance--------- "+ lastDistance );
             if (lastDistance <5) {
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -724,7 +709,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                 String data1=" Your Destination Reached ";
                 int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
                 if (speechStatus1 == TextToSpeech.ERROR) {
-                    Log.e("TTS", "Error in converting Text to Speech!");
+
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
@@ -741,7 +726,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
                 alert.show();
             }
         }else{
-            Log.e("last Point","last Point--------- "+ "FALSE");
         }
     }
     public Bitmap fromDrawable(final Drawable drawable) {
@@ -1247,14 +1231,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
             public void run() {
                 try {
                     String url1 = "http://86.96.196.245/ROROAPI/Login/GetToken";
-                    Log.e("SAVING DATA ", "SAVING DATA " + url1);
                     tokenResponse = HttpPost1(url1);
-
                     JSONObject obj = new JSONObject(tokenResponse);
                     tokenNumber = obj.getString("tokenNumber");
                     if(tokenNumber!=null && !tokenNumber.isEmpty()){
                         String url = "http://86.96.196.245/ROROAPI/NSGMap/AlertDataProcess";
-                        Log.e("SAVING DATA ", "SAVING DATA " + url);
                         updaterServiceResponse = HttpPost(url);
 
 
@@ -1302,8 +1283,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener {
         jsonObject.accumulate("AlertName", "ETA Croessed");
         jsonObject.accumulate("AlertValue", "true");
         jsonObject.accumulate("OptionalString1",  "mobile---Application Testing From NSGI");
-        jsonObject.accumulate("OptionalString1", "24.978782,55.067291");
-        jsonObject.accumulate("OptionalInt1",  "24.979745, 55.067548");
+        jsonObject.accumulate("OptionalString1", SourcePosition);
+        jsonObject.accumulate("OptionalInt1",  DestinationPosition);
         jsonObject.accumulate("OptionalInt2", "");
         jsonObject.accumulate("UserID", "nsgadmin");
         jsonObject.accumulate("ApplicationID",  "10");
