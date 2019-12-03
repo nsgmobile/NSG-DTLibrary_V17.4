@@ -3,9 +3,8 @@ package com.nsg.dtlibrary;
 import android.os.Bundle;
 import android.os.Environment;
 
-import com.nsg.nsgdtlibrary.Classes.activities.MainFragment;
+
 import com.nsg.nsgdtlibrary.Classes.activities.NSGIMainFragment;
-import com.nsg.nsgdtlibrary.Classes.activities.NSGTiledLayerOnMap;
 
 import java.io.File;
 
