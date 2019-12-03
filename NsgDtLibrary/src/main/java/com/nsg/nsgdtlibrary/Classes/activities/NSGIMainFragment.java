@@ -217,6 +217,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private String TotalDistance;
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
+    private double resultNeedToTeavelTimeConverted;
     StringBuilder time= new StringBuilder();
     public interface FragmentToActivity {
         String communicate(String comm);
@@ -274,6 +275,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv = (TextView) rootView.findViewById(R.id.tv);
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
+
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
       //  location_tracking=(ToggleButton)rootView.findViewById(R.id.location_tracking);
       //  location_tracking.setOnClickListener(this);
@@ -315,7 +317,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     // GetRouteDetails(SourcePosition.toString(),DestinationPosition.toString());
                 }
                 StringBuilder routeAlert=new StringBuilder();
-                routeAlert.append("src");
+               // routeAlert.append("src");
                 sendData(routeAlert.toString());
                 // sendTokenRequest();
                 getAllEdgesData();
@@ -355,24 +357,39 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             mMap.getUiSettings().setRotateGesturesEnabled(true);
                             mMap.getUiSettings().setMyLocationButtonEnabled(true);
                             if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    // MoveWithGPSMARKER();
+                                ETACalclator etaCalculator1=new ETACalclator();
+                                double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+                                double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+                                tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+                                tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                    // MoveWithGPSMARKER();
+
                                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                        @Override
                                          public void onMyLocationChange(Location location) {
                                            if (mPositionMarker != null) {
                                             mPositionMarker.remove();
                                            }
-                                           vehicleSpeed=location.getSpeed();
+                                            vehicleSpeed=location.getSpeed();
                                             getLatLngPoints();
-                                           LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                           Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
+                                            LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
+                                            Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
                                                     // NavigationDirection(currentGpsPosition,DestinationPosition);
                                             currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-                                            Log.e("currentGpsPosition","currentGpsPosition LATLNG DATA ARRAY "+ LatLngDataArray.size());
+
+
+                                           Log.e("currentGpsPosition","currentGpsPosition LATLNG DATA ARRAY "+ LatLngDataArray.size());
                                             Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
                                             MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
-                                            locationFakeGpsListener = locationFakeGpsListener + 1;
+                                             new Handler().postDelayed(new Runnable() {
+                                               //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                                               @Override
+                                               public void run() {
+                                                   locationFakeGpsListener = locationFakeGpsListener + 1;
+                                               }
+                                            },2000);
+
                                        }
                                    });
 
@@ -409,9 +426,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                             }
                             dialog.dismiss();
-
                         }
-                    }, 0);
+                    }, 5000);
                 }else{
                     Log.e("SendData","SendData ------- "+ "internet does not exist");
                 }
@@ -656,8 +672,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .title("currentLocation")
                 .anchor(0.5f, 0.5f)
                 .rotation(bearing)
-                .flat(true)
-                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                .flat(true));
+              //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
@@ -678,6 +694,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+
+
 
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
@@ -2017,7 +2035,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
 
     }
-    public void caclulateETA(double TotalDistance, LatLng sourcePosition, LatLng currentGpsPosition, LatLng DestinationPosition){
+    public void caclulateETA(final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
         Log.e("Total Distance"," sourcePosition "+ sourcePosition);
         Log.e("Total Distance"," DestinationPosition "+ DestinationPosition);
         Log.e("Total Distance"," currentGpsPosition "+ currentGpsPosition);
@@ -2025,69 +2043,60 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Log.e("Total Distance","Total Distance"+ TotalDistanceInMTS);
         ETACalclator etaCalculator1=new ETACalclator();
         double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-        double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+        final double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
         Log.e("resultTotalTime ","resultTotalTimeConverted ------- "+ resultTotalTimeConverted);
 
+        double resultTravelledTimeConverted=0.0;
+       // double resultNeedToTeavelTimeConverted=0.0;
+        double resultNeedToTeavelTime=0.0;
+        double EtaCrossedTime = 0.0;
+        double EtaElapsed = 0.0;
+        String etaCrossedFlag = "NO";
+
+        double travelledDistance = showDistance(sourcePosition, currentGpsPosition);
+        String travelledDistanceInMTS = String.format("%.0f", travelledDistance);
+        ETACalclator etaCalculator = new ETACalclator();
+        double resultTravelledTime = etaCalculator.cal_time(travelledDistance, 10);
+        resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
 
 
-        double travelledDistance=showDistance(sourcePosition,currentGpsPosition);
-        String travelledDistanceInMTS=String.format("%.0f", travelledDistance);
-        ETACalclator etaCalculator=new ETACalclator();
-        double resultTravelledTime=etaCalculator.cal_time(travelledDistance, 10);
-        double resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime,0);
+        double needToTravelDistance = TotalDistance - travelledDistance;
+        String needToTravelDistanceInMTS = String.format("%.0f", needToTravelDistance);
+        ETACalclator etaCalculator2 = new ETACalclator();
+        resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, 10);
+        resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
+
+        Log.e("TAG", " currentGpsPosition @@@@ " + currentGpsPosition);
+        Log.e("TAG", " travelledDistanceInMTS " + travelledDistanceInMTS);
+        Log.e("TAG", " travelled Time  " + resultTravelledTime);
+        Log.e("TAG", "  Need To travel DistanceInMTS " + needToTravelDistanceInMTS);
+        Log.e("TAG", "  Need To travel  Time " + resultNeedToTeavelTime);
+        // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
+        new Handler().postDelayed(new Runnable() {
+            //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void run() {
+                tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+
+            }
+        },5000);
 
 
-        double needToTravelDistance=TotalDistance-travelledDistance;
-        String  needToTravelDistanceInMTS=String.format("%.0f", needToTravelDistance);
-        ETACalclator etaCalculator2=new ETACalclator();
-        double resultNeedToTeavelTime=etaCalculator2.cal_time(needToTravelDistance, 10);
-        double resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime,0);
-
-        Log.e("TAG"," currentGpsPosition @@@@ "+ currentGpsPosition);
-        Log.e("TAG"," travelledDistanceInMTS "+ travelledDistanceInMTS);
-        Log.e("TAG"," travelled Time  "+ resultTravelledTime);
-        Log.e("TAG","  Need To travel DistanceInMTS "+ needToTravelDistanceInMTS);
-        Log.e("TAG","  Need To travel  Time "+ resultNeedToTeavelTime);
-
-
-       // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
-        double EtaCrossedTime=0.0;
-        String etaCrossedFlag="NO";
-        double EtaElapsed=0.0;
-        if(resultTravelledTimeConverted>resultTotalTimeConverted){
-            etaCrossedFlag="YES";
-            EtaCrossedTime= resultTravelledTime-resultTotalTimeConverted;
-            EtaElapsed =DecimalUtils.round(EtaCrossedTime,0);
-        }else{
-            etaCrossedFlag="NO";
+        if (resultTravelledTimeConverted > resultTotalTimeConverted) {
+            etaCrossedFlag = "YES";
+            EtaCrossedTime = resultTravelledTime - resultTotalTimeConverted;
+            EtaElapsed = DecimalUtils.round(EtaCrossedTime, 0);
+        } else {
+            etaCrossedFlag = "NO";
         }
-
-/*
-        if(presentETATime > resultTotalETA) {
-            EtaCrossedTime= presentETATime-resultTotalETA;
-
-        }
-        if(EtaCrossedTime > 0.0){
-            etaCrossedFlag="YES";
-
-        }else{
-            etaCrossedFlag="NO";
-        }
-        if(String.valueOf(EtaCrossedTime).equals("Infinity")){
-
-        }else{
-            EtaElapsed =DecimalUtils.round(EtaCrossedTime,0);
-        }
-        */
 
 
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
         sendData(time.toString());
 
-
         tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
         tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
-        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+
         tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
 
 
