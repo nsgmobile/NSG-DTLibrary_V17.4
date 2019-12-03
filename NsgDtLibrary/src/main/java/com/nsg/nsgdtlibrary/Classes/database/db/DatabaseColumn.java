@@ -1,8 +1,7 @@
 package com.nsg.nsgdtlibrary.Classes.database.db;
+
 /**
- * Created by sailaja.ch NSGI on 27/09/2019 *
- * Modified on 13/11/2019
- *
+ * Created by sailaja.ch on 03/09/2019
  */
 public class DatabaseColumn {
     private String columnName;

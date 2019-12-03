@@ -149,7 +149,7 @@ public class NSGTiledLayerOnMap extends Fragment  implements View.OnClickListene
         tv1=(TextView)rootView.findViewById(R.id.tv1);
         tv2=(TextView)rootView.findViewById(R.id.tv2);
         tv3=(TextView)rootView.findViewById(R.id.tv3);
-        tv4=(TextView)rootView.findViewById(R.id.tv4);
+       // tv4=(TextView)rootView.findViewById(R.id.tv4);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
          SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);

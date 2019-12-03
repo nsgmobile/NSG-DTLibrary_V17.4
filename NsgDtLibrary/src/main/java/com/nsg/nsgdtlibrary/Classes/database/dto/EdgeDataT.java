@@ -1,12 +1,13 @@
 package com.nsg.nsgdtlibrary.Classes.database.dto;
+
+
+
 import com.nsg.nsgdtlibrary.Classes.database.db.DatabaseColumn;
 
 import java.util.ArrayList;
 
 /**
- * Created by sailaja.ch NSGI on 27/09/2019 *
- * Modified on 13/11/2019
- *
+ * Created by sailaja.ch on 03/09/2019
  */
 public class EdgeDataT {
     private Integer sid;
@@ -40,12 +41,11 @@ public class EdgeDataT {
 
     }
     public EdgeDataT(){}
-    public EdgeDataT(Integer edgeNo, String startPoint , String endPoint,String allPoints,String distanceInVertex,String geometryText ){
+    public EdgeDataT( String startPoint , String endPoint,String positionMarkingPoint,String geometryText,String distanceInVertex ){
 
-        this.edgeNo=edgeNo;
         this.startPoint=startPoint;
         this.endPoint=endPoint;
-        this.allPoints=allPoints;
+        this.positionMarkingPoint=positionMarkingPoint;
         this.distanceInVertex=distanceInVertex;
         this.geometryText=geometryText;
     }

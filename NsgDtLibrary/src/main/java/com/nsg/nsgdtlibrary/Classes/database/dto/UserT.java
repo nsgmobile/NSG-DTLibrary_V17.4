@@ -1,12 +1,8 @@
 package com.nsg.nsgdtlibrary.Classes.database.dto;
 import com.nsg.nsgdtlibrary.Classes.database.db.DatabaseColumn;
-
 import java.util.ArrayList;
-
 /**
- * Created by sailaja.ch NSGI on 27/09/2019 *
- * Modified on 13/11/2019
- *
+ * Created by sailaja.ch on 03/09/2019
  */
 public class UserT {
     private static final long serialVersionUID = -7074513959395013911L;
