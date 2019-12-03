@@ -667,7 +667,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Projection p = mMap.getProjection();
         Point  bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
-        Point offset = new Point(center.x, (center.y + 350));
+        Point offset = new Point(center.x, (center.y + 300));
         LatLng centerLoc = p.fromScreenLocation(center);
         LatLng offsetNewLoc = p.fromScreenLocation(offset);
         double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);

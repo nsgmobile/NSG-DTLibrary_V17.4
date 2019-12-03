@@ -218,6 +218,7 @@ public class NSGIMainFragment_1 extends Fragment implements View.OnClickListener
     private String TotalDistance;
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
+    View rootView;
     StringBuilder time= new StringBuilder();
 
     public NSGIMainFragment_1(){ }
@@ -268,11 +269,11 @@ public class NSGIMainFragment_1 extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gps_transperent_98);
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+         rootView = inflater.inflate(R.layout.fragment_map, container, false);
         tv = (TextView) rootView.findViewById(R.id.tv);
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
-       // tv2 = (TextView) rootView.findViewById(R.id.tv2);
-       // tv3 = (TextView) rootView.findViewById(R.id.tv3);
+        tv2 = (TextView) rootView.findViewById(R.id.tv2);
+        tv3 = (TextView) rootView.findViewById(R.id.tv3);
         //  location_tracking=(ToggleButton)rootView.findViewById(R.id.location_tracking);
         //  location_tracking.setOnClickListener(this);
         mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
@@ -650,13 +651,26 @@ public class NSGIMainFragment_1 extends Fragment implements View.OnClickListener
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000,currentGpsPosition);
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
         }
+/*
+        Projection projection = mMap.getProjection();
+        LatLng markerPosition = mPositionMarker.getPosition();
+        Point markerPoint = projection.toScreenLocation(markerPosition);
+        Point targetPoint = new Point(markerPoint.x, markerPoint.y +rootView.getHeight() / 2);
+        LatLng targetPosition = projection.fromScreenLocation(targetPoint);
+
+       // mMap.animateCamera(CameraUpdateFactory.newCameraPosition(targetPosition), 10000, null);
+       mMap.animateCamera(CameraUpdateFactory.newLatLng(targetPosition), 10000, null);
+*/
+
+
+
 
         Projection p = mMap.getProjection();
-        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+        Point  bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
-        Point offset = new Point(center.x, (center.y + 350));
+        Point offset = new Point(center.x, (center.y + 300));
         LatLng centerLoc = p.fromScreenLocation(center);
         LatLng offsetNewLoc = p.fromScreenLocation(offset);
         double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
@@ -666,7 +680,11 @@ public class NSGIMainFragment_1 extends Fragment implements View.OnClickListener
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+
+
+
+
 
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
@@ -2027,8 +2045,8 @@ public class NSGIMainFragment_1 extends Fragment implements View.OnClickListener
 
         tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
         tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
-       // tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
-        //tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
+        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+        tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
 
 
 
