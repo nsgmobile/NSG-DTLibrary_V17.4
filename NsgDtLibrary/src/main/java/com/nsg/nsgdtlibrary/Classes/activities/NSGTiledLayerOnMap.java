@@ -660,7 +660,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(nearestPositionPoint)
+                .position(SourceNode)
                 .title("currentLocation")
                 .anchor(0.5f, 0.5f)
                 .rotation(bearing)
