@@ -427,7 +427,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             }
                             dialog.dismiss();
                         }
-                    }, 5000);
+                    }, 500);
                 }else{
                     Log.e("SendData","SendData ------- "+ "internet does not exist");
                 }
@@ -668,7 +668,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(nearestPositionPoint)
+                .position(SourceNode)
                 .title("currentLocation")
                 .anchor(0.5f, 0.5f)
                 .rotation(bearing)
@@ -709,7 +709,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             }
         });
         */
-
     }
     private double bearingBetweenLocations(LatLng latLng1, LatLng latLng2) {
         double PI = 3.14159;
@@ -1912,10 +1911,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
     public String NavigationDirection(final LatLng currentGpsPosition, LatLng DestinationPosition) {
         final String shortestDistancePoint = "";
-       // Handler handler = new Handler();
-       // handler.postDelayed(new Runnable() {
-        //    @Override
-        //    public void run() {
+
                 ArrayList<Double> EdgeDistancesList=new ArrayList<Double>();
                 HashMap EdgeDistancesMap=new HashMap<String,String>();
                 String stPoint = "", endPoint = "", geometryTextimpValue = "", distanceInEdge = "";
@@ -1941,8 +1937,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                      GetSortetPoint(EdgeDistancesMap,EdgeDistancesList, currentGpsPosition );
 
-        //    }
-       // }, 10000);
         return shortestDistancePoint;
 
     }
@@ -2023,14 +2017,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             toast.setGravity(Gravity.TOP, 0, 150);
             toast.setView(layout);
             toast.show();
-            /*
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    dialog.dismiss();
-                }
-            }, 1500);  // 1500 seconds
-            */
 
         }
 
@@ -2079,7 +2065,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
 
             }
-        },5000);
+        },100);
 
 
         if (resultTravelledTimeConverted > resultTotalTimeConverted) {
