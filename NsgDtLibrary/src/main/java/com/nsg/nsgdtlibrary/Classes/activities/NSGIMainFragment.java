@@ -275,7 +275,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv = (TextView) rootView.findViewById(R.id.tv);
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
-
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
       //  location_tracking=(ToggleButton)rootView.findViewById(R.id.location_tracking);
       //  location_tracking.setOnClickListener(this);
@@ -363,7 +362,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                                 tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                    // MoveWithGPSMARKER();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                   // MoveWithGPSMARKER();
 
                                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                        @Override
@@ -2058,14 +2057,16 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Log.e("TAG", "  Need To travel DistanceInMTS " + needToTravelDistanceInMTS);
         Log.e("TAG", "  Need To travel  Time " + resultNeedToTeavelTime);
         // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
+        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+        /*
         new Handler().postDelayed(new Runnable() {
             //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void run() {
-                tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
 
             }
         },100);
+        */
 
 
         if (resultTravelledTimeConverted > resultTotalTimeConverted) {
