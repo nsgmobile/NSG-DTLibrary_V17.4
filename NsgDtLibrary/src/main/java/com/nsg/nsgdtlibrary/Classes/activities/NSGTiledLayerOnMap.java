@@ -327,7 +327,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     //    ActivityCompat#requestPermissions
                     return;
                 }
-
                 getRouteAccordingToRouteID(routeIDName);
                 Log.e("RouteData","RouteData"+RouteDataList.size());
                 if(RouteDataList!=null && RouteDataList.size()>0) {
@@ -339,7 +338,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                         @Override
                         public void run() {
-                            // dialog.dismiss();
                             nearestPointValuesList=new ArrayList<LatLng>();
                             nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                             OldNearestGpsList=new ArrayList<>();
@@ -381,13 +379,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                             Log.e("currentGpsPosition","currentGpsPosition LATLNG DATA ARRAY "+ LatLngDataArray.size());
                                             Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
                                             MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
-                                            new Handler().postDelayed(new Runnable() {
-                                                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                                                @Override
-                                                public void run() {
-                                                    locationFakeGpsListener = locationFakeGpsListener + 1;
-                                                }
-                                            },2000);
+                                            locationFakeGpsListener = locationFakeGpsListener + 1;
+
 
                                         }
                                     });
@@ -418,7 +411,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                         .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
                                                         .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
                                                         .build();
-                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
                                             }
                                         });
                                 }
@@ -426,7 +419,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             }
                             dialog.dismiss();
                         }
-                    }, 5000);
+                    }, 100);
                 }else{
                     Log.e("SendData","SendData ------- "+ "internet does not exist");
                 }
@@ -1739,10 +1732,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 degree = Math.round(event.values[0]);
 
             }
-        }, 10000);
-
-
-
+        }, 100);
     }
 
     private void updateCamera(float bearing) {
@@ -1911,10 +1901,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     public String NavigationDirection(final LatLng currentGpsPosition, LatLng DestinationPosition) {
         final String shortestDistancePoint = "";
-        // Handler handler = new Handler();
-        // handler.postDelayed(new Runnable() {
-        //    @Override
-        //    public void run() {
+
         ArrayList<Double> EdgeDistancesList=new ArrayList<Double>();
         HashMap EdgeDistancesMap=new HashMap<String,String>();
         String stPoint = "", endPoint = "", geometryTextimpValue = "", distanceInEdge = "";
@@ -1940,8 +1927,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
         GetSortetPoint(EdgeDistancesMap,EdgeDistancesList, currentGpsPosition );
 
-        //    }
-        // }, 10000);
+
         return shortestDistancePoint;
 
     }
@@ -2022,14 +2008,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             toast.setGravity(Gravity.TOP, 0, 150);
             toast.setView(layout);
             toast.show();
-            /*
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    dialog.dismiss();
-                }
-            }, 1500);  // 1500 seconds
-            */
 
         }
 
@@ -2071,15 +2049,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         Log.e("TAG", "  Need To travel DistanceInMTS " + needToTravelDistanceInMTS);
         Log.e("TAG", "  Need To travel  Time " + resultNeedToTeavelTime);
         // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
-        new Handler().postDelayed(new Runnable() {
-            //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            @Override
-            public void run() {
-                tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
-
-            }
-        },5000);
-
+        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
 
         if (resultTravelledTimeConverted > resultTotalTimeConverted) {
             etaCrossedFlag = "YES";
@@ -2102,238 +2072,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
-    public void getTextImplementation(final LatLng currentGpsPosition, LatLng DestinationPosition){
-        String stPoint="",endPoint="",geometryTextimpValue="",distanceInEdge="";
-        final String shortestDistancePoint="";
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                List  EdgeDistancesList=new ArrayList<>();
-                HashMap EdgeDistancesMap=new HashMap<String,String>();
-
-                AlertDestination(currentGpsPosition);
-                for (int i = 0; i < edgeDataList.size(); i++) {
-                    EdgeDataT edge = new EdgeDataT(); //creating object for EDGETABLE
-                    edge = edgeDataList.get(i);
-                    int edgeNo = edge.getEdgeNo(); //Edge Number
-                    String points = edge.getAllPoints(); // All points in the edge
-                    if(points!=null){
-                        String AllPoints = points.replace("[", "");
-                        AllPoints = AllPoints.replace("]", "");
-                        String[] AllPointsArray = AllPoints.split(", ");
-                        for (int ap = 0; ap < AllPointsArray.length; ap++) {
-
-                            String data = String.valueOf(AllPointsArray[ap]);
-                            String dataStr = data.replace("[", "");
-                            dataStr = dataStr.replace("]", "");
-                            String ptData[] = dataStr.split(",");
-                            double Lat = Double.parseDouble(ptData[0]);
-                            double Lang = Double.parseDouble(ptData[1]);
-                            PointData = new LatLng(Lang,Lat);
-                            double distanceOfCurrentPosition=showDistance(PointData,currentGpsPosition);
-                            EdgeDistancesList.add(distanceOfCurrentPosition);
-                            EdgeDistancesMap.put(String.valueOf(distanceOfCurrentPosition).trim(),String.valueOf(PointData));
-                            Collections.addAll(EdgeDistancesList);
-                        }
-                        String FirstShortestDistance = String.valueOf(EdgeDistancesList.get(0));
-                        boolean verify=EdgeDistancesMap.containsKey(FirstShortestDistance.trim());
-                        if(verify){
-                            Object Value = EdgeDistancesMap.get(FirstShortestDistance);
-                            key= String.valueOf(Value);
-                        } else{
-                            System.out.println("Key not matched with ID");
-                        }
-                    }
-
-
-                }
-
-            }
-        }, 10000);
-
-        int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
-        LatLng cameraPosition=OldNearestGpsList.get(GpsIndex);
-        LatLng OldcameraPosition=OldNearestGpsList.get(GpsIndex-1);
-        double DistanceInVertex=showDistance(OldcameraPosition,cameraPosition);
-        String DitrectionDistance=String.format("%.0f", DistanceInVertex);
-
-        for(int i=0;i<EdgeContainsDataList.size();i++){
-            EdgeDataT edgeCurrentPoint=EdgeContainsDataList.get(i);
-            String position=edgeCurrentPoint.getPositionMarkingPoint();
-            if(position.equals(shortestDistancePoint)){
-                distanceInEdge= edgeCurrentPoint.getDistanceInVertex();
-                stPoint=  edgeCurrentPoint.getStartPoint();
-                endPoint= edgeCurrentPoint.getEndPoint();
-                geometryTextimpValue=edgeCurrentPoint.getGeometryText();
-
-            }else{
-                // Log.e("VertexCordinate ", "StrtPoint----- : " + "NOT MATCHED");
-            }
-
-        }
-
-        String stPoint_data=stPoint.replace("[","");
-        String stPoint_data1=stPoint_data.replace("]","");
-        String[] st_point=stPoint_data1.split(",");
-        double st_point_lat= Double.parseDouble(st_point[1]);
-        double st_point_lnag= Double.parseDouble(st_point[0]);
-        LatLng st_Point_vertex=new LatLng(st_point_lat,st_point_lnag);
-
-
-
-        String endPoint_data=endPoint.replace("[","");
-        String endPoint_data1=endPoint_data.replace("]","");
-        String[] end_point=endPoint_data1.split(",");
-        double end_point_lat= Double.parseDouble(end_point[1]);
-        double end_point_lnag= Double.parseDouble(end_point[0]);
-        LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
-        double resultTotalDistance=showDistance(new LatLng(sourceLat,sourceLng),new LatLng(destLat,destLng));
-
-
-
-        double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
-        String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
-
-        String data= geometryTextimpValue +" " + Distance_To_travelIn_Vertex_Convetred +"Meters";
-        //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-        int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-        if (speechStatus == TextToSpeech.ERROR) {
-            Log.e("TTS", "Error in converting Text to Speech!");
-        }
-
-
-        //  double  DitrectionDistance_InEDGE= showDistance(st_Point_vertex,end_Point_vertex);
-        //  String directionDistanceFinal_inEdge=String.format("%.0f", DitrectionDistance_InEDGE);
-        //  Log.e(" EDGE CONVERSION ", "Distance in EDGE TOTAL DISTANCE " + directionDistanceFinal_inEdge);
-
-        //  double  TravelledDitrectionDistance_InEDGE= showDistance(st_Point_vertex,currentGpsPosition);
-        //  String TravelledDitrectionDistance_inEdge_Convetred=String.format("%.0f", TravelledDitrectionDistance_InEDGE);
-        //  Log.e("VertexCordinate ", "Distance in EDGE TRAVELLED DISTANCE  " + TravelledDitrectionDistance_inEdge_Convetred);
-
-
-
-
-
-
-        //String geometryTextimp= String.valueOf(getKeysFromValue(nearestValuesMap,cameraPosition.toString()));
-        String directionText1=geometryTextimpValue.replace("[[","");
-        String directionTextFinal=directionText1.replace("]]","");
-        Log.e("Direction Text","Direction Text " + directionTextFinal);
-/*
-        //Total Distance & Time Calculations
-       // double resultTotalDistance=showDistance(new LatLng(sourceLat,sourceLng),new LatLng(destLat,destLng));
-       // String totalDistanceInMts=String.format("%.0f", TotalDistance);
-        ETACalclator calculator=new ETACalclator();
-        double resultTotalTime=calculator.cal_time(Double.valueOf(TotalDistance), maxSpeed);
-        double resultTotalTimeConverted =DecimalUtils.round(resultTotalTime,0);
-        int seconds = (int) ((resultTotalTime / 1000) % 60);
-        int minutes = (int) ((resultTotalTime / 1000) / 60);
-
-        //Travelled Distance Calculation
-        double resultTravelledTimeConverted=0.0;
-        double resultTravelledDistance=showDistance(new LatLng(sourceLat,sourceLng),currentGpsPosition);
-        String resultTravelledDistanceInMts=String.format("%.0f", resultTravelledDistance);
-        ETACalclator etaCalculator=new ETACalclator();
-        double speedKMPH= mphTOkmph(vehicleSpeed);
-        double resultTravelledTime=etaCalculator.cal_time(resultTravelledDistance, vehicleSpeed);
-        if((String.valueOf(resultTravelledTime).equals("Infinity"))||(String.valueOf(resultTravelledTime).equals("NAN"))){
-
-        }else {
-            //resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
-        }
-        //  double resultTravelledTimeConverted =DecimalUtils.round(resultTravelledTime,0);
-        String resultTravelledDistanceMts=String.format("%.0f", resultTravelledDistance);
-
-
-        double RemaininedTime=0.0, DistanceToTravel=0.0,RemaininedTimeConverted=0.0;
-        if(resultTravelledDistanceInMts!=null) {
-            DistanceToTravel = showDistance(currentGpsPosition,new LatLng(destLat,destLng));
-            String resultDistanceToTravel = String.format("%.0f", DistanceToTravel);
-            ETACalclator calculator1 = new ETACalclator();
-            RemaininedTime=calculator1.cal_time(DistanceToTravel, vehicleSpeed);
-            if((String.valueOf(RemaininedTime).equals("Infinity"))||(String.valueOf(RemaininedTime).equals("NAN"))){
-
-            }else {
-                RemaininedTimeConverted = DecimalUtils.round(RemaininedTime, 0);
-            }
-        }
-
-        double presentETATime = resultTravelledTime+RemaininedTime;
-        double EtaCrossedTime=0.0;
-        String etaCrossedFlag="NO";
-        double EtaElapsed=0.0;
-
-        Log.e("resultTotalTime ","resultTotalTime " + resultTotalTimeConverted);
-        Log.e("resultTravelledTime ","resultTravelledTime " + resultTravelledTime);
-        Log.e("RemaininedTime ","RemaininedTime " + resultTravelledTimeConverted);
-        Log.e("present ETATime ","present ETATime " + RemaininedTimeConverted);
-
-
-        if(presentETATime > resultTotalTime) {
-            EtaCrossedTime= presentETATime-resultTotalTime;
-
-        }
-        if(EtaCrossedTime > 0.0){
-            etaCrossedFlag="YES";
-
-        }else{
-            etaCrossedFlag="NO";
-        }
-        if(String.valueOf(EtaCrossedTime).equals("Infinity")){
-
-        }else{
-            EtaElapsed =DecimalUtils.round(EtaCrossedTime,0);
-        }
-        time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalTime +" SEC ").append("\n").append(" Distance To Travel").append(RemaininedTime +"Sec").append("Elapsed Time").append(EtaCrossedTime).append("\n");
-        sendData(time.toString());
-        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-        tv1.setText("Time  Traveled: "+ resultTravelledTime +" SEC ");
-        tv2.setText("ETA : " + RemaininedTimeConverted +"SEC" );
-        tv3.setText("ETA Crossed Alert: "+ etaCrossedFlag );
-        //Real ETA Distance
-        double ETADIstance=showDistance(currentGpsPosition,new LatLng(destLat,destLng));
-        String ETADIstanceInMts=String.format("%.0f", ETADIstance);
-        ETACalclator calculator2=new ETACalclator();
-        double ETA=calculator2.cal_time(ETADIstance, vehicleSpeed);
-        ETA=DecimalUtils.round(resultTotalTime,0);
-        //tv2.setText("Distance To Travel: "+ ETADIstanceInMts +"  ");
-        //tv3.setText("ETA: "+ ETA +" SEC ");
-        //tv4.setText("Direction : "+ directionText );
-        //Speech implementation
-
-        String data= directionTextFinal +" " + Distance_To_travelIn_Vertex_Convetred +"Meters";
-        //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-        int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-        if (speechStatus == TextToSpeech.ERROR) {
-            Log.e("TTS", "Error in converting Text to Speech!");
-        }
- */
-
-        Toast.makeText(getActivity(), ""+ DitrectionDistance+" "+ directionTextFinal, Toast.LENGTH_SHORT).show();
-        LayoutInflater inflater1 = getActivity().getLayoutInflater();
-        @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-        TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-        text.setText(" "+ directionTextFinal +" " + Distance_To_travelIn_Vertex_Convetred +"Meters");
-        ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-        if(directionTextFinal.contains("Take Right")){
-            image.setImageResource(R.drawable.direction_right);
-        }else if(directionTextFinal.contains("Take Left")){
-            image.setImageResource(R.drawable.direction_left);
-        }
-
-        Toast toast = new Toast(getActivity().getApplicationContext());
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
-        toast.setGravity(Gravity.TOP,0,150);
-        toast.setView(layout);
-        toast.show();
-        Log.e("Destination points","currentGpsPosition LastLoop "+currentGpsPosition);
-        Log.e("Destination points","DestinationPosition  "+DestinationPosition);
-
-    }
 
 
 }
