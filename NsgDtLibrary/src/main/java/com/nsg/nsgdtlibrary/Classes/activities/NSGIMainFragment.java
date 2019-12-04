@@ -173,7 +173,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     LatLng centerFromPoint;
     LatLng point;
     private ImageButton etaListener;
-    private ToggleButton location_tracking;
+    private ImageButton location_tracking;
     Marker fakeGpsMarker;
     List<Marker> markerlist;
     ArrayList<String> etaList;
@@ -276,8 +276,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
-      //  location_tracking=(ToggleButton)rootView.findViewById(R.id.location_tracking);
-      //  location_tracking.setOnClickListener(this);
+        location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
+        location_tracking.setOnClickListener(this);
         mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -665,6 +665,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
             nearestPointValuesList.add(DestinationPosition);
         }
+
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         mPositionMarker = mMap.addMarker(new MarkerOptions()
                 .position(SourceNode)
@@ -678,7 +679,24 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }else{
             animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000,currentGpsPosition);
         }
+        animateCamera(nearestPositionPoint,bearing);
+        verifyRouteDeviation(currentGpsPosition,50);
+        caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
+        NavigationDirection(currentGpsPosition,DestinationNode);
 
+        AlertDestination(currentGpsPosition);
+
+/*
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override            public void onCameraChange(CameraPosition cameraPosition) {
+                Log.e("Destination points","Destination points "+destLat+destLng);
+                getTextImplementation(currentGpsPosition,DestinationNode);
+               // verifyRouteDeviation(currentGpsPosition,10);
+            }
+        });
+        */
+    }
+    public void animateCamera(LatLng nearestPositionPoint,float bearing ){
         Projection p = mMap.getProjection();
         Point  bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
@@ -694,21 +712,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
 
-
-
-        caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-        NavigationDirection(currentGpsPosition,DestinationNode);
-        AlertDestination(currentGpsPosition);
-/*
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override            public void onCameraChange(CameraPosition cameraPosition) {
-                Log.e("Destination points","Destination points "+destLat+destLng);
-                getTextImplementation(currentGpsPosition,DestinationNode);
-               // verifyRouteDeviation(currentGpsPosition,10);
-            }
-        });
-        */
     }
+
     private double bearingBetweenLocations(LatLng latLng1, LatLng latLng2) {
         double PI = 3.14159;
         double lat1 = latLng1.latitude * PI / 180;
@@ -807,7 +812,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         return keys;
     }
 
-    private void GetRouteDetails(final String currentGpsPosition, final String DestinationPoint){
+    private void GetRouteDetails(final LatLng currentGpsPosition, final LatLng destinationPosition){
 
         try{
             getActivity().runOnUiThread(new Runnable() {
@@ -820,7 +825,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         try {
                             String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
                             Log.e("HTTP REQUEST","HTTP REQUEST"+httprequest);
-                            String FeatureResponse = HttpPost(httprequest,SourcePoint,DestinationPoint);
+                            String FeatureResponse = HttpPost(httprequest,currentGpsPosition,destinationPosition);
                             Log.e("HTTP REQUEST","HTTP REQUEST"+FeatureResponse);
                             JSONObject jsonObject = null;
                             try {
@@ -891,7 +896,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                     }
                                     polylineOptions.addAll(convertedPoints);
                                     polyline = mMap.addPolyline(polylineOptions);
-                                    polylineOptions.color(Color.CYAN).width(30);
+                                    polylineOptions.color(Color.RED).width(30);
                                     mMap.addPolyline(polylineOptions);
                                     polyline.setJointType(JointType.ROUND);
                                 }
@@ -910,7 +915,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         dialog.dismiss();
     }
-    private String HttpPost(String myUrl,String latLng1,String latLng2) throws IOException, JSONException {
+    private String HttpPost(String myUrl,LatLng latLng1,LatLng latLng2) throws IOException, JSONException {
         StringBuilder sb = new StringBuilder();
         String LoginResponse = "";
         String result = "";
@@ -940,7 +945,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         return LoginResponse;
     }
 
-    private JSONObject buidJsonObject(String latLng1,String latLng2) throws JSONException {
+    private JSONObject buidJsonObject(LatLng latLng1,LatLng latLng2) throws JSONException {
         JSONObject buidJsonObject = new JSONObject();
         buidJsonObject.accumulate("UserData", buidJsonObject1());
         buidJsonObject.accumulate("StartNode", latLng1);
@@ -1042,7 +1047,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     Log.e("Route Deviated Point", "Route Deviated Point--------- "+ currentGpsPosition);
                     Log.e("Route Deviated Point", "Route Destination Point--------- "+ DestinationPosition);
 
-                   // GetRouteDetails(currentGpsPosition,DestinationPosition);
+                    GetRouteDetails(currentGpsPosition,DestinationPosition);
                 }
             }, 30);
 
@@ -1101,36 +1106,38 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.977164,55.065171));
         LatLngDataArray.add(new LatLng(24.977257,55.064874));
         LatLngDataArray.add(new LatLng(24.977631,55.06466));
-        LatLngDataArray.add(new LatLng(24.977819,55.064294));//ok  //Route Deviation point
-
-
-/*
-        LatLngDataArray.add(new LatLng(24.978292,55.064001));//ok
-        LatLngDataArray.add(new LatLng(24.97839,55.063665));//ok
-        LatLngDataArray.add(new LatLng(24.978536,55.063522));//ok
-        LatLngDataArray.add(new LatLng(24.978702,55.063579));//ok
-        LatLngDataArray.add(new LatLng(24.978885,55.063587));//ok
-        LatLngDataArray.add(new LatLng(24.979201,55.063928));//ok
-        LatLngDataArray.add(new LatLng(24.979542,55.064338));//ok
-        LatLngDataArray.add(new LatLng(24.979851,55.064687));//ok
-        LatLngDataArray.add(new LatLng(24.980139,55.065028));//ok
-        LatLngDataArray.add(new LatLng(24.980285,55.065195));//ok
-        LatLngDataArray.add(new LatLng(24.980427,55.065333));//ok
-        LatLngDataArray.add(new LatLng(24.980586,55.065491));//ok
-        LatLngDataArray.add(new LatLng(24.980833,55.0658));//ok
-        LatLngDataArray.add(new LatLng(24.981081,55.066064));//ok
-        LatLngDataArray.add(new LatLng(24.980886,55.066323));//ok
-        LatLngDataArray.add(new LatLng(24.980614,55.066624));//ok
-        LatLngDataArray.add(new LatLng(24.980146,55.066946)); //ok
-        LatLngDataArray.add(new LatLng(24.980072,55.067073)); //ok
-        LatLngDataArray.add(new LatLng(24.979965,55.067191));// ok
-        LatLngDataArray.add(new LatLng(24.979878,55.067205));// ok
-        */
-
+        LatLngDataArray.add(new LatLng(24.977819,55.064294));
 
         LatLngDataArray.add(new LatLng(24.978002, 55.064153));
-        LatLngDataArray.add(new LatLng(24.978070, 55.064231));
-        LatLngDataArray.add(new LatLng(24.978175, 55.064343));
+        LatLngDataArray.add(new LatLng(24.978175, 55.064343));  //ok  //Route Deviation point
+
+        //Route Deviation points starts from here ----
+      //  LatLngDataArray.add(new LatLng(24.978210, 55.064397  ));
+      //  LatLngDataArray.add(new LatLng(24.978221, 55.064439 ));
+      //  LatLngDataArray.add(new LatLng(24.978337, 55.064418));
+     //   LatLngDataArray.add(new LatLng(24.9784537645553,55.064304505867));
+     //   LatLngDataArray.add(new LatLng(24.978790869000079,55.063950160000047));
+     //   LatLngDataArray.add(new LatLng(24.978915312000083,55.063819114000069));
+    //    LatLngDataArray.add(new LatLng(24.978922141000055,55.063814532000038));
+        LatLngDataArray.add(new LatLng(24.979314878000082,55.064217762000055));  //ok
+        LatLngDataArray.add(new LatLng(24.979747801000087,55.064715432000071));
+        LatLngDataArray.add(new LatLng(24.979892579000079,55.064881864000085));
+        LatLngDataArray.add(new LatLng(24.979896187000065,55.064932884000086));
+        LatLngDataArray.add(new LatLng(24.97989218400005,55.064945144000035));
+        LatLngDataArray.add(new LatLng(24.979327548000072,55.065535772000032));
+        LatLngDataArray.add(new LatLng(24.979314058000057,55.065549857000065));
+        LatLngDataArray.add(new LatLng(24.979299272000048,55.065681098000084));
+        LatLngDataArray.add(new LatLng(24.979522600000053,55.065938324000058));
+        LatLngDataArray.add(new LatLng(24.979578645000061,55.066002768000033));  //ok
+        LatLngDataArray.add(new LatLng(24.979647065000051,55.066081442000041));
+        LatLngDataArray.add(new LatLng(24.979672262000065,55.066110416000072));
+        LatLngDataArray.add(new LatLng(24.979789959000072,55.066245676000051));
+        LatLngDataArray.add(new LatLng(24.979875263000054,55.06634370900008));
+        LatLngDataArray.add(new LatLng(24.980231166000067,55.066752725000072));  //ok
+        LatLngDataArray.add(new LatLng(24.980247913000085,55.066861270000061));
+        LatLngDataArray.add(new LatLng(24.980174, 55.066937 ));
+        //Route Deviation points are uoto here---
+        /*
         LatLngDataArray.add(new LatLng(24.978317, 55.064500));
         LatLngDataArray.add(new LatLng(24.978417, 55.064630));
         LatLngDataArray.add(new LatLng(24.978536, 55.064755));
@@ -1144,6 +1151,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.980273, 55.066664));
         LatLngDataArray.add(new LatLng(24.980335, 55.066770));
         LatLngDataArray.add(new LatLng(24.980174, 55.066937));
+        */
         LatLngDataArray.add(new LatLng(24.979878,55.067205));  //Destinationm point
 
 
@@ -1318,79 +1326,28 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+  //  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
-        /*
         if(v==location_tracking){
+            Toast.makeText(getContext(), "Location Tracking button clicked.", Toast.LENGTH_SHORT).show();
+            mMap.setBuildingsEnabled(false);
+            mMap.getUiSettings().setZoomGesturesEnabled(false);
+            mMap.getUiSettings().setScrollGesturesEnabled(false);
+            mMap.getUiSettings().setTiltGesturesEnabled(false);
+            mMap.getUiSettings().setRotateGesturesEnabled(false);
+            mMap.getUiSettings().setScrollGesturesEnabled(false);
 
-            if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
-                OldGps=OldNearestGpsList.get(0);
-                int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
-                nayaGps=OldNearestGpsList.get(indexVal);
-            }else{
-                int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
-                OldGps=OldNearestGpsList.get(indexVal-1);
-                nayaGps=OldNearestGpsList.get(indexVal);
-            }
-            nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
-            nearestPointValuesList.add(nearestPositionPoint);
-            if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
-                nearestPointValuesList.add(DestinationPosition);
-            }
-            float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-            mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(nearestPositionPoint)
-                    .title("currentLocation")
-                    .anchor(0.5f, 0.5f)
-                    .rotation(bearing)
-                    .flat(true)
-                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+            new Handler().postDelayed(new Runnable() {
+                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                @Override
+                public void run() {
 
-            String fakeGpsText=location_tracking.getText().toString();
-            Log.e("FAKE GPS","FAKE GPS"+ fakeGpsText);
-            if(fakeGpsText.equals("START")){
-                if( OldGps .equals(nearestPositionPoint)){
-
-                }else{
-                    animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000,currentGpsPosition);
                 }
+            },500);
 
-                Projection p = mMap.getProjection();
-                Point  bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
-                Point offset = new Point(center.x, (center.y + 350));
-                LatLng centerLoc = p.fromScreenLocation(center);
-                LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
 
-                CameraPosition currentPlace = new CameraPosition.Builder()
-                        .target(shadowTgt)
-                        .bearing(bearing).tilt(65.5f).zoom(20)
-                        .build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
-
-            } else if(fakeGpsText.equals("STOP")){
-                Log.e("Fake Gps Text :", " Fake Gps Text ----- " + fakeGpsText);
-                if( OldGps .equals(nearestPositionPoint)){
-
-                }else{
-                    animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000,currentGpsPosition);
-                }
-                mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                    @Override
-                    public void onCameraIdle() {
-                        //Called when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
-                    }
-                });
-                caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-                NavigationDirection(currentGpsPosition,DestinationNode);
-                AlertDestination(currentGpsPosition);
-
-            }
-        } else
-        */if(v==change_map_options){
+        } else if(v==change_map_options){
 
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file
@@ -1784,129 +1741,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         super.onPause();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mMagnetometer);
-    }
-    class ReRouteFeaturesFromServer extends AsyncTask<String, String, String> {
-        String FeatureResponse = "";
-        // Download features from server using URL and get the data and inserted to Respective tables like DT, SS,RMU ect...
-        // and process that json data and insert to respective tables ....;
-        ProgressDialog dialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-        @Override
-        protected String doInBackground(String... f_url) {
-            try {
-                String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
-                try {
-                    FeatureResponse = HttpPost(httprequest, currentGpsPoint, DestinationPoint);
-                    Log.e("RESPONSE", "RESPONSE" + FeatureResponse);
-                    //{"$id":"1","Message":"Sucess","Status":"Success","TotalDistance":158.891838,
-                    // "Route":[{"$id":"2","EdgeNo":"894","GeometryText":"0","Geometry":{"$id":"3","type":"LineString","coordinates":[[472233.15880000032,2764734.6520000007],[472248.05449999962,2764731.7961999997],[472255.30360000022,2764730.4064000007],[472258.1058,2764730.0001999997],[472260.93340000045,2764729.8501999993],[472264.23180000018,2764729.9999],[472267.49590000045,2764730.4978],[472270.36359999981,2764731.2358999997],[472273.1481999997,2764732.2429000009],[472287.20359999966,2764738.0950000007],[472291.11450000014,2764739.7233000007]]}},{"$id":"4","EdgeNo":"807","GeometryText":"0","Geometry":{"$id":"5","type":"LineString","coordinates":[[472291.11450000014,2764739.7233000007],[472290.56520000007,2764742.9920000006],[472290.42860000022,2764744.4061999992],[472290.49149999954,2764745.8255000003],[472290.75250000041,2764747.2221000008],[472291.34240000043,2764749.4847999997]]}},{"$id":"6","EdgeNo":"651","GeometryText":"0","Geometry":{"$id":"7","type":"LineString","coordinates":[[472282.38850000035,2764750.7881000005],[472282.80910000019,2764749.9809000008],[472283.36330000032,2764749.2588],[472284.03430000041,2764748.6437999997],[472284.80179999955,2764748.1544000003],[472285.64250000007,2764747.8055000007],[472286.53089999966,2764747.6076999996],[472287.4402999999,2764747.5669],[472288.1738,2764747.6624],[472288.34289999958,2764747.6843999997],[472289.21140000038,2764747.9565999992],[472290.01960000023,2764748.3752999995],[472290.74299999978,2764748.9277999997],[472291.34240000043,2764749.4847999997]]}},{"$id":"8","EdgeNo":"897","GeometryText":"0","Geometry":{"$id":"9","type":"LineString","coordinates":[[472257.58829999994,2764706.4168999996],[472264.65139999986,2764724.2607000004],[472267.49590000045,2764730.4978],[472271.2089999998,2764736.7921999991],[472273.32809999958,2764739.7956000008],[472275.608,2764742.6788999997],[472282.38850000035,2764750.7881000005]]}},{"$id":"10","EdgeNo":"898","GeometryText":"0","Geometry":{"$id":"11","type":"LineString","coordinates":[[472266.96239999961,2764681.4626],[472257.58829999994,2764706.4168999996]]}}]}
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String file_url) {
-            //  dialog.setTitle("Downloaded Features ");
-            //    dialog.dismiss();
-            JSONObject jsonObject = null;
-            try {
-                if (FeatureResponse != null) {
-                    String delQuery = "DELETE  FROM " + EdgeDataT.TABLE_NAME;
-                    Log.e("DEL QUERY", "DEL QUERY " + delQuery);
-                    sqlHandler.executeQuery(delQuery.toString());
-
-                    jsonObject = new JSONObject(FeatureResponse);
-                    String ID = String.valueOf(jsonObject.get("$id"));
-                    String Message = jsonObject.getString("Message");
-                    String Status = jsonObject.getString("Status");
-                    String TotalDistance = jsonObject.getString("TotalDistance");
-                    JSONArray jSonRoutes = new JSONArray(jsonObject.getString("Route"));
-                    for (int i = 0; i < jSonRoutes.length(); i++) {
-                        points = new ArrayList();
-                        convertedPoints = new ArrayList<LatLng>();
-                        JSONObject Routes = new JSONObject(jSonRoutes.get(i).toString());
-                        String $id = Routes.getString("$id");
-                        String EdgeNo = Routes.getString("EdgeNo");
-                        String GeometryText = Routes.getString("GeometryText");
-                        String Geometry = Routes.getString("Geometry");
-                        JSONObject geometryObject = new JSONObject(Routes.getString("Geometry"));
-                        String $id1 = geometryObject.getString("$id");
-                        String type = geometryObject.getString("type");
-                        String coordinates = geometryObject.getString("coordinates");
-                        JSONArray jSonLegs = new JSONArray(geometryObject.getString("coordinates"));
-                        for (int j = 0; j < jSonLegs.length(); j++) {
-                            points.add(jSonLegs.get(j));
-                            StringBuilder query = new StringBuilder("INSERT INTO ");
-                            query.append(GeometryT.TABLE_NAME).append("(ID,message,status,totaldistance,edgeNo,geometryType,geometry) values (")
-                                    .append("'").append(ID).append("',")
-                                    .append("'").append(Message).append("',")
-                                    .append("'").append(Status).append("',")
-                                    .append("'").append(TotalDistance).append("',")
-                                    .append("'").append(EdgeNo).append("',")
-                                    .append("'").append(type).append("',")
-                                    .append("'").append(jSonLegs.get(j)).append("')");
-                            sqlHandler.executeQuery(query.toString());
-                            sqlHandler.closeDataBaseConnection();
-
-
-                        }
-                        StringBuilder query = new StringBuilder("INSERT INTO ");
-                        query.append(EdgeDataT.TABLE_NAME).append("(edgeNo,startPoint,endPoint) values (")
-                                .append("'").append(EdgeNo).append("',")
-                                .append("'").append(jSonLegs.get(0)).append("',")
-                                .append("'").append(jSonLegs.get(jSonLegs.length() - 1)).append("')");
-                        sqlHandler.executeQuery(query.toString());
-                        sqlHandler.closeDataBaseConnection();
-                        for (int p = 0; p < points.size(); p++) {
-
-                            String listItem = points.get(p).toString();
-                            listItem = listItem.replace("[", "");
-                            listItem = listItem.replace("]", "");
-                            String[] subListItem = listItem.split(",");
-                            Double y = Double.valueOf(subListItem[0]);
-                            Double x = Double.valueOf(subListItem[1]);
-                            StringBuilder sb = new StringBuilder();
-                            LatLng latLng = new LatLng(x, y);
-                            convertedPoints.add(latLng);
-                            for (int k = 0; k < convertedPoints.size(); k++) {
-                                MarkerOptions markerOptions = new MarkerOptions();
-                                PolylineOptions polylineOptions = new PolylineOptions();
-                                if (polylineOptions != null && mMap != null) {
-                                    markerOptions.position(convertedPoints.get(k));
-                                    markerOptions.title("Position");
-                                    polylineOptions.color(Color.RED);
-                                    polylineOptions.width(6);
-                                    polylineOptions.addAll(convertedPoints);
-                                    polylineOptions.color(Color.RED).width(8);
-                                    mMap.addPolyline(polylineOptions);
-                                    addMarkers();
-                                }
-
-                            }
-
-                        }
-
-
-                    }
-
-                }
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
     public String NavigationDirection(final LatLng currentGpsPosition, LatLng DestinationPosition) {
         final String shortestDistancePoint = "";
