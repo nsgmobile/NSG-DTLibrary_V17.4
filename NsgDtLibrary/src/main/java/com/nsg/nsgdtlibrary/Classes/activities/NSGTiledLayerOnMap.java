@@ -369,17 +369,18 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                 mPositionMarker.remove();
                                             }
                                             vehicleSpeed=location.getSpeed();
-                                            getLatLngPoints();
-                                            LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                            Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
-                                            // NavigationDirection(currentGpsPosition,DestinationPosition);
-                                            currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-
-
-                                            Log.e("currentGpsPosition","currentGpsPosition LATLNG DATA ARRAY "+ LatLngDataArray.size());
-                                            Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
+                                          //  getLatLngPoints();
+                                            currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
                                             MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
-                                            locationFakeGpsListener = locationFakeGpsListener + 1;
+                                             //  Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
+                                            // NavigationDirection(currentGpsPosition,DestinationPosition);
+                                          //  currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
+
+
+                                        //    Log.e("currentGpsPosition","currentGpsPosition LATLNG DATA ARRAY "+ LatLngDataArray.size());
+                                        //    Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
+                                         //   MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
+                                         //   locationFakeGpsListener = locationFakeGpsListener + 1;
 
 
                                         }
@@ -655,9 +656,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
         nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
         nearestPointValuesList.add(nearestPositionPoint);
-        if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
-            nearestPointValuesList.add(DestinationPosition);
-        }
+      //  if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
+       //     nearestPointValuesList.add(DestinationPosition);
+     //   }
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         mPositionMarker = mMap.addMarker(new MarkerOptions()
                 .position(SourceNode)
@@ -665,7 +666,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 .anchor(0.5f, 0.5f)
                 .rotation(bearing)
                 .flat(true));
-        //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
