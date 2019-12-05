@@ -29,7 +29,8 @@ public class GeometryT {
     private String positionMarkingPoint;
 
     public static ArrayList<DatabaseColumn> MAPPING = new ArrayList<DatabaseColumn>();
-    public static String TABLE_NAME = "Route_Deviated_GeometryT";    static{
+    public static String TABLE_NAME = "GeometryT";
+    static{
 
         MAPPING.add(new DatabaseColumn("sid", "setSid",true,true,false,"int"));
         MAPPING.add(new DatabaseColumn("edgeNo", "setEdgeNo",false,false,true,"int"));
