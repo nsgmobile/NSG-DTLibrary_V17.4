@@ -152,7 +152,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private List polyLines;
     private Circle mCircle;
     private List<LatLng>lastKnownPosition;
-    private LatLng nearestPositionPoint;
+    private LatLng nearestPositionPoint,OldGPSPosition;
     // BitmapDescriptor mMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.car_icon_32);
     Bitmap mMarkerIcon;
     int mIndexCurrentPoint=0;
@@ -360,8 +360,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                 tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                                 tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                    // MoveWithGPSMARKER();
-
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                    // MoveWithGPSMARKER();
+                                    if( currentGpsPosition!=null) {
+                                        OldGPSPosition=null;
+                                        OldGPSPosition = currentGpsPosition;
+                                    }
                                     mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                         @Override
                                         public void onMyLocationChange(Location location) {

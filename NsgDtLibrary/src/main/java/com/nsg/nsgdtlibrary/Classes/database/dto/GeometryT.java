@@ -11,64 +11,113 @@ import java.util.ArrayList;
 
 
 public class GeometryT {
-    private Integer gId;
-    private String ID;
+    private Integer sid;
+    private Integer edgeNo;
+    private String startPoint;
+    private String endPoint;
     private String message;
     private String status;
     private String totaldistance;
-    private String edgeNo;
     private String latitute;
     private String longitude;
     private String timeDuration;
     private String geometryType;
     private String geometry;
+    private String geometryText;
+    private String allPoints;
+    private String distanceInVertex;
+    private String positionMarkingPoint;
 
     public static ArrayList<DatabaseColumn> MAPPING = new ArrayList<DatabaseColumn>();
-    public static String TABLE_NAME = "GEOMETRY_T";    static{
+    public static String TABLE_NAME = "Route_Deviated_GeometryT";    static{
 
-        MAPPING.add(new DatabaseColumn("gId", "setGId",true,true,false,"int"));
-        MAPPING.add(new DatabaseColumn("ID", "setID",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("message", "setMessage",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("status", "setStatus",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("totaldistance", "setTotaldistance",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("edgeNo", "setEdgeNo",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("latitute", "setLatitute",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("longitude", "setLongitude",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("timeDuration", "setTimeDuration",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("geometryType", "setGeometryType",false,false,true,"text"));
-        MAPPING.add(new DatabaseColumn("geometry", "setGeometry",false,false,true,"text"));
+        MAPPING.add(new DatabaseColumn("sid", "setSid",true,true,false,"int"));
+        MAPPING.add(new DatabaseColumn("edgeNo", "setEdgeNo",false,false,true,"int"));
+        MAPPING.add(new DatabaseColumn("startPoint", "setStartPoint",false,false,true,"text"));
+        MAPPING.add(new DatabaseColumn("endPoint", "setEndPoint",false,false,true,"text"));
+        MAPPING.add(new DatabaseColumn("allPoints", "setAllPoints",false,false,true,"text"));
+        MAPPING.add(new DatabaseColumn("distanceInVertex", "setDistanceInVertex",false,false,true,"text"));
+        MAPPING.add(new DatabaseColumn("geometryText", "setGeometryText",false,false,true,"text"));
+        MAPPING.add(new DatabaseColumn("positionMarkingPoint", "setPositionMarkingPoint",false,false,true,"text"));
 
     }
     public GeometryT(){}
-    public GeometryT(String ID, String message , String status, String totaldistance, String edgeNo, String latitute, String longitude, String timeDuration, String geometryType, String geometry){
+    public GeometryT( String startPoint , String endPoint,String positionMarkingPoint,String geometryText,String distanceInVertex ){
 
-        this.ID=ID;
-        this.message=message;
-        this.status=status;
-        this.totaldistance=totaldistance;
+        this.startPoint=startPoint;
+        this.endPoint=endPoint;
+        this.positionMarkingPoint=positionMarkingPoint;
+        this.distanceInVertex=distanceInVertex;
+        this.geometryText=geometryText;
+    }
+    public GeometryT(Integer edgeNo,String allPoints,String geometryText ){
+
         this.edgeNo=edgeNo;
-        this.latitute=latitute;
-        this.longitude=longitude;
-        this.timeDuration=timeDuration;
-        this.geometryType=geometryType;
-        this.geometry=geometry;
-
+        this.allPoints=allPoints;
+        this.geometryText=geometryText;
     }
 
-    public Integer getgId() {
-        return gId;
+    public GeometryT(String distanceInVertex,String positionMarkingPoint,String geometryText ){
+
+        this.distanceInVertex=distanceInVertex;
+        this.positionMarkingPoint=positionMarkingPoint;
+        this.geometryText=geometryText;
     }
 
-    public void setgId(Integer gId) {
-        this.gId = gId;
+    public Integer getSid() {
+        return sid;
     }
 
-    public String getID() {
-        return ID;
+    public void setSid(Integer sid) {
+        this.sid = sid;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public Integer getEdgeNo() {
+        return edgeNo;
+    }
+
+    public void setEdgeNo(Integer edgeNo) {
+        this.edgeNo = edgeNo;
+    }
+
+    public String getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(String startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public String getAllPoints() {
+        return allPoints;
+    }
+
+    public void setAllPoints(String allPoints) {
+        this.allPoints = allPoints;
+    }
+
+    public String getDistanceInVertex() {
+        return distanceInVertex;
+    }
+
+    public void setDistanceInVertex(String distanceInVertex) {
+        this.distanceInVertex = distanceInVertex;
+    }
+
+    public String getGeometryText() {
+        return geometryText;
+    }
+
+    public void setGeometryText(String geometryText) {
+        this.geometryText = geometryText;
     }
 
     public String getMessage() {
@@ -93,14 +142,6 @@ public class GeometryT {
 
     public void setTotaldistance(String totaldistance) {
         this.totaldistance = totaldistance;
-    }
-
-    public String getEdgeNo() {
-        return edgeNo;
-    }
-
-    public void setEdgeNo(String edgeNo) {
-        this.edgeNo = edgeNo;
     }
 
     public String getLatitute() {
@@ -141,5 +182,13 @@ public class GeometryT {
 
     public void setGeometry(String geometry) {
         this.geometry = geometry;
+    }
+
+    public String getPositionMarkingPoint() {
+        return positionMarkingPoint;
+    }
+
+    public void setPositionMarkingPoint(String positionMarkingPoint) {
+        this.positionMarkingPoint = positionMarkingPoint;
     }
 }
