@@ -1491,7 +1491,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng( 24.979342,55.065516));
 
         //Route Deviation points are upto here---
-
         // LatLngDataArray.add(new LatLng(24.978317, 55.064500));
         // LatLngDataArray.add(new LatLng(24.978417, 55.064630));
         // LatLngDataArray.add(new LatLng(24.978536, 55.064755));
