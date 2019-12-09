@@ -279,8 +279,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
-        location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
-        location_tracking.setOnClickListener(this);
+       // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
+       // location_tracking.setOnClickListener(this);
         mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -1727,6 +1727,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
   //  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
+        /*
         if(v==location_tracking){
             Toast.makeText(getContext(), "Location Tracking button clicked.", Toast.LENGTH_SHORT).show();
             mMap.setBuildingsEnabled(false);
@@ -1745,7 +1746,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             },500);
 
 
-        } else if(v==change_map_options){
+        } else */
+        if(v==change_map_options){
 
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file
