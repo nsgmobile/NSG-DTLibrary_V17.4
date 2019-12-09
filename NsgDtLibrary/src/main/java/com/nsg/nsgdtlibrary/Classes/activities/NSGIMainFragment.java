@@ -73,6 +73,7 @@ import com.nsg.nsgdtlibrary.Classes.database.dto.GeometryT;
 import com.nsg.nsgdtlibrary.Classes.database.dto.RouteT;
 import com.nsg.nsgdtlibrary.Classes.util.DecimalUtils;
 import com.nsg.nsgdtlibrary.Classes.util.ETACalclator;
+import com.nsg.nsgdtlibrary.Classes.util.Util;
 import com.nsg.nsgdtlibrary.R;
 
 import org.json.JSONArray;
@@ -385,17 +386,24 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                             if(isRouteDeviated==false) {
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                            }else{
-                                                MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                            }else {
+                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(currentGpsPosition)
+                                                        .title("currentLocation")
+                                                        .anchor(0.5f, 0.5f)
+                                                        .flat(true)
+                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                                                    if (mPositionMarker.getPosition().equals(currentGpsPosition)) {
+
+                                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                    }
                                             }
-                                                new Handler().postDelayed(new Runnable() {
+                                            new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
                                                         locationFakeGpsListener = locationFakeGpsListener + 1;
                                                     }
                                                 }, 10);
-
-
                                        }
                                    });
                                 }
@@ -688,7 +696,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
        // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
-        verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+        verifyRouteDeviation(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
+
 
         AlertDestination(currentGpsPosition);
 
@@ -1056,11 +1065,14 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
             Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
-                    Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
-                    Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
-                    toast.setMargin(100, 100);
-                    toast.show();
+                Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
+                Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
+                toast.setMargin(100, 100);
+                toast.show();
 
+
+                if(mPositionMarker.getPosition().equals(currentGpsPosition)) {
+                    if (Util.isInternetAvailable(getActivity()) == true ) {
                         mMap.stopAnimation();
                         String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                         String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
@@ -1069,35 +1081,30 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         String destLatPos = String.valueOf(DestinationPosition.latitude);
                         String destLongiPos = String.valueOf(DestinationPosition.longitude);
                         final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                        RouteDeviatedSourceNode = new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude);
 
                         Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
                         Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                        //  DestinationPosition = new LatLng(destLat, destLng);
+                            //  DestinationPosition = new LatLng(destLat, destLng);
                         dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                        dialog.setMessage("Fetching new Route");
+                        dialog.setMessage("Fetching Alternative Route");
                         dialog.setMax(100);
                         dialog.show();
                         new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.dismiss();
-                                String MESSAGE = "";
-                                GetRouteDetails(routeDiationPosition, destPoint);
-                                //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
-                                if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
-                                    isRouteDeviated = true;
-                                    /*
-                                    if (isRouteDeviated == true) {
+                                @Override
+                                public void run() {
+                                    dialog.dismiss();
+                                    String MESSAGE = "";
+                                    GetRouteDetails(routeDiationPosition, destPoint);
+                                    //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                                    if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                                        isRouteDeviated = true;
 
-
-                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     }
-                                    */
                                 }
-
-
-                            }
-                        }, 10);
+                        }, 100);
+                    }
+                }
 
             }
 
@@ -1192,8 +1199,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 }
                 Log.e("Route Deviation", " distancesInDeviation" + distancesInDeviation);
                 Log.e("Route Deviation", " distancesMapInRouteDeviation" + distancesMapInRouteDeviation);
-                String firstShortestDistance = String.valueOf(distancesInDeviation.get(0));
-                String secondShortestDistance = String.valueOf(distancesInDeviation.get(1));
+                String firstShortestDistance = String.valueOf(distancesInDeviation.get(1));
+                String secondShortestDistance = String.valueOf(distancesInDeviation.get(2));
                 boolean answerFirst = distancesMapInRouteDeviation.containsKey(firstShortestDistance);
                 if (answerFirst) {
                     System.out.println("The list contains " + firstShortestDistance);
