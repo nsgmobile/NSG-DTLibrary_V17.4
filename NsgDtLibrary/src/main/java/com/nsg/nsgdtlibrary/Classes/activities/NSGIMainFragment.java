@@ -370,35 +370,34 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                                     mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                        @Override
-                                         public void onMyLocationChange(Location location) {
-                                           if (mPositionMarker != null) {
-                                            mPositionMarker.remove();
-                                           }
-                                            vehicleSpeed=location.getSpeed();
-                                           if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
-                                               lastGPSPosition=new ArrayList<>();
-                                               lastGPSPosition.add(currentGpsPosition);
-                                               OldGPSPosition=lastGPSPosition.get(0);
-                                           }
-                                            getLatLngPoints();
-                                            LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                            Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
-                                                    // NavigationDirection(currentGpsPosition,DestinationPosition);
-                                            currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-                                            if(isRouteDeviated==false) {
-                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                            }else{
-                                                MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
-                                            }
-                                            new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        locationFakeGpsListener = locationFakeGpsListener + 1;
-                                                    }
-                                                }, 10);
+                                          public void onMyLocationChange(Location location) {
+                                               if (mPositionMarker != null) {
+                                                mPositionMarker.remove();
+                                               }
+                                                vehicleSpeed=location.getSpeed();
+                                               if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
+                                                   lastGPSPosition=new ArrayList<>();
+                                                   lastGPSPosition.add(currentGpsPosition);
+                                                   OldGPSPosition=lastGPSPosition.get(0);
+                                               }
+                                                getLatLngPoints();
+                                                LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
+                                                Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
+                                                        // NavigationDirection(currentGpsPosition,DestinationPosition);
+                                                currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
+                                                if(isRouteDeviated==false) {
+                                                    MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                                }else{
+                                                    MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                                }
+                                                new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            locationFakeGpsListener = locationFakeGpsListener + 1;
+                                                        }
+                                                    }, 0);
 
-
-                                       }
+                                          }
                                    });
                                 }
                             }else if(enteredMode==2){
@@ -413,27 +412,24 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             }
                                             LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
 
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(currentGpsPosition)
-                                                        .title("currentLocation")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .rotation(location.bearingTo(location))
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                //changing direction to NORTH as Shown in vedio by DT Team 65.5f
-
-                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                        .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
-                                                        .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
-                                                        .build();
-                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+                                            if(isRouteDeviated==false) {
+                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                            }else{
+                                                MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                            }
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    locationFakeGpsListener = locationFakeGpsListener + 1;
+                                                }
+                                            }, 10);
                                         }
                                     });
                                 }
                             }
                             dialog.dismiss();
                         }
-                    }, 10);
+                    }, 0);
                 }else{
                     Log.e("SendData","SendData ------- "+ "internet does not exist");
                 }
@@ -775,7 +771,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
         LatLng cameraPosition=OldNearestGpsList.get(GpsIndex);
         if (currentGpsPosition.equals(DestinationNode)) {
-            lastDistance= showDistance(cameraPosition,DestinationNode);
+            lastDistance= showDistance(currentGpsPosition,DestinationNode);
             if (lastDistance <5) {
                 if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
@@ -1045,7 +1041,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
         return sb.toString();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
         PolylineOptions polylineOptions = new PolylineOptions();
@@ -1053,10 +1048,19 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
         double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
+            float bearing = (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition); //correct method to change orientation of map
+            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                    .position(SourceNode)
+                    .title("currentLocation")
+                    .anchor(0.5f, 0.5f)
+                    .rotation(bearing)
+                    .flat(true));
+        animateCarMove(mPositionMarker, PrevousGpsPosition, currentGpsPosition, 100,currentGpsPosition);
         Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
         float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
             Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
+               // animateCarMove(mPositionMarker,PrevousGpsPosition,currentGpsPosition,100,currentGpsPosition);
                  Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
                 String data =  "ROUTE DEVIATED ";
                 //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
@@ -1076,7 +1080,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 toast.setView(layout);
                 toast.show();
 
-                        mMap.stopAnimation();
+
                         String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                         String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                         final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
@@ -1106,7 +1110,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             }
                             dialog.dismiss();
                         }
-                    }, 10);
+                    }, 0);
                 }
 
             }
@@ -1494,7 +1498,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         return distance;
     }
     public int getLatLngPoints(){
-
+        /*
         LatLngDataArray.add(new LatLng(24.978782,55.067291));
         LatLngDataArray.add(new LatLng(24.978792,55.067279));
         LatLngDataArray.add(new LatLng(24.978762,55.067241));
@@ -1508,6 +1512,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.97761,55.065815));
         LatLngDataArray.add(new LatLng(24.977358,55.065692));
         LatLngDataArray.add(new LatLng(24.977132,55.065436));
+          */
         LatLngDataArray.add(new LatLng(24.977126,55.065249));
         LatLngDataArray.add(new LatLng(24.977164,55.065171));
         LatLngDataArray.add(new LatLng(24.977257,55.064874));
@@ -1518,10 +1523,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
         LatLngDataArray.add(new LatLng(24.978098, 55.064253));
 
+
         //Route Deviation points starts from here ----
         LatLngDataArray.add(new LatLng(24.978098, 55.064253));
         LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
-        LatLngDataArray.add(new LatLng( 24.978179,55.064389));
 
         LatLngDataArray.add(new LatLng( 24.978179,55.064389)); //Route deviation point
         LatLngDataArray.add(new LatLng(24.978547,55.064227));
@@ -1546,12 +1551,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
         //Route Deviation points are upto here---
 
-       // LatLngDataArray.add(new LatLng(24.978317, 55.064500));
-       // LatLngDataArray.add(new LatLng(24.978417, 55.064630));
-       // LatLngDataArray.add(new LatLng(24.978536, 55.064755));
-      //  LatLngDataArray.add(new LatLng(24.978645, 55.064879));
-      //  LatLngDataArray.add(new LatLng(24.978688, 55.064914));
-        LatLngDataArray.add(new LatLng(24.979722, 55.066073));
         LatLngDataArray.add(new LatLng(24.979961, 55.066314));
         LatLngDataArray.add(new LatLng(24.980189, 55.066572));
         LatLngDataArray.add(new LatLng(24.980335, 55.066770));
