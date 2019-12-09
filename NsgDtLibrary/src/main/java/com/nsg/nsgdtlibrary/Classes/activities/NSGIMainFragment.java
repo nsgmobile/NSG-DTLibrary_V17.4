@@ -1458,7 +1458,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         return distance;
     }
     public int getLatLngPoints(){
-
 /*
         LatLngDataArray.add(new LatLng(24.978782,55.067291));
         LatLngDataArray.add(new LatLng(24.978792,55.067279));
