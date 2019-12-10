@@ -290,6 +290,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
+
         RouteT route = RouteDataList.get(0);
         final String routeData = route.getRouteData();
         String sourceText=route.getStartNode();
@@ -373,7 +374,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                 mPositionMarker.remove();
                                             }
                                             vehicleSpeed=location.getSpeed();
-                                            currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                                           // currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                                            currentGpsPosition = new LatLng(24.979382, 55.067505);
                                             Log.e("NSG DT LOG TEST","NSG DT LOCATION LOG TEST "+currentGpsPosition);
                                             MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
 
