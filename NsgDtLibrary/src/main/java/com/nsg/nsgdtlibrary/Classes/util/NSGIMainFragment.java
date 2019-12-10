@@ -129,6 +129,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private Polyline mPolyline;
     private GoogleMap mMap;
     RouteT route;
+   // boolean isRouteDeviatedAlert=false;
     private SqlHandler sqlHandler;
     GoogleMap.CancelableCallback callback;
     private double userLocatedLat, userLocatedLongi;
@@ -702,7 +703,13 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
        // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
-        verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+        boolean routeAlert=verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+        if(routeAlert==true){
+            identifyRouteDeviationMarker(currentGpsPosition);
+            //ReROuteFromServiceAPI(currentGpsPosition,DestinationNode);
+
+        }
+
         AlertDestination(currentGpsPosition);
 
         Projection p = mMap.getProjection();
@@ -1058,56 +1065,65 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
+    public boolean verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
+        boolean isRouteDeviatedAlert=false;
         PolylineOptions polylineOptions = new PolylineOptions();
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
 
-        if (PrevousGpsPosition != null){
-        double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
-        Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
-        float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
-            Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
-            if(returnedDistance > markDistance) {
-                 Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
-                String data =  "ROUTE DEVIATED ";
-                //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-                int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-                if (speechStatus == TextToSpeech.ERROR) {
-                    Log.e("TTS", "Error in converting Text to Speech!");
-                }
-                Toast.makeText(getActivity(), "ROUTE DEVIATED", Toast.LENGTH_SHORT).show();
-                LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                text.setText(" ROUTE DEVIATED ");
-                Toast toast = new Toast(getActivity().getApplicationContext());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.setGravity(Gravity.TOP, 0, 150);
-                toast.setView(layout);
-                toast.show();
-                float bearing = (float) bearingBetweenLocations(OldGPSPosition,currentGpsPosition); //correct method to change orientation of map
-                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                        .position(currentGpsPosition)
-                        .title("currentLocation")
-                        .anchor(0.5f, 0.5f)
-                        .rotation(bearing)
-                        .flat(true));
+        if (PrevousGpsPosition != null) {
+            double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
+            Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + returnedDistance);
+            float rotateBearing = (float) bearingBetweenLocations(PrevousGpsPosition, currentGpsPosition);
+            Log.e("Route Deviation", "ROUTE DEVIATION ANGLE ----" + rotateBearing);
+            if (returnedDistance > markDistance) {
+               isRouteDeviatedAlert = true;
+            }
+        }
+        return isRouteDeviatedAlert;
+    }
+    public void identifyRouteDeviationMarker(LatLng currentGpsPosition){
+        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                .position(currentGpsPosition)
+                .title("currentLocation")
+                .anchor(0.5f, 0.5f)
+                .flat(true));
 
-                        mMap.stopAnimation();
-                        String cgpsLat = String.valueOf(currentGpsPosition.latitude);
-                        String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
-                        final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
 
-                        String destLatPos = String.valueOf(DestinationPosition.latitude);
-                        String destLongiPos = String.valueOf(DestinationPosition.longitude);
-                        final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+    }
+    public void ReROuteFromServiceAPI(LatLng currentGpsPosition,LatLng DestinationPosition ){
+        Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
+        String data =  "ROUTE DEVIATED ";
+        //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
+        int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+        if (speechStatus == TextToSpeech.ERROR) {
+            Log.e("TTS", "Error in converting Text to Speech!");
+        }
+        Toast.makeText(getActivity(), "ROUTE DEVIATED", Toast.LENGTH_SHORT).show();
+        LayoutInflater inflater1 = getActivity().getLayoutInflater();
+        @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+        TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+        text.setText(" ROUTE DEVIATED ");
+        Toast toast = new Toast(getActivity().getApplicationContext());
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+        toast.setGravity(Gravity.TOP, 0, 150);
+        toast.setView(layout);
+        toast.show();
 
-                        Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
-                        Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                        //  DestinationPosition = new LatLng(destLat, destLng);
-                /*
+        mMap.stopAnimation();
+        String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+        String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+        final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+
+        String destLatPos = String.valueOf(DestinationPosition.latitude);
+        String destLongiPos = String.valueOf(DestinationPosition.longitude);
+        final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+
+        Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
+        Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+        //  DestinationPosition = new LatLng(destLat, destLng);
+
                 if (Util.isInternetAvailable(getActivity()) == true ) {
                     dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
                     dialog.setMessage("Fetching new Route");
@@ -1118,7 +1134,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         public void run() {
                             dialog.dismiss();
                             String MESSAGE = "";
-                            RouteDeviatedSourceNode = new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude);
+                          //  RouteDeviatedSourceNode = new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude);
                             GetRouteDetails(routeDiationPosition, destPoint);
                             //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                             if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
@@ -1129,13 +1145,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         }
                     }, 10);
                 }
-                */
 
-            }
 
-        }else{
-
-        }
     }
     public void checkPointsOfRoue1withNewRoute(List<LatLng> edgeWithoutDuplicates,LatLng PointBeforeRouteDeviation){
         Log.e("CGPS","CGPS POINR PRESENT--------"+PointBeforeRouteDeviation);

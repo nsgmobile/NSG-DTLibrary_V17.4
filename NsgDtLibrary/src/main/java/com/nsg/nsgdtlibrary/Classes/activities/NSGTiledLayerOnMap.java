@@ -355,12 +355,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             mMap.getUiSettings().setRotateGesturesEnabled(true);
                             mMap.getUiSettings().setMyLocationButtonEnabled(true);
                             if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
+                                //Running in FakeGps
                                 ETACalclator etaCalculator1=new ETACalclator();
                                 double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
                                 double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
                                 tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                                 tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
+                                MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                     // MoveWithGPSMARKER();
                                     if( currentGpsPosition!=null) {
@@ -373,18 +375,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                             if (mPositionMarker != null) {
                                                 mPositionMarker.remove();
                                             }
-                                            vehicleSpeed=location.getSpeed();
-                                           // currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
-                                            currentGpsPosition = new LatLng(24.979382, 55.067505);
-                                            Log.e("NSG DT LOG TEST","NSG DT LOCATION LOG TEST "+currentGpsPosition);
+                                            getLatLngPoints();
+                                            currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                             MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
-
-
+                                            locationFakeGpsListener = locationFakeGpsListener + 1;
                                         }
                                     });
 
                                 }
+
                             }else if(enteredMode==2){
+                                //Running in RealTime
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                     if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
 
@@ -394,24 +395,23 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                 if (mPositionMarker != null) {
                                                     mPositionMarker.remove();
                                                 }
-                                                LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
-
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(currentGpsPosition)
-                                                        .title("currentLocation")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .rotation(location.bearingTo(location))
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                //changing direction to NORTH as Shown in vedio by DT Team 65.5f
-
-                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                        .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
-                                                        .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
-                                                        .build();
-                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                vehicleSpeed=location.getSpeed();
+                                                LatLng currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                                                MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
                                             }
                                         });
+                                }
+
+                            }else if(enteredMode==3){
+                                //Running in RealTime
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                    LatLng currentGpsPosition = new LatLng(24.978782,55.067291);
+                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                            .position(currentGpsPosition)
+                                            .title("currentLocation")
+                                            .anchor(0.5f, 0.5f)
+                                            .flat(true)
+                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
                                 }
 
                             }
@@ -595,6 +595,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
             }
             String FirstShortestDistance = String.valueOf(distancesList.get(0));
+
             String SecondShortestDistance = String.valueOf(distancesList.get(1));
             boolean answerFirst= hash_map.containsKey(FirstShortestDistance);
             if (answerFirst) {
@@ -636,6 +637,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
 
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
+            Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
 
         }
