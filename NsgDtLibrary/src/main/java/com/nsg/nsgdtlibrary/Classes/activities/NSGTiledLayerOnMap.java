@@ -1574,8 +1574,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
-
-
     public void GetRouteFromDBPlotOnMap(String FeatureResponse){
         JSONObject jsonObject = null;
         try {
