@@ -1564,7 +1564,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     sqlHandler.executeQuery(query.toString());
                     sqlHandler.closeDataBaseConnection();
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -1572,7 +1571,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }else{
 
         }
-
     }
     public void GetRouteFromDBPlotOnMap(String FeatureResponse){
         JSONObject jsonObject = null;
