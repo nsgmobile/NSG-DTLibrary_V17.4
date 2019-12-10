@@ -329,7 +329,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     return;
                 }
                 getRouteAccordingToRouteID(routeIDName);
-                Log.e("RouteData","RouteData"+RouteDataList.size());
                 if(RouteDataList!=null && RouteDataList.size()>0) {
                     dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
                     dialog.setMessage("Fetching Route");
@@ -374,18 +373,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                 mPositionMarker.remove();
                                             }
                                             vehicleSpeed=location.getSpeed();
-                                          //  getLatLngPoints();
                                             currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                                            Log.e("NSG DT LOG TEST","NSG DT LOCATION LOG TEST "+currentGpsPosition);
                                             MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
-                                             //  Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
-                                            // NavigationDirection(currentGpsPosition,DestinationPosition);
-                                          //  currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-
-
-                                        //    Log.e("currentGpsPosition","currentGpsPosition LATLNG DATA ARRAY "+ LatLngDataArray.size());
-                                        //    Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
-                                         //   MoveWithGpsPointInBetWeenAllPoints(currentGpsPosition);
-                                         //   locationFakeGpsListener = locationFakeGpsListener + 1;
 
 
                                         }
@@ -427,7 +417,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         }
                     }, 100);
                 }else{
-                    Log.e("SendData","SendData ------- "+ "internet does not exist");
+
                 }
             }
         });
@@ -441,7 +431,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private void sendData(String comm)
     {
         //comm=time.toString();
-        Log.e("SendData","SendData ------- "+ comm);
+
         Callback.communicate(comm);
 
     }
@@ -648,7 +638,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
         }
 
-        Log.e("EdgeSt Point", "End point" + OldNearestGpsList.size());
+
 
         if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
             OldGps=OldNearestGpsList.get(0);
@@ -764,7 +754,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 String data1=" Your Destination Reached ";
                 int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
                 if (speechStatus1 == TextToSpeech.ERROR) {
-                    Log.e("TTS", "Error in converting Text to Speech!");
+                  //  Log.e("TTS", "Error in converting Text to Speech!");
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
@@ -818,9 +808,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         StrictMode.setThreadPolicy(policy);
                         try {
                             String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
-                            Log.e("HTTP REQUEST","HTTP REQUEST"+httprequest);
+                           // Log.e("HTTP REQUEST","HTTP REQUEST"+httprequest);
                             String FeatureResponse = HttpPost(httprequest,SourcePoint,DestinationPoint);
-                            Log.e("HTTP REQUEST","HTTP REQUEST"+FeatureResponse);
+                          //  Log.e("HTTP REQUEST","HTTP REQUEST"+FeatureResponse);
                             JSONObject jsonObject = null;
                             try {
                                 if(FeatureResponse!=null){
@@ -1021,10 +1011,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             String cgpsLat= String.valueOf(currentGpsPosition.latitude);
             String cgpsLongi= String.valueOf(currentGpsPosition.longitude);
             currentGpsPoint=cgpsLongi.concat(" ").concat(cgpsLat);
-            Log.e("returnedDistance", "nearest Position--------- "+ nearestPosition);
-            Log.e("returnedDistance", "Destination Position --------- "+ DestinationPosition);
+           // Log.e("returnedDistance", "nearest Position--------- "+ nearestPosition);
+          //  Log.e("returnedDistance", "Destination Position --------- "+ DestinationPosition);
             DestinationPosition=new LatLng(destLat,destLng);
-            Log.e("returnedDistance", "DestinationPosition --------- "+ DestinationPosition);
+           // Log.e("returnedDistance", "DestinationPosition --------- "+ DestinationPosition);
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(currentGpsPosition);
             markerOptions.position(DestinationPosition);
@@ -1038,8 +1028,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 @Override
                 public void run() {
                     dialog.dismiss();
-                    Log.e("Route Deviated Point", "Route Deviated Point--------- "+ currentGpsPosition);
-                    Log.e("Route Deviated Point", "Route Destination Point--------- "+ DestinationPosition);
+                   // Log.e("Route Deviated Point", "Route Deviated Point--------- "+ currentGpsPosition);
+                   // Log.e("Route Deviated Point", "Route Destination Point--------- "+ DestinationPosition);
 
                     // GetRouteDetails(currentGpsPosition,DestinationPosition);
                 }
@@ -1553,7 +1543,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         File file = new File(DBCSV_PATH);
         CsvReader csvReader = new CsvReader();
         csvReader.setContainsHeader(true);
-        Log.e("OUTPUT FILE","OUTPUT FILE"+file);
+       // Log.e("OUTPUT FILE","OUTPUT FILE"+file);
         if(file.exists()) {
             try (CsvParser csvParser = csvReader.parse(file, StandardCharsets.UTF_8)) {
                 CsvRow row;

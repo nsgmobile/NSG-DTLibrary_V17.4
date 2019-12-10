@@ -122,6 +122,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     Marker markerSource, markerDestination,mPositionMarker;
     private Polyline mPolyline;
     private GoogleMap mMap;
+    RouteT route;
     private SqlHandler sqlHandler;
     GoogleMap.CancelableCallback callback;
     private double userLocatedLat, userLocatedLongi;
@@ -289,7 +290,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
-        RouteT route = RouteDataList.get(0);
+        if(RouteDataList!=null) {
+             route = RouteDataList.get(0);
+        }
         final String routeData = route.getRouteData();
         String sourceText=route.getStartNode();
         String[]  text =sourceText.split(" ");
@@ -362,7 +365,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                                 tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                   // MoveWithGPSMARKER();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                  // MoveWithGPSMARKER();
 
                                     mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                        @Override
@@ -383,9 +386,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                             if(isRouteDeviated==false) {
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                            }else{
-                                                MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
                                             }
+                                            //else{
+                                             //   MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                           // }
                                             new Handler().postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -407,22 +411,19 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             if (mPositionMarker != null) {
                                                 mPositionMarker.remove();
                                             }
+                                            vehicleSpeed=location.getSpeed();
+                                            if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
+                                                lastGPSPosition=new ArrayList<>();
+                                                lastGPSPosition.add(currentGpsPosition);
+                                                OldGPSPosition=lastGPSPosition.get(0);
+                                            }
                                             LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
+                                            if(isRouteDeviated==false) {
+                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition,currentGpsPosition);
+                                            }else{
+                                                MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                            }
 
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(currentGpsPosition)
-                                                        .title("currentLocation")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .rotation(location.bearingTo(location))
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                //changing direction to NORTH as Shown in vedio by DT Team 65.5f
-
-                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                        .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
-                                                        .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
-                                                        .build();
-                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
                                         }
                                     });
                                 }
@@ -702,8 +703,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
-
-
 /*
 
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
@@ -1072,6 +1071,13 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 toast.setGravity(Gravity.TOP, 0, 150);
                 toast.setView(layout);
                 toast.show();
+                float bearing = (float) bearingBetweenLocations(OldGPSPosition,currentGpsPosition); //correct method to change orientation of map
+                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                        .position(currentGpsPosition)
+                        .title("currentLocation")
+                        .anchor(0.5f, 0.5f)
+                        .rotation(bearing)
+                        .flat(true));
 
                         mMap.stopAnimation();
                         String cgpsLat = String.valueOf(currentGpsPosition.latitude);
@@ -1085,6 +1091,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
                         Log.e("returnedDistance", "Destination Position --------- " + destPoint);
                         //  DestinationPosition = new LatLng(destLat, destLng);
+                /*
                 if (Util.isInternetAvailable(getActivity()) == true ) {
                     dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
                     dialog.setMessage("Fetching new Route");
@@ -1100,11 +1107,13 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                             if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                                 isRouteDeviated = true;
+
                             }
                             dialog.dismiss();
                         }
                     }, 10);
                 }
+                */
 
             }
 
