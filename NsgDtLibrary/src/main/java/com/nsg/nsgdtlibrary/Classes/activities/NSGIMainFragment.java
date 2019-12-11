@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -175,7 +176,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     LatLng centerFromPoint;
     LatLng point;
     private ImageButton etaListener;
-    private ImageButton location_tracking;
+    private Button location_tracking_start,location_tracking_stop;
     Marker fakeGpsMarker;
     List<Marker> markerlist;
     ArrayList<String> etaList;
@@ -279,8 +280,12 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
-       // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
-      //  location_tracking.setOnClickListener(this);
+
+        location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
+        location_tracking_start.setOnClickListener(this);
+
+        location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
+        location_tracking_stop.setOnClickListener(this);
         mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -387,8 +392,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             if(isRouteDeviated==false) {
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
                                             }else {
-                                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-
+                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                             }
                                             new Handler().postDelayed(new Runnable() {
                                                     @Override
@@ -1696,8 +1700,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
   //  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
-        /*
-        if(v==location_tracking){
+
+        if(v==location_tracking_start){
             Toast.makeText(getContext(), "Location Tracking button clicked.", Toast.LENGTH_SHORT).show();
             mMap.setBuildingsEnabled(false);
             mMap.getUiSettings().setZoomGesturesEnabled(false);
@@ -1715,8 +1719,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             },500);
 
 
-        } else
-            */if(v==change_map_options){
+        }else if(v==location_tracking_stop){
+
+        }
+        else if(v==change_map_options){
 
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file

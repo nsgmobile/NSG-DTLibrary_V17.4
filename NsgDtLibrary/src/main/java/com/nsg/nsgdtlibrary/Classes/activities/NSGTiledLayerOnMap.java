@@ -545,11 +545,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         PointData = new LatLng(Lang,Lat);
                         EdgeDataT edgePointData = new EdgeDataT(stPoint,endPoint,String.valueOf(PointData),geometryText,distanceInEdge);
                         EdgeContainsDataList.add(edgePointData);
-
                     }
                 }
-
-
                 for (int pntCount = 0; pntCount < AllPointsList.size(); pntCount++) {
                     String data = String.valueOf(AllPointsList.get(pntCount));
                     String dataStr = data.replace("[", "");
@@ -559,20 +556,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     double Lang = Double.parseDouble(ptData[1]);
                     PointData = new LatLng(Lat, Lang);
                     edgeDataPointsList.add(PointData);
-
-
                 }
             }
-
-
             for(int k=0;k<EdgeContainsDataList.size();k++){
                 EdgeDataT edgeK=EdgeContainsDataList.get(k);
                 StringBuilder sb=new StringBuilder();
                 sb.append("STPOINT :"+edgeK.getStartPoint()+"EndPt:"+edgeK.getEndPoint()+"Points:"+edgeK.getPositionMarkingPoint()+"Geometry TEXT:"+ edgeK.getGeometryText());
             }
-
         }
-
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveWithGpsPointInBetWeenAllPoints(final LatLng currentGpsPosition){
