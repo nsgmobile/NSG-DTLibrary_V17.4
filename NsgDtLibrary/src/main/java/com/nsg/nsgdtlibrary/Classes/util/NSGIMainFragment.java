@@ -351,11 +351,16 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         AlertDialog alert = builder.create();
                         alert.show();
                     }
+
+                    // sendTokenRequest();
+
                     if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
                         return;
                     }
+
+
                     Log.e("RouteData", "RouteData" + RouteDataList.size());
                     if (RouteDataList != null && RouteDataList.size() > 0) {
                         dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
@@ -389,7 +394,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                     tv.setText("Total Time: " + resultTotalTimeConverted + " SEC");
                                     tv2.setText("Time ETA  : " + resultTotalTimeConverted + " SEC ");
 
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                  // MoveWithGPSMARKER();
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 
                                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                             @Override
@@ -402,6 +407,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                     lastGPSPosition = new ArrayList<>();
                                                     lastGPSPosition.add(currentGpsPosition);
                                                     OldGPSPosition = lastGPSPosition.get(0);
+                                                    Log.e("OldGPSPosition", "OldGPSPosition -----" + OldGPSPosition);
+
                                                 }
                                                 getLatLngPoints();
                                                 LatLng currentGpsPosition1 = new LatLng(location.getLatitude(), location.getLongitude());
@@ -420,6 +427,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                         locationFakeGpsListener = locationFakeGpsListener + 1;
                                                     }
                                                 }, 10);
+
+
                                             }
                                         });
                                     }
