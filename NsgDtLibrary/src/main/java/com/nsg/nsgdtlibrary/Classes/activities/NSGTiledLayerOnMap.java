@@ -219,6 +219,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
     StringBuilder time= new StringBuilder();
+    private RouteT route;
     public interface FragmentToActivity {
         String communicate(String comm);
     }
@@ -275,7 +276,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         tv = (TextView) rootView.findViewById(R.id.tv);
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
-
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
         //  location_tracking=(ToggleButton)rootView.findViewById(R.id.location_tracking);
         //  location_tracking.setOnClickListener(this);
@@ -290,8 +290,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
-
-        RouteT route = RouteDataList.get(0);
+        if(RouteDataList!=null ) {
+              route = RouteDataList.get(0);
+        }
         final String routeData = route.getRouteData();
         String sourceText=route.getStartNode();
         String[]  text =sourceText.split(" ");

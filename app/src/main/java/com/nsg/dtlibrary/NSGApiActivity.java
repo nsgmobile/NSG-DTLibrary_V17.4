@@ -6,9 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 
-import com.nsg.nsgdtlibrary.Classes.activities.NSGTiledLayerOnMap;
 import com.nsg.nsgdtlibrary.Classes.util.NSGIMainFragment;
-import com.nsg.nsgdtlibrary.Classes.activities.NSGIMainFragment_1;
 
 import java.io.File;
 
@@ -19,7 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnMap.FragmentToActivity{
+public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment.FragmentToActivity{
     //implements HomeFragment.FragmentToActivity{
     private double srcLatitude;
     private double srcLongitude;
@@ -32,8 +30,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     String SourcePosition="";
     String DestinationPosition="";
     private TextView tv;
-    String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "DubaiBasemap" + ".mbtiles";
-    String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".csv";
+    String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "DubaiBasemap"+".mbtiles";
+    String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +42,6 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
-
              double srcLatitude=55.067291;
              double srcLongitude=24.978782;
              double destLatitude=55.067205;
@@ -53,14 +50,13 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
             enteredMode = NSGIBundle.getInt("enteredMode");
             bufferSize = NSGIBundle.getInt("bufferSize");
             // fragmentTransaction.add(R.id.map_container, new MainMapFragment(srcLatitude,srcLongitude,destLatitude,desLongitude,1,bufferSize));//getRoutes Direction
-            fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,"RD1",3,bufferSize));//getRoutes Direction
+            fragmentTransaction.add(R.id.map_container, new NSGIMainFragment(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,1,bufferSize));//getRoutes Direction
         }else if(charlsisNumber.equals("RD2")) {
             routeId="RD2";
             enteredMode = NSGIBundle.getInt("enteredMode");
             bufferSize = NSGIBundle.getInt("bufferSize");
-            Log.e("Route Details------", " Route Details------ " +" srcLatitude : "+ srcLatitude +"\n"+" srcLongitude : "+ srcLongitude +"\n"+" destLatitude : "+destLatitude+"\n"+" desLongitude : "+desLongitude+"\n");
-            fragmentTransaction.add(R.id.map_container, new NSGIMainFragment_1(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,"RD2",enteredMode,bufferSize));//getRoutes Direction
-
+          //  Log.e("Route Details------", " Route Details------ " +" srcLatitude : "+ srcLatitude +"\n"+" srcLongitude : "+ srcLongitude +"\n"+" destLatitude : "+destLatitude+"\n"+" desLongitude : "+desLongitude+"\n");
+            fragmentTransaction.add(R.id.map_container, new NSGIMainFragment(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,1,bufferSize));//getRoutes Direction
         }
         fragmentTransaction.commit();
     }

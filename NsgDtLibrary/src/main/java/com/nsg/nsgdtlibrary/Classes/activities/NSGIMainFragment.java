@@ -347,7 +347,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                         @Override
                         public void run() {
-                            // dialog.dismiss();
                             nearestPointValuesList=new ArrayList<LatLng>();
                             nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                             OldNearestGpsList=new ArrayList<>();
@@ -363,79 +362,95 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             mMap.getUiSettings().setTiltGesturesEnabled(true);
                             mMap.getUiSettings().setRotateGesturesEnabled(true);
                             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                            if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
-                                ETACalclator etaCalculator1=new ETACalclator();
-                                double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-                                double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
-                                tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-                                tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
-
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                   // MoveWithGPSMARKER();
-
-                                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                       @Override
-                                         public void onMyLocationChange(Location location) {
-                                           if (mPositionMarker != null) {
-                                            mPositionMarker.remove();
-                                           }
-                                            vehicleSpeed=location.getSpeed();
-                                           if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
-                                               lastGPSPosition=new ArrayList<>();
-                                               lastGPSPosition.add(currentGpsPosition);
-                                               OldGPSPosition=lastGPSPosition.get(0);
-                                           }
-                                            getLatLngPoints();
-                                            LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                            Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
-                                                    // NavigationDirection(currentGpsPosition,DestinationPosition);
-                                            currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-                                            if(isRouteDeviated==false) {
+                            if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0) {
+                                //Running in FakeGps
+                               if(routeIDName.equals("RD1")){
+                                    ETACalclator etaCalculator1 = new ETACalclator();
+                                    double resultTotalETA = etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+                                    double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA, 0);
+                                    tv.setText("Total Time: " + resultTotalTimeConverted + " SEC");
+                                    tv2.setText("Time ETA  : " + resultTotalTimeConverted + " SEC ");
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        // MoveWithGPSMARKER();
+                                        if (currentGpsPosition != null && locationFakeGpsListener > 0) {
+                                            lastGPSPosition = new ArrayList<>();
+                                            lastGPSPosition.add(currentGpsPosition);
+                                            OldGPSPosition = lastGPSPosition.get(0);
+                                        }
+                                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                            @Override
+                                            public void onMyLocationChange(Location location) {
+                                                if (mPositionMarker != null) {
+                                                    mPositionMarker.remove();
+                                                }
+                                                getLatLngPointsForRoute_1();
+                                                currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                            }else {
-                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                locationFakeGpsListener = locationFakeGpsListener + 1;
                                             }
-                                            new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        locationFakeGpsListener = locationFakeGpsListener + 1;
-                                                    }
-                                                }, 10);
+                                        });
+                                    }
+                               }else if(routeIDName.equals("RD2")){
+                                   ETACalclator etaCalculator1 = new ETACalclator();
+                                   double resultTotalETA = etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+                                   double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA, 0);
+                                   tv.setText("Total Time: " + resultTotalTimeConverted + " SEC");
+                                   tv2.setText("Time ETA  : " + resultTotalTimeConverted + " SEC ");
+                                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                       // MoveWithGPSMARKER();
+                                       if (currentGpsPosition != null && locationFakeGpsListener > 0) {
+                                           lastGPSPosition = new ArrayList<>();
+                                           lastGPSPosition.add(currentGpsPosition);
+                                           OldGPSPosition = lastGPSPosition.get(0);
                                        }
-                                   });
-                                }
-                            }else if(enteredMode==2){
+                                       mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                           @Override
+                                           public void onMyLocationChange(Location location) {
+                                               if (mPositionMarker != null) {
+                                                   mPositionMarker.remove();
+                                               }
+                                               getLatLngPointsForRoute_2();
+                                               currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
+                                               MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                               locationFakeGpsListener = locationFakeGpsListener + 1;
+                                           }
+                                       });
+                                   }
+                               }
+                           }else if(enteredMode==2){
+                                //Running in RealTime
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                     if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
 
-                                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                        @Override
-                                        public void onMyLocationChange(Location location) {
-                                            if (mPositionMarker != null) {
-                                                mPositionMarker.remove();
+                                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                            @Override
+                                            public void onMyLocationChange(Location location) {
+                                                if (mPositionMarker != null) {
+                                                    mPositionMarker.remove();
+                                                }
+                                                vehicleSpeed=location.getSpeed();
+                                                LatLng currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition,currentGpsPosition);
                                             }
-                                            LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
-
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(currentGpsPosition)
-                                                        .title("currentLocation")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .rotation(location.bearingTo(location))
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                //changing direction to NORTH as Shown in vedio by DT Team 65.5f
-
-                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                        .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
-                                                        .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
-                                                        .build();
-                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
-                                        }
-                                    });
+                                        });
                                 }
+
+                            }else if(enteredMode==3){
+                                //Running in RealTime
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                    LatLng currentGpsPosition = new LatLng(24.978782,55.067291);
+                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                            .position(currentGpsPosition)
+                                            .title("currentLocation")
+                                            .anchor(0.5f, 0.5f)
+                                            .flat(true)
+                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                                }
+
                             }
                             dialog.dismiss();
                         }
-                    }, 10);
+                    }, 100);
                 }else{
                     Log.e("SendData","SendData ------- "+ "internet does not exist");
                 }
@@ -1461,7 +1476,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         double distance = SphericalUtil.computeDistanceBetween(latlng1,latLng2);
         return distance;
     }
-    public int getLatLngPoints(){
+    public int getLatLngPointsForRoute_1(){
 /*
         LatLngDataArray.add(new LatLng(24.978782,55.067291));
         LatLngDataArray.add(new LatLng(24.978792,55.067279));
@@ -1522,11 +1537,19 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.980335, 55.066770));
         LatLngDataArray.add(new LatLng(24.980174, 55.066937));
         LatLngDataArray.add(new LatLng(24.979878,55.067205));  //Destinationm point
-
-
-
         return LatLngDataArray.size();
 
+    }
+    public int getLatLngPointsForRoute_2(){
+        LatLngDataArray.add(new LatLng(24.981071,55.067708));
+        LatLngDataArray.add(new LatLng(24.981227,55.067913));
+        LatLngDataArray.add(new LatLng(24.981518,55.068258));
+        LatLngDataArray.add(new LatLng(24.981922,55.068711));
+        LatLngDataArray.add(new LatLng(24.982424,55.069294));
+        LatLngDataArray.add(new LatLng(24.982787,55.069716));
+        LatLngDataArray.add(new LatLng(24.983160,55.070151));
+        LatLngDataArray.add(new LatLng(24.983335,55.070321));
+        return LatLngDataArray.size();
     }
     private double getAngle(LatLng beginLatLng, LatLng endLatLng) {
         double f1 = Math.PI * beginLatLng.latitude / 180;
@@ -1673,34 +1696,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         return EdgeWithoutDuplicates;
     }
 
-
-    public void addFakeGPSMarkers(){
-        getLatLngPoints();
-        for(int p=0;p<LatLngDataArray.size();p++){
-            fakeGpsMarker =mMap.addMarker(new MarkerOptions()
-                    .position(LatLngDataArray.get(p))
-                    .icon(bitmapDescriptorFromVector(getActivity(),R.drawable.symbol_shackel_point)));
-            markerlist= new ArrayList<Marker>();
-            markerlist.add(fakeGpsMarker);
-        }
-    }
-    public void removeFakeGPSMarkers(){
-        getLatLngPoints();
-        for(int p=0;p<LatLngDataArray.size();p++) {
-            if (markerlist != null && !markerlist.isEmpty()) {
-                //  markerlist.get(p).remove(); // Add this line
-                markerlist.remove(p);
-                if(  fakeGpsMarker.getPosition().equals(LatLngDataArray.get(p))){
-                    fakeGpsMarker.remove();
-                }
-            }
-        }
-    }
-
-  //  @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+  //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onClick(View v) {
-
         if(v==location_tracking_start){
             Toast.makeText(getContext(), "Location Tracking button clicked.", Toast.LENGTH_SHORT).show();
             mMap.setBuildingsEnabled(false);
