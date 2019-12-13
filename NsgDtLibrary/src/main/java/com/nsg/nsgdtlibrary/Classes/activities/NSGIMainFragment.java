@@ -434,8 +434,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             }
                                         });
                                 }
-
-                            }else if(enteredMode==3){
+                           }else if(enteredMode==3){
                                 //Running in RealTime
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                     LatLng currentGpsPosition = new LatLng(24.978782,55.067291);
@@ -447,8 +446,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
                                 }
 
-                            }
-                            dialog.dismiss();
+                           }
+                           dialog.dismiss();
                         }
                     }, 100);
                 }else{
