@@ -297,26 +297,27 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton) rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
-        if (RouteDataList != null) {
+        if (RouteDataList != null && RouteDataList.size()>0 ) {
             //  Log.e("Route Data", "RouteData" + route.get);
             //  Log.e("Route Data", "RouteData" + route);
             route=RouteDataList.get(0);
             Log.e("Route Data", "RouteData" +route);
+
             final String routeData = route.getRouteData();
-            Log.e("Route Data", "RouteData ------ " + routeData);
-            String sourceText = route.getStartNode();
-            Log.e("Route Data", "RouteData ------ " + sourceText);
-            String[] text = sourceText.split(" ");
-            sourceLat = Double.parseDouble(text[1]);
-            sourceLng = Double.parseDouble(text[0]);
-            String destinationText = route.getEndNode();
-            String[] text1 = destinationText.split(" ");
-            destLat = Double.parseDouble(text1[1]);
-            destLng = Double.parseDouble(text1[0]);
-            SourceNode = new LatLng(sourceLat, sourceLng);
-            DestinationNode = new LatLng(destLat, destLng);
-
-
+            if(routeData!=null) {
+                Log.e("Route Data", "RouteData ------ " + routeData);
+                String sourceText = route.getStartNode();
+                Log.e("Route Data", "RouteData ------ " + sourceText);
+                String[] text = sourceText.split(" ");
+                sourceLat = Double.parseDouble(text[1]);
+                sourceLng = Double.parseDouble(text[0]);
+                String destinationText = route.getEndNode();
+                String[] text1 = destinationText.split(" ");
+                destLat = Double.parseDouble(text1[1]);
+                destLng = Double.parseDouble(text1[0]);
+                SourceNode = new LatLng(sourceLat, sourceLng);
+                DestinationNode = new LatLng(destLat, destLng);
+            }
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment1 = activity   SupportMapFragment = fragment
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -330,21 +331,31 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     if (routeData != null) {
                         GetRouteFromDBPlotOnMap(routeData);
                         // GetRouteDetails(SourcePosition.toString(),DestinationPosition.toString());
+                        StringBuilder routeAlert = new StringBuilder();
+                        // routeAlert.append("src");
+                        sendData(routeAlert.toString());
+
+                        getAllEdgesData();
+                        addMarkers();
+                        getValidRouteData();
+                        getRouteAccordingToRouteID(routeIDName);
+                    }else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("Route Data is not available")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }
-                    StringBuilder routeAlert = new StringBuilder();
-                    // routeAlert.append("src");
-                    sendData(routeAlert.toString());
-                    // sendTokenRequest();
-                    getAllEdgesData();
-                    addMarkers();
-                    getValidRouteData();
                     if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
                         //    ActivityCompat#requestPermissions
                         return;
                     }
-
-                    getRouteAccordingToRouteID(routeIDName);
                     Log.e("RouteData", "RouteData" + RouteDataList.size());
                     if (RouteDataList != null && RouteDataList.size() > 0) {
                         dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
@@ -409,8 +420,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                         locationFakeGpsListener = locationFakeGpsListener + 1;
                                                     }
                                                 }, 10);
-
-
                                             }
                                         });
                                     }
