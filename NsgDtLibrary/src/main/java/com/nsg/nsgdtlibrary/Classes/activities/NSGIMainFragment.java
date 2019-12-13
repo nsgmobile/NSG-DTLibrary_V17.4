@@ -330,6 +330,17 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     addMarkers();
                     getValidRouteData();
                     getRouteAccordingToRouteID(routeIDName);
+                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Route Data is not available")
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 }
                 if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
