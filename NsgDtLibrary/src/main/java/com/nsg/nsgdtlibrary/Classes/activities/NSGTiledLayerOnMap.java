@@ -73,7 +73,6 @@ import com.nsg.nsgdtlibrary.Classes.database.dto.GeometryT;
 import com.nsg.nsgdtlibrary.Classes.database.dto.RouteT;
 import com.nsg.nsgdtlibrary.Classes.util.DecimalUtils;
 import com.nsg.nsgdtlibrary.Classes.util.ETACalclator;
-import com.nsg.nsgdtlibrary.Classes.util.NSGIMainFragment;
 import com.nsg.nsgdtlibrary.R;
 
 import org.json.JSONArray;
