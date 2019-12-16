@@ -1100,51 +1100,56 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
         PolylineOptions polylineOptions = new PolylineOptions();
-        boolean routeFlag=false;
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
-        double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
-        Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
-        float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
+            double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
+            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
+            float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
             Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
-                    Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
-                if (routeFlag==true) {
-                    mMap.stopAnimation();
-                    String cgpsLat = String.valueOf(currentGpsPosition.latitude);
-                    String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
-                    final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
+                Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
+                toast.setMargin(100, 100);
+                toast.show();
 
-                    String destLatPos = String.valueOf(DestinationPosition.latitude);
-                    String destLongiPos = String.valueOf(DestinationPosition.longitude);
-                    final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                mMap.stopAnimation();
+                String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
 
-                    Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
-                    Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                    Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
-                    toast.setMargin(100, 100);
-                    toast.show();
-                    dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                    dialog.setMessage("Fetching new Route");
-                    dialog.setMax(100);
-                    dialog.show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            String MESSAGE = "";
-                            GetRouteDetails(routeDiationPosition, destPoint);
-                            if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
-                                isRouteDeviated = true;
-                            } else {
+                String destLatPos = String.valueOf(DestinationPosition.latitude);
+                String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
 
-                            }
-                            dialog.dismiss();
+                Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
+                Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+                //  DestinationPosition = new LatLng(destLat, destLng);
+                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                dialog.setMessage("Fetching new Route");
+                dialog.setMax(100);
+                dialog.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        String MESSAGE = "";
+                        GetRouteDetails(routeDiationPosition, destPoint);
+                        //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                        if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
+                            isRouteDeviated = true;
+                                    /*
+                                    if (isRouteDeviated == true) {
+
+
+                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                    }
+                                    */
                         }
-                    }, 10);
 
-                }
 
+                    }
+                }, 10);
 
             }
 

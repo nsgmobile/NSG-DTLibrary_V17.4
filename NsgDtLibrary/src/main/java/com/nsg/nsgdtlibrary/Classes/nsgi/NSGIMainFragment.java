@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -154,6 +155,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private Circle mCircle;
     private List<LatLng>lastGPSPosition;
     private LatLng nearestPositionPoint;
+
+    private Button location_tracking_start,location_tracking_stop;
      // BitmapDescriptor mMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.car_icon_32);
     Bitmap mMarkerIcon;
     int mIndexCurrentPoint=0;
@@ -219,6 +222,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
     boolean isRouteDeviated=false;
+    private RouteT route;
     StringBuilder time= new StringBuilder();
     public interface FragmentToActivity {
         String communicate(String comm);
@@ -277,7 +281,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
-       // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
+        location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
+        location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
+        location_tracking_stop.setOnClickListener(this);
+
+        // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
       //  location_tracking.setOnClickListener(this);
         mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -290,7 +298,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
-        RouteT route = RouteDataList.get(0);
+        if(RouteDataList!=null && RouteDataList.size()>0) {
+            route = RouteDataList.get(0);
+        }
         final String routeData = route.getRouteData();
         String sourceText=route.getStartNode();
         String[]  text =sourceText.split(" ");
