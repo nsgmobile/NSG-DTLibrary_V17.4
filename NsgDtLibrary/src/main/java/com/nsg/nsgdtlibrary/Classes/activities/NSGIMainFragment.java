@@ -266,7 +266,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         final String routeData = route.getRouteData();
         if(routeData==null){
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("No Route Data Available for "+routeIDName)
+            builder.setMessage("No Route Data Available for " +routeIDName)
                     .setCancelable(false)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -297,14 +297,27 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
                 tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
                 tileOverlay.setVisible(true);
-                if(routeData!=null) {
-                    GetRouteFromDBPlotOnMap(routeData);
-                    StringBuilder routeAlert=new StringBuilder();
-                    sendData(routeAlert.toString());
-                    getAllEdgesData();
-                    addMarkers();
-                    getValidRouteData();
-                    getRouteAccordingToRouteID(routeIDName);
+                    if(routeData!=null) {
+                        GetRouteFromDBPlotOnMap(routeData);
+                        StringBuilder routeAlert=new StringBuilder();
+                        sendData(routeAlert.toString());
+                        getAllEdgesData();
+                        addMarkers();
+                        getValidRouteData();
+                        getRouteAccordingToRouteID(routeIDName);
+                    }else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
+                        builder.setMessage("Route Data is not available")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+
                     location_tracking_start.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -349,6 +362,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                     Log.e("OldGPSPosition", "OldGPSPosition -----" + OldGPSPosition);
 
                                                 }
+
                                                 getLatLngPointsForRoute_1();
                                                 LatLng currentGpsPosition1 = new LatLng(location.getLatitude(), location.getLongitude());
                                                 Log.e("currentGpsPosition", "currentGpsPosition -----" + currentGpsPosition1);
@@ -384,6 +398,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                             @Override
                                             public void onMyLocationChange(Location location) {
+
 
                                                 getLatLngPointsForRoute_2();
                                                 currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
@@ -446,22 +461,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                         }
                     });
-
-                }else{
-                    /*
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
-                    builder.setMessage("Route Data is not available")
-                            .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                }
-                            });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    */
-                }
-
             }
         });
         return rootView;
@@ -547,6 +546,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .zoom(18)
                 .tilt(45)
                 .build();
+        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                .position(SourceNode)
+                .title("currentLocation")
+                .anchor(0.5f, 0.5f)
+                .flat(true));
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
     }
@@ -700,12 +704,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .rotation(bearing)
-                .flat(true));
               //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
@@ -1051,7 +1049,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
         return sb.toString();
     }
-
+/*
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public boolean verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
         boolean isRouteDeviatedFlag=false;
@@ -1075,7 +1073,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 toast.setGravity(Gravity.TOP, 0, 150);
                 toast.setView(layout);
                 toast.show();
-                animateCarMove(mPositionMarker,PrevousGpsPosition,currentGpsPosition,200,currentGpsPosition);
+              //  animateCarMove(mPositionMarker,PrevousGpsPosition,currentGpsPosition,200,currentGpsPosition);
                 mPositionMarker.setPosition(new LatLng(currentGpsPosition.latitude,currentGpsPosition.longitude));
 
                // if(mPositionMarker.getPosition().equals(currentGpsPosition)) {
@@ -1121,6 +1119,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         return isRouteDeviated;
     }
+    */
 
     public void checkPointsOfRoue1withNewRoute(List<LatLng> edgeWithoutDuplicates,LatLng PointBeforeRouteDeviation){
         Log.e("CGPS","CGPS POINR PRESENT--------"+PointBeforeRouteDeviation);
@@ -1181,9 +1180,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
     }
     public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
-      if(mPositionMarker.getPosition().equals(currentGpsPosition)) {
+     // if(mPositionMarker.getPosition().equals(currentGpsPosition)) {
           PolylineOptions polylineOptions=new PolylineOptions();
-          polylineOptions.add(OldGPSPosition);
+         // polylineOptions.add(OldGPSPosition);
           polylineOptions.addAll(RouteDeviationConvertedPoints);
           Polyline polyline = mMap.addPolyline(polylineOptions);
           polylineOptions.color(Color.RED).width(30);
@@ -1296,12 +1295,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
               }
               Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGps);
               float bearing = (float) bearingBetweenLocations(OldGps, nayaGps); //correct method to change orientation of map
-              mPositionMarker = mMap.addMarker(new MarkerOptions()
-                      .position(SourceNode)
-                      .title("currentLocation")
-                      .anchor(0.5f, 0.5f)
-                      .rotation(bearing)
-                      .flat(true));
 
               //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
               if (OldGps.equals(nearestPositionPoint)) {
@@ -1328,9 +1321,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
              // CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourceNode, currentGpsPosition, DestinationNode);
              // AlertDestination(currentGpsPosition);
           }
-      }else{
+     // }else{
 
-      }
+     // }
     }
     public void CaluculateETAInRouteDeviationDirection( final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
         Log.e("Total Distance"," Route Deviation  ETA sourcePosition "+ sourcePosition);
@@ -2310,7 +2303,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 .title("currentLocation")
                                 .anchor(0.5f, 0.5f)
                                 .flat(true));
-                        // mMap.set
                         String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                         String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                         final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
@@ -2339,7 +2331,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 }
 
                             }
-                        }, 10);
+                        }, 0);
 
                 }
         }
