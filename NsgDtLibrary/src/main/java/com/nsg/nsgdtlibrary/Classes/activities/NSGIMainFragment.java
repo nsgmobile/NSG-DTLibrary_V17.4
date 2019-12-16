@@ -120,7 +120,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private static final int SENSOR_DELAY_NORMAL =5000;
     private ProgressDialog dialog;
     private TextToSpeech textToSpeech;
-    LatLng DestinationPosition,OldGPSPosition,PointBeforeRouteDeviation;
+    LatLng DestinationPosition,OldGPSPosition,PointBeforeRouteDeviation,RouteDeviatedSourcePosition;
     private List<GeometryT>RouteDevaitedEdgesContainsDataList;
     double sourceLat, sourceLng, destLat, destLng;
     LatLng dubai;
@@ -370,14 +370,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                 Log.e("currentGpsPosition", "currentGpsPosition -----" + currentGpsPosition1);
                                                 currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
 
-                                                LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
-                                                //Route Deviation points starts from here ----
-                                                LatLngDataArray.add(new LatLng( 24.978179,55.064389));
                                                 if (isRouteDeviated == false) {
                                                     MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
                                                 }
                                                 else{
-                                                  MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                  MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition,RouteDeviatedSourcePosition,DestinationNode);
                                                  }
                                                 new Handler().postDelayed(new Runnable() {
                                                     @Override
@@ -880,6 +877,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                    // MESSAGE = jsonObject.getString("Message");
                                     String Status = jsonObject.getString("Status");
                                     double TotalDistance = jsonObject.getDouble("TotalDistance");
+
                                     JSONArray jSonRoutes = new JSONArray(jsonObject.getString("Route"));
                                    // PolylineOptions polylineOptions = new PolylineOptions();
 
@@ -1187,7 +1185,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             }
         }
     }
-    public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
+    public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition,LatLng DeviatedSourcePosition,LatLng destinationPosition){
         LatLng FirstCordinate = null,SecondCordinate=null;
         if(RouteDeviationConvertedPoints!=null) {
             Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
@@ -1288,7 +1286,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     .bearing(bearing).tilt(65.5f).zoom(20)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
-           // TextImplementationRouteDeviationDirectionText();
+           // TextImplementationRouteDeviationDirectionText(TotalRouteDeviatedDistanceInMTS,FirstCordinate,SecondCordinate);
           //  CaluculateETAInRouteDeviationDirection();
             AlertDestination(currentGpsPosition);
         }
@@ -2265,10 +2263,16 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 mMap.stopAnimation();
                 Log.e("Route Deviation", "ROUTE DEVIATION FLAG ----" + routeFlag);
                 if (routeFlag==true) {
+                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                            .position(currentGpsPosition)
+                            .title("currentLocation")
+                            .anchor(0.5f, 0.5f)
+                            .flat(true));
                     mMap.stopAnimation();
                     String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                     String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                     final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                    RouteDeviatedSourcePosition=new LatLng(Double.parseDouble(cgpsLat),Double.parseDouble(cgpsLat));
 
                     String destLatPos = String.valueOf(DestinationPosition.latitude);
                     String destLongiPos = String.valueOf(DestinationPosition.longitude);
@@ -2278,7 +2282,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     Log.e("returnedDistance", "Destination Position --------- " + destPoint);
                     //  DestinationPosition = new LatLng(destLat, destLng);
                     if (Util.isInternetAvailable(getContext())) {
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -2289,7 +2292,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        dialog.dismiss();
+
+
                                         String MESSAGE = "";
                                         GetRouteDetails(routeDiationPosition, destPoint);
                                         //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
@@ -2298,15 +2302,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
                                             toast.setMargin(100, 100);
                                             toast.show();
-                                            mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                    .position(currentGpsPosition)
-                                                    .title("currentLocation")
-                                                    .anchor(0.5f, 0.5f)
-                                                    .flat(true));
+
                                         } else {
 
                                         }
-
+                                        dialog.dismiss();
                                     }
                                 }, 10);
                             }
