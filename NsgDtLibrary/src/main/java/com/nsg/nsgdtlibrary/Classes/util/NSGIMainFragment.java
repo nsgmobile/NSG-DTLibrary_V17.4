@@ -1122,17 +1122,29 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                     Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
                     Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                    //  DestinationPosition = new LatLng(destLat, destLng);
-                    if (Util.isInternetAvailable(getContext())) {
-                        GetRouteDetails(routeDiationPosition, destPoint);
-                                        //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
-                         if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
-                           isRouteDeviated = true;
+                    Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
+                    toast.setMargin(100, 100);
+                    toast.show();
+                    dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                    dialog.setMessage("Fetching new Route");
+                    dialog.setMax(100);
+                    dialog.show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String MESSAGE = "";
+                            GetRouteDetails(routeDiationPosition, destPoint);
+                            //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                            if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                                isRouteDeviated = true;
 
-                         }
-                    } else {
 
-                    }
+                            } else {
+
+                            }
+                            dialog.dismiss();
+                        }
+                    }, 10);
 
                 }
 
@@ -1274,12 +1286,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             }
             Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGps);
             float bearing = (float) bearingBetweenLocations(OldGps, nayaGps); //correct method to change orientation of map
-            mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(SourceNode)
-                    .title("currentLocation")
-                    .anchor(0.5f, 0.5f)
-                    .rotation(bearing)
-                    .flat(true));
 
             //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
             if (OldGps.equals(nearestPositionPoint)) {
