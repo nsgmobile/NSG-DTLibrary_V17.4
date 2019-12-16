@@ -2258,43 +2258,61 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 toast.show();
                 mMap.stopAnimation();
                 Log.e("Route Deviation", "ROUTE DEVIATION FLAG ----" + routeFlag);
-                if(routeFlag==true){
-                    Log.e("Route Deviation", "ROUTE DEVIATION FLAG ----" + routeFlag);
-                     /* mMap.addMarker(new MarkerOptions()
-                                .position(currentGpsPosition)
-                                .title("currentLocation")
-                                .anchor(0.5f, 0.5f)
-                                .flat(true));
-                      */
-                        String cgpsLat = String.valueOf(currentGpsPosition.latitude);
-                        String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
-                        final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                if (routeFlag==true) {
+                    mMap.stopAnimation();
+                    String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                    String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                    final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
 
-                        String destLatPos = String.valueOf(DestinationPosition.latitude);
-                        String destLongiPos = String.valueOf(DestinationPosition.longitude);
-                        final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                    String destLatPos = String.valueOf(DestinationPosition.latitude);
+                    String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                    final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
 
-                        Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
-                        Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                        //  DestinationPosition = new LatLng(destLat, destLng);
-                        dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                        dialog.setMessage("Fetching new Route");
-                        dialog.setMax(100);
-                        dialog.show();
-                        new Handler().postDelayed(new Runnable() {
+                    Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
+                    Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+                    //  DestinationPosition = new LatLng(destLat, destLng);
+                    if (Util.isInternetAvailable(getContext())) {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                dialog.dismiss();
-                                String MESSAGE = "";
-                                GetRouteDetails(routeDiationPosition, destPoint);
-                                //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
-                                if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
-                                    isRouteDeviated = true;
+                                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                                dialog.setMessage("Fetching new Route");
+                                dialog.setMax(100);
+                                dialog.show();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                        String MESSAGE = "";
+                                        GetRouteDetails(routeDiationPosition, destPoint);
+                                        //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                                        if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                                            isRouteDeviated = true;
+                                            Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
+                                            toast.setMargin(100, 100);
+                                            toast.show();
+                                        } else {
 
-                                }
+                                        }
 
+                                    }
+                                }, 10);
                             }
-                        }, 0);
+                        });
+                    } else {
+                        /*
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("Please turn-on internenet")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //do things
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        */
+                    }
 
                 }
         }
