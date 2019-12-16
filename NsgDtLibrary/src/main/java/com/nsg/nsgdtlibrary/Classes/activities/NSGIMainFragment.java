@@ -1435,7 +1435,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         return distance;
     }
     public int getLatLngPointsForRoute_1(){
-        /*
+
         LatLngDataArray.add(new LatLng(24.978782,55.067291));
         LatLngDataArray.add(new LatLng(24.978792,55.067279));
         LatLngDataArray.add(new LatLng(24.978762,55.067241));
@@ -1456,7 +1456,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.977690, 55.064490));
         LatLngDataArray.add(new LatLng(24.977881, 55.064262));
         LatLngDataArray.add(new LatLng( 24.977960, 55.064183));
-        */
+
         LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
 
 
@@ -1486,11 +1486,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng( 24.979342,55.065516));
 
         //Route Deviation points are upto here---
-        // LatLngDataArray.add(new LatLng(24.978317, 55.064500));
-        // LatLngDataArray.add(new LatLng(24.978417, 55.064630));
-        // LatLngDataArray.add(new LatLng(24.978536, 55.064755));
-        //  LatLngDataArray.add(new LatLng(24.978645, 55.064879));
-        //  LatLngDataArray.add(new LatLng(24.978688, 55.064914));
+
         LatLngDataArray.add(new LatLng(24.979722, 55.066073));
         LatLngDataArray.add(new LatLng(24.979961, 55.066314));
         LatLngDataArray.add(new LatLng(24.980189, 55.066572));

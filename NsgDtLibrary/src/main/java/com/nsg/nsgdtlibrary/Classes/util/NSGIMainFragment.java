@@ -1078,6 +1078,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
         PolylineOptions polylineOptions = new PolylineOptions();
+        boolean routeFlag=false;
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
@@ -1087,41 +1088,70 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
                     Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
-                    Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
-                    toast.setMargin(100, 100);
-                    toast.show();
+                if (routeFlag==true) {
+                    mMap.stopAnimation();
+                    String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                    String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                    final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
 
-                        mMap.stopAnimation();
-                        String cgpsLat = String.valueOf(currentGpsPosition.latitude);
-                        String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
-                        final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                    String destLatPos = String.valueOf(DestinationPosition.latitude);
+                    String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                    final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
 
-                        String destLatPos = String.valueOf(DestinationPosition.latitude);
-                        String destLongiPos = String.valueOf(DestinationPosition.longitude);
-                        final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                    Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
+                    Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+                    //  DestinationPosition = new LatLng(destLat, destLng);
+                    if (Util.isInternetAvailable(getContext())) {
 
-                        Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
-                        Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                        //  DestinationPosition = new LatLng(destLat, destLng);
-                        dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                        dialog.setMessage("Fetching new Route");
-                        dialog.setMax(100);
-                        dialog.show();
-                        new Handler().postDelayed(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                dialog.dismiss();
-                                String MESSAGE = "";
-                                GetRouteDetails(routeDiationPosition, destPoint);
-                                //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
-                                if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
-                                    isRouteDeviated = true;
+                                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                                dialog.setMessage("Fetching new Route");
+                                dialog.setMax(100);
+                                dialog.show();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        dialog.dismiss();
+                                        String MESSAGE = "";
+                                        GetRouteDetails(routeDiationPosition, destPoint);
+                                        //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                                        if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                                            isRouteDeviated = true;
+                                            Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
+                                            toast.setMargin(100, 100);
+                                            toast.show();
+                                            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                    .position(currentGpsPosition)
+                                                    .title("currentLocation")
+                                                    .anchor(0.5f, 0.5f)
+                                                    .flat(true));
+                                        } else {
 
-                                }
+                                        }
 
-
+                                    }
+                                }, 10);
                             }
-                        }, 10);
+                        });
+                    } else {
+                        /*
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setMessage("Please turn-on internenet")
+                                .setCancelable(false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        //do things
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        */
+                    }
+
+                }
+
 
             }
 
