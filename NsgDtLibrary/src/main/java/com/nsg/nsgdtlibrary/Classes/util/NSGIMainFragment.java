@@ -1327,7 +1327,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
     }
 
-
     private void drawMarkerWithCircle(LatLng gpsPosition, double radius){
         // double radiusInMeters = 400.0;
         CircleOptions circleOptions = new CircleOptions().center(gpsPosition).radius(radius).fillColor(Color.parseColor("#2271cce7")).strokeColor(Color.parseColor("#2271cce7")).strokeWidth(3);
