@@ -344,15 +344,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         getRouteAccordingToRouteID(routeIDName);
                         Log.e("RouteData","RouteData"+RouteDataList.size());
                         if(RouteDataList!=null && RouteDataList.size()>0) {
-                          //  dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                           // dialog.setMessage("Fetching Route");
-                           // dialog.setMax(100);
-                           // dialog.show();
-                          //  new Handler().postDelayed(new Runnable() {
-                                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                               // @Override
-                             //   public void run() {
-                                    // dialog.dismiss();
+
                                     nearestPointValuesList=new ArrayList<LatLng>();
                                     nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                     OldNearestGpsList=new ArrayList<>();
@@ -440,10 +432,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                 });
                                         }
                                     }
-                                //    dialog.dismiss();
-                              //  }
-                           // }, 10);
-
                        }else{
                             Log.e("SendData","SendData ------- "+ "internet does not exist");
                        }

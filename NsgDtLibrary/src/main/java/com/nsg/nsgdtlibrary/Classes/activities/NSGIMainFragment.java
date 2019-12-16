@@ -2280,11 +2280,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                     Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
                     Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                    //  DestinationPosition = new LatLng(destLat, destLng);
-                    if (Util.isInternetAvailable(getContext())) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                    // DestinationPosition = new LatLng(destLat, destLng);
+                  //  if (Util.isInternetAvailable(getContext())) {
+                  //     getActivity().runOnUiThread(new Runnable() {
+                   //         @Override
+                   //         public void run() {
                                 dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
                                 dialog.setMessage("Fetching new Route");
                                 dialog.setMax(100);
@@ -2292,8 +2292,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-
-
                                         String MESSAGE = "";
                                         GetRouteDetails(routeDiationPosition, destPoint);
                                         //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
@@ -2309,10 +2307,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                         dialog.dismiss();
                                     }
                                 }, 10);
-                            }
-                        });
-                    } else {
-                        /*
+                       //    }
+                     //   });
+                   /*  } else {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setMessage("Please turn-on internenet")
                                 .setCancelable(false)
@@ -2323,10 +2321,12 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 });
                         AlertDialog alert = builder.create();
                         alert.show();
-                        */
+
                     }
+                    */
 
                 }
+
         }
 
         }else{
