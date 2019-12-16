@@ -186,44 +186,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private double resultNeedToTeavelTimeConverted;
     private boolean isRouteDeviated=false;
     private RouteT route;
-    boolean flag;
-    // private Polyline mPolyline;
-    //LatLng convertedSrcPosition,convertedDestinationPoisition;
-    //private double userLocatedLat, userLocatedLongi;
-    // private Marker sourceMarker,destinationMarker;
-    // private String currentGpsPoint;
-    // private Polyline line;
-    //  private List polyLines;
-    // int mIndexCurrentPoint=0;
-    // private Marker gpsMarker;
-    // LatLng centerFromPoint;
-    // LatLng point;
-    // private float[] mLastAccelerometer = new float[3];
-    // private float[] mLastMagnetometer = new float[3];
-    // private boolean mLastAccelerometerSet = false;
-    // private boolean mLastMagnetometerSet = false;
-    // private float[] mR = new float[9];
-    //  private float[] mOrientation = new float[3];
-    // private float mCurrentDegree = 0f;
-    // private ImageButton etaListener;
-    //Marker fakeGpsMarker;
-    //List<Marker> markerlist;
-    //ArrayList<String> etaList;
-    //private ArrayList lastDistancesList;
-    // private String geometryText;
-    // private LocationManager locationManager;
-    // private Location lastLocation;
-    // Bitmap tileBitmap;
-    // MultiMap multiMap = new MultiValueMap();
-    // private long startTime,presentTime,previousTime,TimeDelay;
-    // private  List<LatLng>listOfLatLng;
-    // HashMap<LatLng,String>edgeDataPointsListData;
-
-    //String GeometryDirectionText="";
-    // ImageView water_ball;
-    // private boolean isMarkerRotating=false;
-    //private float azimuthInRadians;
-
     StringBuilder time= new StringBuilder();
     public interface FragmentToActivity {
         String communicate(String comm);
@@ -662,7 +624,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
-
         LatLng OldGps,nayaGps;
         List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
         nearestValuesMap=new HashMap<>();
@@ -764,7 +725,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         NavigationDirection(currentGpsPosition,DestinationNode);
 
         verifyRouteDeviationPrevious(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
-        flag= verifyRouteDeviation(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
+       // flag= verifyRouteDeviation(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
 
         AlertDestination(currentGpsPosition);
         Projection p = mMap.getProjection();
@@ -1227,13 +1188,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
     }
     public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(currentGpsPosition)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .flat(true)
-                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-
       if(mPositionMarker.getPosition().equals(currentGpsPosition)) {
           PolylineOptions polylineOptions=new PolylineOptions();
           polylineOptions.add(OldGPSPosition);
@@ -2338,59 +2292,64 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviationPrevious(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
+       boolean routeFlag=false;
         PolylineOptions polylineOptions = new PolylineOptions();
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
-        if (PrevousGpsPosition != null){
+        if (PrevousGpsPosition != null) {
             double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
-            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
-            float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
-            Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
-            if(returnedDistance > markDistance) {
+            Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + returnedDistance);
+            float rotateBearing = (float) bearingBetweenLocations(PrevousGpsPosition, currentGpsPosition);
+            Log.e("Route Deviation", "ROUTE DEVIATION ANGLE ----" + rotateBearing);
+            if (returnedDistance > markDistance) {
+                routeFlag = true;
+
                 Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
                 Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
                 toast.setMargin(100, 100);
                 toast.show();
-
                 mMap.stopAnimation();
-                String cgpsLat = String.valueOf(currentGpsPosition.latitude);
-                String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
-                final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                Log.e("Route Deviation", "ROUTE DEVIATION FLAG ----" + routeFlag);
+                if(routeFlag==true){
+                    Log.e("Route Deviation", "ROUTE DEVIATION FLAG ----" + routeFlag);
+                      mMap.addMarker(new MarkerOptions()
+                                .position(currentGpsPosition)
+                                .title("currentLocation")
+                                .anchor(0.5f, 0.5f)
+                                .flat(true));
+                        // mMap.set
+                        String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                        String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                        final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
 
-                String destLatPos = String.valueOf(DestinationPosition.latitude);
-                String destLongiPos = String.valueOf(DestinationPosition.longitude);
-                final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                        String destLatPos = String.valueOf(DestinationPosition.latitude);
+                        String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                        final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
 
-                Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
-                Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                //  DestinationPosition = new LatLng(destLat, destLng);
-                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                dialog.setMessage("Fetching new Route");
-                dialog.setMax(100);
-                dialog.show();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.dismiss();
-                        String MESSAGE = "";
-                        GetRouteDetails(routeDiationPosition, destPoint);
-                        //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
-                        if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
-                            isRouteDeviated = true;
-                                    /*
-                                    if (isRouteDeviated == true) {
+                        Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
+                        Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+                        //  DestinationPosition = new LatLng(destLat, destLng);
+                        dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                        dialog.setMessage("Fetching new Route");
+                        dialog.setMax(100);
+                        dialog.show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.dismiss();
+                                String MESSAGE = "";
+                                GetRouteDetails(routeDiationPosition, destPoint);
+                                //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                                if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                                    isRouteDeviated = true;
 
+                                }
 
-                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                    }
-                                    */
-                        }
+                            }
+                        }, 10);
 
-
-                    }
-                }, 10);
-
-            }
+                }
+        }
 
         }else{
 
@@ -2398,154 +2357,3 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
 
 }
-/*
-                if(RouteDataList!=null && RouteDataList.size()>0) {
-                    dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                    dialog.setMessage("Fetching Route");
-                    dialog.setMax(100);
-                    dialog.show();
-                    new Handler().postDelayed(new Runnable() {
-                        //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                        @Override
-                        public void run() {
-
-                            if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                return;
-                            }
-                            nearestPointValuesList=new ArrayList<LatLng>();
-                            nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
-                            OldNearestGpsList=new ArrayList<>();
-                            OldNearestGpsList.add(new LatLng(sourceLat,sourceLng));
-
-                            if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0) {
-                                //Running in FakeGps
-                                if(routeIDName.equals("RD1")){
-                                    ETACalclator etaCalculator1 = new ETACalclator();
-                                    double resultTotalETA = etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-                                    double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA, 0);
-                                    tv.setText("Total Time: " + resultTotalTimeConverted + " SEC");
-                                    tv2.setText("Time ETA  : " + resultTotalTimeConverted + " SEC ");
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                        // MoveWithGPSMARKER();
-                                        if (currentGpsPosition != null && locationFakeGpsListener > 0) {
-                                            lastGPSPosition = new ArrayList<>();
-                                            lastGPSPosition.add(currentGpsPosition);
-                                            OldGPSPosition = lastGPSPosition.get(0);
-                                        }
-                                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                            @Override
-                                            public void onMyLocationChange(Location location) {
-                                                if (mPositionMarker != null) {
-                                                    mPositionMarker.remove();
-                                                }
-                                                getLatLngPointsForRoute_1();
-                                                location_tracking_start.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        mMap.setMyLocationEnabled(true);
-                                                        mMap.setBuildingsEnabled(true);
-                                                        mMap.getUiSettings().setZoomControlsEnabled(true);
-                                                        mMap.getUiSettings().setCompassEnabled(true);
-                                                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                                                        mMap.getUiSettings().setMapToolbarEnabled(true);
-                                                        mMap.getUiSettings().setZoomGesturesEnabled(true);
-                                                        mMap.getUiSettings().setScrollGesturesEnabled(true);
-                                                        mMap.getUiSettings().setTiltGesturesEnabled(true);
-                                                        mMap.getUiSettings().setRotateGesturesEnabled(true);
-                                                        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
-                                                        currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-                                                        MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                                        locationFakeGpsListener = locationFakeGpsListener + 1;
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                }else if(routeIDName.equals("RD2")){
-                                    ETACalclator etaCalculator1 = new ETACalclator();
-                                    double resultTotalETA = etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-                                    double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA, 0);
-                                    tv.setText("Total Time: " + resultTotalTimeConverted + " SEC");
-                                    tv2.setText("Time ETA  : " + resultTotalTimeConverted + " SEC ");
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                        // MoveWithGPSMARKER();
-                                        if (currentGpsPosition != null && locationFakeGpsListener > 0) {
-                                            lastGPSPosition = new ArrayList<>();
-                                            lastGPSPosition.add(currentGpsPosition);
-                                            OldGPSPosition = lastGPSPosition.get(0);
-                                        }
-                                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                            @Override
-                                            public void onMyLocationChange(Location location) {
-                                                if (mPositionMarker != null) {
-                                                    mPositionMarker.remove();
-                                                }
-                                                getLatLngPointsForRoute_2();
-
-                                                location_tracking_start.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-                                                        MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                                        locationFakeGpsListener = locationFakeGpsListener + 1;
-                                                    }
-                                                });
-
-                                            }
-                                        });
-                                    }
-                                }
-                            }else if(enteredMode==2){
-                                //Running in RealTime
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-
-                                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                            @Override
-                                            public void onMyLocationChange(final Location location) {
-                                                if (mPositionMarker != null) {
-                                                    mPositionMarker.remove();
-                                                }
-                                                vehicleSpeed=location.getSpeed();
-                                                location_tracking_start.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        LatLng currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
-                                                        MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition,currentGpsPosition);
-                                                    }
-                                                });
-                                                location_tracking_stop.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        LatLng currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
-
-                                                      //  MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition,currentGpsPosition);
-                                                    }
-                                                });
-
-
-
-                                            }
-                                        });
-                                }
-                            }else if(enteredMode==3){
-                                //Running in RealTime
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    LatLng currentGpsPosition = new LatLng(24.978782,55.067291);
-                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                            .position(currentGpsPosition)
-                                            .title("currentLocation")
-                                            .anchor(0.5f, 0.5f)
-                                            .flat(true)
-                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                }
-
-                            }
-                            dialog.dismiss();
-                        }
-                    }, 100);
-                }
- */
