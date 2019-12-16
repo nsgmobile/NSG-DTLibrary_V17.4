@@ -585,6 +585,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .zoom(18)
                 .tilt(45)
                 .build();
+        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                .position(SourceNode)
+                .title("currentLocation")
+                .anchor(0.5f, 0.5f)
+                .flat(true));
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
     }
@@ -628,7 +633,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
 
-
                 for (int pntCount = 0; pntCount < AllPointsList.size(); pntCount++) {
                     String data = String.valueOf(AllPointsList.get(pntCount));
                     String dataStr = data.replace("[", "");
@@ -642,7 +646,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                 }
             }
-
 
             for(int k=0;k<EdgeContainsDataList.size();k++){
                 EdgeDataT edgeK=EdgeContainsDataList.get(k);
@@ -738,12 +741,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .rotation(bearing)
-                .flat(true));
+
               //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
@@ -1131,24 +1129,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                            isRouteDeviated = true;
 
-                         } else {
-
-                           }
-
-
+                         }
                     } else {
-                        /*
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setMessage("Please turn-on internenet")
-                                .setCancelable(false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        //do things
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                        */
+
                     }
 
                 }
