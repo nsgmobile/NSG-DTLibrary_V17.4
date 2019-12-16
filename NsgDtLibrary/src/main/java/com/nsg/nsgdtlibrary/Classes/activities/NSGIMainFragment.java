@@ -716,7 +716,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
 
-        verifyRouteDeviationPrevious(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
+       // verifyRouteDeviationPrevious(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
        // flag= verifyRouteDeviation(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
 
         AlertDestination(currentGpsPosition);
