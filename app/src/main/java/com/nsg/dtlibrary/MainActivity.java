@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Environment;
 
 
+import com.nsg.nsgdtlibrary.Classes.util.NSGIMainFragment;
+
 import java.io.File;
 
 import androidx.fragment.app.FragmentActivity;
@@ -15,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
  * Modified on 14/11/2019
  *
  */
+
 public class MainActivity extends FragmentActivity implements NSGIMainFragment.FragmentToActivity{
     private String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "DubaiBasemap" + ".mbtiles";
     private String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".csv";

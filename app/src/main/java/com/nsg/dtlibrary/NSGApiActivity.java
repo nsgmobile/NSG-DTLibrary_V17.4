@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 
-import com.nsg.nsgdtlibrary.Classes.util.NSGIMainFragment;
+import com.nsg.nsgdtlibrary.Classes.activities.NSGIMainFragment;
 
 import java.io.File;
 
