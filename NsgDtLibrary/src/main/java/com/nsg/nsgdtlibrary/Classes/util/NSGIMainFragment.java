@@ -1116,13 +1116,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                                 if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
                                     isRouteDeviated = true;
-                                    /*
-                                    if (isRouteDeviated == true) {
 
-
-                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                    }
-                                    */
                                 }
 
 
