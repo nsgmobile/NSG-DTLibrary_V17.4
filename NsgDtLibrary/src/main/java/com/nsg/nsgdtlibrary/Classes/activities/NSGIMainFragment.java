@@ -364,8 +364,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                     Log.e("OldGPSPosition", "OldGPSPosition -----" + OldGPSPosition);
 
                                                 }
-
-                                               getLatLngPointsForRoute_1();
+                                                getLatLngPointsForRoute_1();
                                                 LatLng currentGpsPosition1 = new LatLng(location.getLatitude(), location.getLongitude());
                                                 Log.e("currentGpsPosition", "currentGpsPosition -----" + currentGpsPosition1);
                                                 currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
@@ -403,13 +402,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                             @Override
                                             public void onMyLocationChange(Location location) {
-
-
                                                 getLatLngPointsForRoute_2();
                                                 currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
                                                 locationFakeGpsListener = locationFakeGpsListener + 1;
-
 
                                             }
                                         });
@@ -738,16 +734,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
-/*
-
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override            public void onCameraChange(CameraPosition cameraPosition) {
-                Log.e("Destination points","Destination points "+destLat+destLng);
-                getTextImplementation(currentGpsPosition,DestinationNode);
-               // verifyRouteDeviation(currentGpsPosition,10);
-            }
-        });
-        */
     }
 
     private double bearingBetweenLocations(LatLng latLng1, LatLng latLng2) {
@@ -765,8 +751,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         brng = (brng + 360) % 360;
         return brng;
     }
-
-
 
     private LatLng animateLatLngZoom(LatLng latlng, int reqZoom, int offsetX, int offsetY) {
         // Save current zoom
@@ -792,13 +776,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             lastDistance= showDistance(cameraPosition,DestinationNode);
             if (lastDistance <5) {
                 if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
+
                     return;
                 }
 
@@ -1258,12 +1236,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             }
             Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGps);
             float bearing = (float) bearingBetweenLocations(OldGps, nayaGps); //correct method to change orientation of map
-            mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(SourceNode)
-                    .title("currentLocation")
-                    .anchor(0.5f, 0.5f)
-                    .rotation(bearing)
-                    .flat(true));
 
             //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
             if (OldGps.equals(nearestPositionPoint)) {

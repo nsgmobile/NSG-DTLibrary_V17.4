@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.os.Environment;
 
 
-import com.nsg.nsgdtlibrary.Classes.activities.NSGIMainFragment;
+import com.nsg.nsgdtlibrary.Classes.util.NSGIMainFragment;
 
 import java.io.File;
 
