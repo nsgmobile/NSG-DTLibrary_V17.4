@@ -384,9 +384,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                             @Override
                                             public void onMyLocationChange(Location location) {
-                                                if (mPositionMarker != null) {
-                                                    mPositionMarker.remove();
-                                                }
+
                                                 getLatLngPointsForRoute_2();
                                                 currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
@@ -404,14 +402,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                             @Override
                                             public void onMyLocationChange(final Location location) {
-                                                if (mPositionMarker != null) {
-                                                    mPositionMarker.remove();
-                                                }
                                                 vehicleSpeed=location.getSpeed();
                                                 LatLng currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
                                                 MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition,currentGpsPosition);
-
-
                                             }
                                         });
                                 }
