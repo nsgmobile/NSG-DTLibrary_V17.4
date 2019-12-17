@@ -960,11 +960,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             }
                                         }
                                     }
-                                    polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                    polyline = mMap.addPolyline(polylineOptions);
-                                    polylineOptions.color(Color.RED).width(30);
-                                    mMap.addPolyline(polylineOptions);
-                                    polyline.setJointType(JointType.ROUND);
+
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -1079,7 +1075,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
-        PolylineOptions polylineOptions = new PolylineOptions();
+
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
@@ -1135,15 +1131,17 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             .anchor(0.5f, 0.5f)
                                             .flat(true)
                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                    
-
-
+                                    PolylineOptions polylineOptions = new PolylineOptions();
+                                    polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                    Polyline polyline = mMap.addPolyline(polylineOptions);
+                                    polylineOptions.color(Color.RED).width(30);
+                                    mMap.addPolyline(polylineOptions);
+                                    polyline.setJointType(JointType.ROUND);
                                 }
 
 
                             }
                         }, 10);
-
             }
 
         }else{
