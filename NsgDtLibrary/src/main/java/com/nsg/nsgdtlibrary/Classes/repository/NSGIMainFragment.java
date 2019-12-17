@@ -1124,19 +1124,24 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                     toast.setGravity(Gravity.TOP, 0, 150);
                                     toast.setView(layout);
                                     toast.show();
-
+                                    if(mPositionMarker!=null){
+                                      mPositionMarker.remove();
+                                    }
                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
                                             .position(currentGpsPosition)
                                             .title("currentLocation")
                                             .anchor(0.5f, 0.5f)
                                             .flat(true)
                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                    PolylineOptions polylineOptions = new PolylineOptions();
-                                    polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                    Polyline polyline = mMap.addPolyline(polylineOptions);
-                                    polylineOptions.color(Color.RED).width(30);
-                                    mMap.addPolyline(polylineOptions);
-                                    polyline.setJointType(JointType.ROUND);
+                                    if(mPositionMarker!=null && mPositionMarker.isVisible()==true) {
+                                        PolylineOptions polylineOptions = new PolylineOptions();
+                                        polylineOptions.add(OldGPSPosition);
+                                        polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                        Polyline polyline = mMap.addPolyline(polylineOptions);
+                                        polylineOptions.color(Color.RED).width(30);
+                                        mMap.addPolyline(polylineOptions);
+                                        polyline.setJointType(JointType.ROUND);
+                                    }
                                 }
 
 
