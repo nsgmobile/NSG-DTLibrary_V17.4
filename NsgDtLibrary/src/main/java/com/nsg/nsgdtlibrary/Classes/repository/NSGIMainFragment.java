@@ -1291,9 +1291,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                        if(routeDeviationTextPoint.equals(FirstCordinate.toString())){
                           int index = geometryRouteDeviatedEdgesData.indexOf(routeDeviationTextPoint);
-                           st_vertex=geometryRouteDeviatedEdgesData.get(index).getStartPoint();
-                           end_vertex=geometryRouteDeviatedEdgesData.get(index).getEndPoint();
-                           directionTextRouteDeviation=geometryRouteDeviatedEdgesData.get(index).getGeometryText();
+                           st_vertex=geometry.getStartPoint();
+                           end_vertex=geometry.getEndPoint();
+                           directionTextRouteDeviation=geometry.getGeometryText();
 
                        }
                     }
