@@ -117,7 +117,7 @@ import static java.lang.Math.sin;
 
 public class NSGIMainFragment extends Fragment implements View.OnClickListener, SensorEventListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private static final int SENSOR_DELAY_NORMAL =5000;
+    private static final int SENSOR_DELAY_NORMAL =50;
     private ProgressDialog dialog;
     private TextToSpeech textToSpeech;
     LatLng DestinationPosition,OldGPSPosition,PointBeforeRouteDeviation,RouteDeviatedSourcePosition;
@@ -138,6 +138,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private ArrayList<LatLng> currentLocationList=new ArrayList<LatLng>();
     private List<EdgeDataT> edgeDataList;
     List RouteDeviationConvertedPoints;
+    HashMap<String,String> RouteDeviatedEdgesMap;
+    private List<GeometryT> geometryRouteDeviatedEdgesData;
     double TotalRouteDeviatedDistanceInMTS;
     private List<RouteT> RouteDataList;
     private List PreviousGpsList;
@@ -355,7 +357,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             @Override
                                             public void onMyLocationChange(Location location) {
 
-
+                                                /*
                                                 vehicleSpeed = location.getSpeed();
                                                 if (currentGpsPosition != null && locationFakeGpsListener > 0) {
                                                     lastGPSPosition = new ArrayList<>();
@@ -381,6 +383,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                         locationFakeGpsListener = locationFakeGpsListener + 1;
                                                     }
                                                 }, 0);
+                                                */
 
 
                                             }
@@ -711,12 +714,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }else{
             animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
         }
-        //animateCamera(nearestPositionPoint,bearing);
-       // verifyRouteDeviation(currentGpsPosition,50);
+
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
 
-       // verifyRouteDeviationPrevious(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
+        verifyRouteDeviationPrevious(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
        // flag= verifyRouteDeviation(PrevousGpsPosition, currentGpsPosition, DestinationNode, 40, EdgeWithoutDuplicates);
 
         AlertDestination(currentGpsPosition);
@@ -862,6 +864,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                     PointBeforeRouteDeviation=new LatLng(OldGPSPosition.latitude,OldGPSPosition.longitude);
                                     Polyline polyline = null;
                                      RouteDeviationConvertedPoints=new ArrayList<LatLng>();
+                                    geometryRouteDeviatedEdgesData=new ArrayList<GeometryT>();
+
+                                    RouteDeviatedEdgesMap=new HashMap<>();
                                     for (int i = 0; i < jSonRoutes.length(); i++) {
                                         List deviationPoints=new ArrayList();
                                         JSONObject Routes = new JSONObject(jSonRoutes.get(i).toString());
@@ -888,6 +893,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                         Double stPointLongi= Double.valueOf(firstPoint[1]);
                                         LatLng stVertex=new LatLng(stPointLongi,stPointLat);
 
+
+
                                         StringBuilder query = new StringBuilder("INSERT INTO ");
                                         query.append(GeometryT.TABLE_NAME).append("(edgeNo,distanceInVertex,startPoint,allPoints,geometryText,endPoint) values (")
                                                 .append("'").append(EdgeNo).append("',")
@@ -910,6 +917,13 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             StringBuilder sb=new StringBuilder();
                                             LatLng latLng = new LatLng(x, y);
                                             RouteDeviationConvertedPoints.add(latLng);
+                                            RouteDeviatedEdgesMap.put(latLng.toString(),GeometryText);
+                                            GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(PointData),GeometryText,"");
+                                            geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
+                                            // EdgeContainsDataList.add(edgeRouteDeviatedPointData);
+                                           // GeometryT geometry=
+                                              // geometryRouteDeviatedEdgesData.put(String.valueOf(PointData),geometryText);
+
                                         }
                                         Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints);
                                         MarkerOptions markerOptions = new MarkerOptions();
@@ -1126,6 +1140,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             double distance = distFrom(PositionMarkingPoint.latitude,PositionMarkingPoint.longitude,PointBeforeRouteDeviation.latitude,PointBeforeRouteDeviation.longitude);
             hash_map1.put(String.valueOf(distance),String.valueOf(edgeWithoutDuplicates.get(epList)));
             distancesList1.add(distance);
+           // RouteDeviatedEdgesMap
             Collections.sort(distancesList1);
         }
         String shortestDistance = String.valueOf(distancesList1.get(0));
@@ -1165,12 +1180,14 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
     public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition,LatLng DeviatedSourcePosition,LatLng destinationPosition){
         LatLng FirstCordinate = null,SecondCordinate=null;
+        String  DirectionRouteDeviationText="";
         if(RouteDeviationConvertedPoints!=null) {
             Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
             Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
             List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
             for (int k = 0; k < EdgeWithoutDuplicatesInRouteDeviationPoints.size(); k++) {
                 Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
+
             }
             if (EdgeWithoutDuplicatesInRouteDeviationPoints != null && EdgeWithoutDuplicatesInRouteDeviationPoints.size() > 0) {
 
@@ -1196,7 +1213,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     System.out.println("The list contains " + firstShortestDistance);
                     FirstCordinate = distancesMapInRouteDeviation.get(firstShortestDistance);
                     Log.e("Route Deviation", " FIRST Cordinate  From Route deviation" + FirstCordinate);
-                    // key= String.valueOf(getKeysFromValue(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate));
+                    DirectionRouteDeviationText= String.valueOf(getKeysFromValue(RouteDeviatedEdgesMap,FirstCordinate.toString()));
+
+                    //key= String.valueOf(getKeysFromValue(,FirstCordinate));
+                    // key= String.valueOf(getKeysFromValue(geometryRouteDeviatedEdgesData,FirstCordinate));
                     // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
                 } else {
                     System.out.println("The list does not contains " + "FALSE");
@@ -1258,8 +1278,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     .bearing(bearing).tilt(65.5f).zoom(20)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
-           // TextImplementationRouteDeviationDirectionText(TotalRouteDeviatedDistanceInMTS,FirstCordinate,SecondCordinate);
-          //  CaluculateETAInRouteDeviationDirection();
+           TextImplementationRouteDeviationDirectionText(DirectionRouteDeviationText,FirstCordinate.toString(),SecondCordinate.toString());
+            CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS,RouteDeviatedSourcePosition,currentGpsPosition,DestinationNode);
             AlertDestination(currentGpsPosition);
         }
 
@@ -2241,6 +2261,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             .anchor(0.5f, 0.5f)
                             .flat(true));
                     mMap.stopAnimation();
+
                     String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                     String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                     final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
