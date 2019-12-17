@@ -980,7 +980,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             StringBuilder sb=new StringBuilder();
                                             LatLng latLng = new LatLng(x, y);
                                             RouteDeviationConvertedPoints.add(latLng);
-                                            GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(PointData),GeometryText,"");
+                                            GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(latLng),GeometryText,"");
                                             geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
                                         }
                                         Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints);
@@ -1287,6 +1287,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     for(int i=0;i<geometryRouteDeviatedEdgesData.size();i++){
                         GeometryT geometry=geometryRouteDeviatedEdgesData.get(i);
                        String routeDeviationTextPoint= geometry.getPositionMarkingPoint();
+                        Log.e("Route Deviation", " ST_VERTEX From Route deviation" + routeDeviationTextPoint);
+
                        if(routeDeviationTextPoint.equals(FirstCordinate.toString())){
                           int index = geometryRouteDeviatedEdgesData.indexOf(routeDeviationTextPoint);
                            st_vertex=geometryRouteDeviatedEdgesData.get(index).getStartPoint();
@@ -1295,6 +1297,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                        }
                     }
+                    Log.e("Route Deviation", " ST_VERTEX From Route deviation" + st_vertex);
+                    Log.e("Route Deviation", " END_VERTEX  From Route deviation" + end_vertex);
+                    Log.e("Route Deviation", " DIRECTION TEXT Cordinate  From Route deviation" + directionTextRouteDeviation);
 
                     // key= getKeysFromValueinLatLng(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate);
                     // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
@@ -1436,6 +1441,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
     }
     public void TextImplementationRouteDeviationDirectionText(String directionTextInDeviation,String stPoint,String endPoint){
+        Log.e("TAG", "  START POSITION " + stPoint);
+        Log.e("TAG", " END POSITION " + endPoint);
+        Log.e("TAG", " END POSITION " + directionTextInDeviation);
         String stPoint_data=stPoint.replace("[","");
         String stPoint_data1=stPoint_data.replace("]","");
         String[] st_point=stPoint_data1.split(",");
