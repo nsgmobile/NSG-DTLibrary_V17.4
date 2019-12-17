@@ -47,6 +47,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -1133,6 +1134,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             .anchor(0.5f, 0.5f)
                                             .flat(true)
                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                                    CameraUpdate center =
+                                            CameraUpdateFactory.newLatLng(currentGpsPosition);
+                                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                                    mMap.moveCamera(center);
+                                    mMap.animateCamera(zoom);
                                     if(mPositionMarker!=null && mPositionMarker.isVisible()==true) {
                                         PolylineOptions polylineOptions = new PolylineOptions();
                                         polylineOptions.add(OldGPSPosition);
