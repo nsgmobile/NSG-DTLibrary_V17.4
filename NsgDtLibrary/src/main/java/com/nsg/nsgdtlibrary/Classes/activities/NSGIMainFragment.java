@@ -547,11 +547,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .zoom(18)
                 .tilt(45)
                 .build();
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .flat(true));
+
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
     }
@@ -711,6 +707,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }else{
             animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
         }
+        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                .position(SourceNode)
+                .title("currentLocation")
+                .anchor(0.5f, 0.5f)
+                .flat(true));
 
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
@@ -1275,7 +1276,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     .bearing(bearing).tilt(65.5f).zoom(20)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
-           TextImplementationRouteDeviationDirectionText(DirectionRouteDeviationText,FirstCordinate.toString(),SecondCordinate.toString());
+          // TextImplementationRouteDeviationDirectionText(DirectionRouteDeviationText,FirstCordinate.toString(),SecondCordinate.toString());
             CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS,RouteDeviatedSourcePosition,currentGpsPosition,DestinationNode);
             AlertDestination(currentGpsPosition);
         }
@@ -2234,7 +2235,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviationPrevious(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
        boolean routeFlag=false;
-        PolylineOptions polylineOptions = new PolylineOptions();
+
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null) {
@@ -2252,12 +2253,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 mMap.stopAnimation();
                 Log.e("Route Deviation", "ROUTE DEVIATION FLAG ----" + routeFlag);
                 if (routeFlag==true) {
-                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                            .position(currentGpsPosition)
-                            .title("currentLocation")
-                            .anchor(0.5f, 0.5f)
-                            .flat(true));
-                    mMap.stopAnimation();
 
                     String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                     String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
@@ -2282,21 +2277,35 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
+
+                                        mMap.stopAnimation();
                                         String MESSAGE = "";
                                         GetRouteDetails(routeDiationPosition, destPoint);
                                         //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                                         if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                                             isRouteDeviated = true;
+                                            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                    .position(currentGpsPosition)
+                                                    .title("currentLocation")
+                                                    .anchor(0.5f, 0.5f)
+                                                    .flat(true));
                                             Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
                                             toast.setMargin(100, 100);
                                             toast.show();
+                                            PolylineOptions polylineOptions = new PolylineOptions();
+                                            polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                            Polyline polyline = mMap.addPolyline(polylineOptions);
+                                            polylineOptions.color(Color.RED).width(30);
+                                            mMap.addPolyline(polylineOptions);
+                                            polyline.setJointType(JointType.ROUND);
+
 
                                         } else {
 
                                         }
                                         dialog.dismiss();
                                     }
-                                }, 10);
+                                }, 0);
                        //    }
                      //   });
                    /*  } else {
