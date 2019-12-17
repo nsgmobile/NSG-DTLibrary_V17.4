@@ -701,17 +701,18 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-              //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-        if( OldGps .equals(nearestPositionPoint)){
-
-        }else{
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
-        }
         mPositionMarker = mMap.addMarker(new MarkerOptions()
                 .position(SourceNode)
                 .title("currentLocation")
                 .anchor(0.5f, 0.5f)
                 .flat(true));
+
+        //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+        if( OldGps .equals(nearestPositionPoint)){
+
+        }else{
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
+        }
 
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
@@ -2277,7 +2278,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-
                                         mMap.stopAnimation();
                                         String MESSAGE = "";
                                         GetRouteDetails(routeDiationPosition, destPoint);
