@@ -386,8 +386,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                        OldGPSPosition=lastGPSPosition.get(0);
                                                    }
                                                    getLatLngPoints();
-                                                   LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                                   Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
+                                                  // LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
+                                                 //  Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
                                                    // NavigationDirection(currentGpsPosition,DestinationPosition);
                                                    currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                                    if(isRouteDeviated==false) {
@@ -2129,7 +2129,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             if (speechStatus == TextToSpeech.ERROR) {
                 Log.e("TTS", "Error in converting Text to Speech!");
             }
-            Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
             LayoutInflater inflater1 = getActivity().getLayoutInflater();
             @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
             TextView text = (TextView) layout.findViewById(R.id.textView_toast);
