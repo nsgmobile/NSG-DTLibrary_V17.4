@@ -2003,7 +2003,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                     }
                 }
-                break;
+            break;
         }
     }
     @Override
@@ -2016,9 +2016,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
             }
         }, 100);
-
-
-
     }
 
     private void updateCamera(float bearing) {
