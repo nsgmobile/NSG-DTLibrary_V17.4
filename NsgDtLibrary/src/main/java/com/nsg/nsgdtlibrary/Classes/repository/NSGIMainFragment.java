@@ -716,7 +716,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000,currentGpsPosition);
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
         }
         animateCamera(nearestPositionPoint,bearing);
        // verifyRouteDeviation(currentGpsPosition,50);
@@ -729,7 +729,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Projection p = mMap.getProjection();
         Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
-        Point offset = new Point(center.x, (center.y + 300));
+       // Point offset = new Point(center.x, (center.y + 320));
+        Point offset = new Point((center.x + 320), (center.y + 320));
         LatLng centerLoc = p.fromScreenLocation(center);
         LatLng offsetNewLoc = p.fromScreenLocation(offset);
         double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
@@ -739,7 +740,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
 
 
 /*
@@ -861,6 +862,16 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     public Set<Object> getKeysFromValue(Map<String, String> map, String key) {
         Set<Object> keys = new HashSet<Object>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
+            //if value != null
+            if (entry.getKey().equals(key)){
+                keys.add(entry.getValue());
+            }
+        }
+        return keys;
+    }
+    public Set<Object> getKeysFromValueinLatLng(Map<LatLng, String> map, String key) {
+        Set<Object> keys = new HashSet<Object>();
+        for (Map.Entry<LatLng, String> entry : map.entrySet()) {
             //if value != null
             if (entry.getKey().equals(key)){
                 keys.add(entry.getValue());
@@ -1200,20 +1211,20 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLng deviatedLatlng=new LatLng(longi,lat);
 
         boolean listVerifyCon = edgeWithoutDuplicates.contains(deviatedLatlng);
-        Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT INDEX BOOL ------- " + listVerifyCon);
+       // Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT INDEX BOOL ------- " + listVerifyCon);
         if(listVerifyCon) {
             int index = edgeWithoutDuplicates.indexOf(deviatedLatlng);
-            Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT INDEX ------- " + index);
+          //  Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT INDEX ------- " + index);
             sublistBefore = edgeWithoutDuplicates.subList(0, index);
-            Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST BEFORE------- " + sublistBefore.size());
+          //  Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST BEFORE------- " + sublistBefore.size());
             sublistAfter = edgeWithoutDuplicates.subList(index, edgeWithoutDuplicates.size());
-            Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST AFTER ------- " + sublistAfter.size());
+         //   Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST AFTER ------- " + sublistAfter.size());
 
             for (int p = 0; p < sublistBefore.size(); p++) {
-                Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST BEFORE ------- " + sublistBefore.get(p));
+           //     Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST BEFORE ------- " + sublistBefore.get(p));
             }
             for (int p = 0; p < sublistAfter.size(); p++) {
-                Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST AFTER ------- " + sublistAfter.get(p));
+           //     Log.e("Route Deviated----", "shortestDistance  Route Deviated POINT SUBLIST AFTER ------- " + sublistAfter.get(p));
             }
         }
     }
@@ -1250,7 +1261,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     System.out.println("The list contains " + firstShortestDistance);
                     FirstCordinate = distancesMapInRouteDeviation.get(firstShortestDistance);
                     Log.e("Route Deviation", " FIRST Cordinate  From Route deviation" + FirstCordinate);
-                    // key= String.valueOf(getKeysFromValue(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate));
+                    // key= getKeysFromValueinLatLng(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate);
                     // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
                 } else {
                     System.out.println("The list does not contains " + "FALSE");
@@ -1301,13 +1312,14 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             if (OldGps.equals(nearestPositionPoint)) {
 
             } else {
-                animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000, currentGpsPosition);
+                animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000, currentGpsPosition);
             }
           //  animateCamera(nearestPositionPoint, bearing);
             Projection p = mMap.getProjection();
             Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
             Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
-            Point offset = new Point(center.x, (center.y + 300));
+          //  Point offset = new Point(center.x, (center.y + 320));
+            Point offset = new Point((center.x + 320), (center.y + 320));
             LatLng centerLoc = p.fromScreenLocation(center);
             LatLng offsetNewLoc = p.fromScreenLocation(offset);
             double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
@@ -1317,7 +1329,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     .target(shadowTgt)
                     .bearing(bearing).tilt(65.5f).zoom(20)
                     .build();
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
 
             AlertDestination(currentGpsPosition);
         }
