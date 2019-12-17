@@ -1088,10 +1088,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
             Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
-                    Log.e("Route Deviation", "ROUTE DEVIATION DISTANCE ----" + "ROUTE DEVIATED");
-                    Toast toast = Toast.makeText(getContext(), " ROUTE DEVIATED ", Toast.LENGTH_LONG);
-                    toast.setMargin(100, 100);
-                    toast.show();
+
 
                         mMap.stopAnimation();
                         String cgpsLat = String.valueOf(currentGpsPosition.latitude);
@@ -1118,13 +1115,29 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                                 if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
                                     isRouteDeviated = true;
-                                    /*
-                                    if (isRouteDeviated == true) {
+
+                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                                    text.setText("Route Deviated");
+
+                                    Toast toast = new Toast(getActivity().getApplicationContext());
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                    toast.setGravity(Gravity.TOP, 0, 150);
+                                    toast.setView(layout);
+                                    toast.show();
+
+                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                            .position(currentGpsPosition)
+                                            .title("currentLocation")
+                                            .anchor(0.5f, 0.5f)
+                                            .flat(true)
+                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                                    
 
 
-                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                    }
-                                    */
                                 }
 
 
