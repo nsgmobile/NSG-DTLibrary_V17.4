@@ -1463,7 +1463,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.978968,55.063839 ));
         LatLngDataArray.add(new LatLng( 24.979060,55.063933));//
         LatLngDataArray.add(new LatLng( 24.979202,55.064101));
-        LatLngDataArray.add(new LatLng(24.979288,55.064200 ));
+        LatLngDataArray.add(new LatLng(24.979329, 55.064174 ));
         LatLngDataArray.add(new LatLng( 24.979387,55.064313));
         LatLngDataArray.add(new LatLng( 24.979527,55.064469));
         LatLngDataArray.add(new LatLng( 24.979651,55.064618));
@@ -1476,6 +1476,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng( 24.979342,55.065516));
 
         //Route Deviation points are upto here---
+
 
         LatLngDataArray.add(new LatLng(24.979722, 55.066073));
         LatLngDataArray.add(new LatLng(24.979961, 55.066314));
