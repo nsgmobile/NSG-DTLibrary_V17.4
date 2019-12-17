@@ -1127,7 +1127,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         String destLatPos = String.valueOf(DestinationPosition.latitude);
                         String destLongiPos = String.valueOf(DestinationPosition.longitude);
                         final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
-                RouteDeviatedSourcePosition=new LatLng(Double.parseDouble(cgpsLat),Double.parseDouble(cgpsLat));
+                        RouteDeviatedSourcePosition=new LatLng(Double.parseDouble(cgpsLat),Double.parseDouble(cgpsLat));
 
                         Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
                         Log.e("returnedDistance", "Destination Position --------- " + destPoint);
