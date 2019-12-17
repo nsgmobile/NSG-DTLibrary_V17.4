@@ -357,7 +357,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             @Override
                                             public void onMyLocationChange(Location location) {
 
-                                                /*
                                                 vehicleSpeed = location.getSpeed();
                                                 if (currentGpsPosition != null && locationFakeGpsListener > 0) {
                                                     lastGPSPosition = new ArrayList<>();
@@ -383,8 +382,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                         locationFakeGpsListener = locationFakeGpsListener + 1;
                                                     }
                                                 }, 0);
-                                                */
-
 
                                             }
 
