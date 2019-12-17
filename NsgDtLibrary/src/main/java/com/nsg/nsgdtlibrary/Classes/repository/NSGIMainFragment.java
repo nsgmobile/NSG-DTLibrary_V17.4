@@ -387,9 +387,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                        OldGPSPosition=lastGPSPosition.get(0);
                                                    }
                                                    getLatLngPoints();
-                                                  // LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                                 //  Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
-                                                   // NavigationDirection(currentGpsPosition,DestinationPosition);
                                                    currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
                                                    if(isRouteDeviated==false) {
                                                        MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
@@ -433,8 +430,27 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                                .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
                                                                .build();
                                                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+
+                                                       if(isRouteDeviated==false) {
+                                                           MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                                       }else{
+                                                           MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                                       }
+
                                                    }
                                                });
+                                       }
+                                   }else if(enteredMode==3){
+                                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                           if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+
+                                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                               .position(SourceNode)
+                                                               .title("currentLocation")
+                                                               .anchor(0.5f, 0.5f)
+                                                               .flat(true)
+                                                               .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+
                                        }
                                    }
                                    dialog.dismiss();
