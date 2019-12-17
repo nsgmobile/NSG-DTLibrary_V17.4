@@ -39,6 +39,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -212,7 +213,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private float[] mR = new float[9];
     private float[] mOrientation = new float[3];
     private float mCurrentDegree = 0f;
-    LatLng currentGpsPosition;
+    LatLng currentGpsPosition,RouteDeviatedSourcePosition;
     float azimuthInRadians;
     float azimuthInDegress;
     float degree,lastUpdate;
@@ -221,6 +222,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
     boolean isRouteDeviated=false;
+    private Button location_tracking_start,location_tracking_stop;
     StringBuilder time= new StringBuilder();
     public interface FragmentToActivity {
         String communicate(String comm);
@@ -279,6 +281,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv1 = (TextView) rootView.findViewById(R.id.tv1);
         tv2 = (TextView) rootView.findViewById(R.id.tv2);
         tv3 = (TextView) rootView.findViewById(R.id.tv3);
+        location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
+        location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
        // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
        // location_tracking.setOnClickListener(this);
         mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
@@ -332,110 +336,138 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 }
 
                 getRouteAccordingToRouteID(routeIDName);
-                Log.e("RouteData","RouteData"+RouteDataList.size());
-                if(RouteDataList!=null && RouteDataList.size()>0) {
-                    dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                    dialog.setMessage("Fetching Route");
-                    dialog.setMax(100);
-                    dialog.show();
-                    new Handler().postDelayed(new Runnable() {
-                        //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                        @Override
-                        public void run() {
-                            // dialog.dismiss();
-                            nearestPointValuesList=new ArrayList<LatLng>();
-                            nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
-                            OldNearestGpsList=new ArrayList<>();
-                            OldNearestGpsList.add(new LatLng(sourceLat,sourceLng));
-                            mMap.setMyLocationEnabled(true);
-                            mMap.setBuildingsEnabled(true);
-                            mMap.getUiSettings().setZoomControlsEnabled(true);
-                            mMap.getUiSettings().setCompassEnabled(true);
-                            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                            mMap.getUiSettings().setMapToolbarEnabled(true);
-                            mMap.getUiSettings().setZoomGesturesEnabled(true);
-                            mMap.getUiSettings().setScrollGesturesEnabled(true);
-                            mMap.getUiSettings().setTiltGesturesEnabled(true);
-                            mMap.getUiSettings().setRotateGesturesEnabled(true);
-                            mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                            if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
-                                ETACalclator etaCalculator1=new ETACalclator();
-                                double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-                                double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
-                                tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-                                tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
+               location_tracking_start.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       if(RouteDataList!=null && RouteDataList.size()>0) {
+                           dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                           dialog.setMessage("Fetching Route");
+                           dialog.setMax(100);
+                           dialog.show();
+                           new Handler().postDelayed(new Runnable() {
+                               //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                               @Override
+                               public void run() {
+                                   // dialog.dismiss();
+                                   nearestPointValuesList=new ArrayList<LatLng>();
+                                   nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
+                                   OldNearestGpsList=new ArrayList<>();
+                                   OldNearestGpsList.add(new LatLng(sourceLat,sourceLng));
+                                   mMap.setMyLocationEnabled(true);
+                                   mMap.setBuildingsEnabled(true);
+                                   mMap.getUiSettings().setZoomControlsEnabled(true);
+                                   mMap.getUiSettings().setCompassEnabled(true);
+                                   mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                   mMap.getUiSettings().setMapToolbarEnabled(true);
+                                   mMap.getUiSettings().setZoomGesturesEnabled(true);
+                                   mMap.getUiSettings().setScrollGesturesEnabled(true);
+                                   mMap.getUiSettings().setTiltGesturesEnabled(true);
+                                   mMap.getUiSettings().setRotateGesturesEnabled(true);
+                                   mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                   if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
+                                       ETACalclator etaCalculator1=new ETACalclator();
+                                       double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+                                       double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+                                       tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+                                       tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                   // MoveWithGPSMARKER();
+                                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                   // MoveWithGPSMARKER();
 
-                                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                       @Override
-                                         public void onMyLocationChange(Location location) {
-                                           if (mPositionMarker != null) {
-                                            mPositionMarker.remove();
-                                           }
-                                            vehicleSpeed=location.getSpeed();
-                                           if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
-                                               lastGPSPosition=new ArrayList<>();
-                                               lastGPSPosition.add(currentGpsPosition);
-                                               OldGPSPosition=lastGPSPosition.get(0);
-                                           }
-                                            getLatLngPoints();
-                                            LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
-                                            Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
-                                                    // NavigationDirection(currentGpsPosition,DestinationPosition);
-                                            currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-                                            if(isRouteDeviated==false) {
-                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                            }else{
-                                                MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
-                                            }
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        locationFakeGpsListener = locationFakeGpsListener + 1;
-                                                    }
-                                                }, 10);
+                                           mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                               @Override
+                                               public void onMyLocationChange(Location location) {
+                                                   if (mPositionMarker != null) {
+                                                       mPositionMarker.remove();
+                                                   }
+                                                   vehicleSpeed=location.getSpeed();
+                                                   if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
+                                                       lastGPSPosition=new ArrayList<>();
+                                                       lastGPSPosition.add(currentGpsPosition);
+                                                       OldGPSPosition=lastGPSPosition.get(0);
+                                                   }
+                                                   getLatLngPoints();
+                                                   LatLng currentGpsPosition1 = new LatLng(location.getLatitude(),location.getLongitude());
+                                                   Log.e("currentGpsPosition","currentGpsPosition -----"+currentGpsPosition1);
+                                                   // NavigationDirection(currentGpsPosition,DestinationPosition);
+                                                   currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
+                                                   if(isRouteDeviated==false) {
+                                                       MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                                   }else{
+                                                       MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                                   }
+                                                   new Handler().postDelayed(new Runnable() {
+                                                       @Override
+                                                       public void run() {
+                                                           locationFakeGpsListener = locationFakeGpsListener + 1;
+                                                       }
+                                                   }, 10);
 
 
+                                               }
+                                           });
                                        }
-                                   });
-                                }
-                            }else if(enteredMode==2){
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                                   }else if(enteredMode==2){
+                                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                           if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
 
-                                    mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                                        @Override
-                                        public void onMyLocationChange(Location location) {
-                                            if (mPositionMarker != null) {
-                                                mPositionMarker.remove();
-                                            }
-                                            LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
+                                               mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                                   @Override
+                                                   public void onMyLocationChange(Location location) {
+                                                       if (mPositionMarker != null) {
+                                                           mPositionMarker.remove();
+                                                       }
+                                                       LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
 
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(currentGpsPosition)
-                                                        .title("currentLocation")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .rotation(location.bearingTo(location))
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                //changing direction to NORTH as Shown in vedio by DT Team 65.5f
+                                                       mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                               .position(currentGpsPosition)
+                                                               .title("currentLocation")
+                                                               .anchor(0.5f, 0.5f)
+                                                               .rotation(location.bearingTo(location))
+                                                               .flat(true)
+                                                               .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                                                       //changing direction to NORTH as Shown in vedio by DT Team 65.5f
 
-                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                        .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
-                                                        .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
-                                                        .build();
-                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
-                                        }
-                                    });
-                                }
-                            }
-                            dialog.dismiss();
-                        }
-                    }, 10);
-                }else{
-                    Log.e("SendData","SendData ------- "+ "internet does not exist");
-                }
+                                                       CameraPosition currentPlace = new CameraPosition.Builder()
+                                                               .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
+                                                               .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
+                                                               .build();
+                                                       mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+                                                   }
+                                               });
+                                       }
+                                   }
+                                   dialog.dismiss();
+                               }
+                           }, 10);
+                       }
+                   }
+               });
+
+               location_tracking_stop.setOnClickListener(new View.OnClickListener() {
+                   LatLng currentGpsPosition;
+                   @Override
+                   public void onClick(View v) {
+
+                           mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                               @Override
+                               public void onMyLocationChange(final Location location) {
+                                   if (mPositionMarker != null) {
+                                       mPositionMarker.remove();
+                                   }
+                                   currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+
+                               }
+                           });
+                           if(currentGpsPosition!=null){
+                               mMap.setMyLocationEnabled(false);
+                               sendData(currentGpsPosition.toString());
+                           }
+                           getActivity().onBackPressed();
+
+
+                   }
+               });
+
             }
         });
         return rootView;
@@ -2175,9 +2207,79 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
 
         tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
+    }
+    public int getLatLngPointsForRoute_1(){
+
+        LatLngDataArray.add(new LatLng(24.978782,55.067291));
+        LatLngDataArray.add(new LatLng(24.978792,55.067279));
+        LatLngDataArray.add(new LatLng(24.978762,55.067241));
+        LatLngDataArray.add(new LatLng(24.978765,55.067237));
+        LatLngDataArray.add(new LatLng(24.978755,55.067218));
+        LatLngDataArray.add(new LatLng(24.978449,55.067310));
+        LatLngDataArray.add(new LatLng(24.978656,55.066997));
+        LatLngDataArray.add(new LatLng(24.978408,55.066897));
+        LatLngDataArray.add(new LatLng(24.978025,55.066462));
+        LatLngDataArray.add(new LatLng(24.977993,55.066226));
+        LatLngDataArray.add(new LatLng(24.97761,55.065815));
+        LatLngDataArray.add(new LatLng(24.977358,55.065692));
+        LatLngDataArray.add(new LatLng(24.977132,55.065436));
+        LatLngDataArray.add(new LatLng(24.977126,55.065249));
+        LatLngDataArray.add(new LatLng(24.977164,55.065171));
+        LatLngDataArray.add(new LatLng(24.977257,55.064874));
+        LatLngDataArray.add(new LatLng(24.977631,55.06466));
+        LatLngDataArray.add(new LatLng(24.977690, 55.064490));
+        LatLngDataArray.add(new LatLng(24.977881, 55.064262));
+        LatLngDataArray.add(new LatLng( 24.977960, 55.064183));
+
+        LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
 
 
 
+        LatLngDataArray.add(new LatLng(24.978098, 55.064253));
+        LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
+        //Route Deviation points starts from here ----
+        LatLngDataArray.add(new LatLng( 24.978179,55.064389)); //Route deviation point
+        LatLngDataArray.add(new LatLng(24.978547,55.064227));
+        LatLngDataArray.add(new LatLng( 24.978617,55.064152));
+        LatLngDataArray.add(new LatLng( 24.978720,55.064048));
+        LatLngDataArray.add(new LatLng(24.978816,55.063959 ));
+        LatLngDataArray.add(new LatLng(24.978879,55.063874 ));
+        LatLngDataArray.add(new LatLng(24.978968,55.063839 ));
+        LatLngDataArray.add(new LatLng( 24.979060,55.063933));//
+        LatLngDataArray.add(new LatLng( 24.979202,55.064101));
+        LatLngDataArray.add(new LatLng(24.979288,55.064200 ));
+        LatLngDataArray.add(new LatLng( 24.979387,55.064313));
+        LatLngDataArray.add(new LatLng( 24.979527,55.064469));
+        LatLngDataArray.add(new LatLng( 24.979651,55.064618));
+        LatLngDataArray.add(new LatLng( 24.979770,55.064747));
+        LatLngDataArray.add(new LatLng( 24.979840,55.064828));
+        LatLngDataArray.add(new LatLng(24.979861,55.064973));
+        LatLngDataArray.add(new LatLng( 24.979760,55.065077));
+        LatLngDataArray.add(new LatLng( 24.979559,55.065288));
+        LatLngDataArray.add(new LatLng( 24.979448,55.065401));
+        LatLngDataArray.add(new LatLng( 24.979342,55.065516));
+
+        //Route Deviation points are upto here---
+
+        LatLngDataArray.add(new LatLng(24.979722, 55.066073));
+        LatLngDataArray.add(new LatLng(24.979961, 55.066314));
+        LatLngDataArray.add(new LatLng(24.980189, 55.066572));
+        LatLngDataArray.add(new LatLng(24.980335, 55.066770));
+        LatLngDataArray.add(new LatLng(24.980174, 55.066937));
+        LatLngDataArray.add(new LatLng(24.979878,55.067205));  //Destinationm point
+        return LatLngDataArray.size();
+
+    }
+    public int getLatLngPointsForRoute_2(){
+        LatLngDataArray.add(new LatLng(24.981071,55.067708));
+        LatLngDataArray.add(new LatLng(24.981227,55.067913));
+        LatLngDataArray.add(new LatLng(24.981518,55.068258));
+        LatLngDataArray.add(new LatLng(24.981922,55.068711));
+        LatLngDataArray.add(new LatLng(24.982424,55.069294));
+        LatLngDataArray.add(new LatLng(24.982787,55.069716));
+        LatLngDataArray.add(new LatLng(24.983160,55.070151));
+        LatLngDataArray.add(new LatLng(24.983335,55.070321));
+        return LatLngDataArray.size();
     }
 
 }
