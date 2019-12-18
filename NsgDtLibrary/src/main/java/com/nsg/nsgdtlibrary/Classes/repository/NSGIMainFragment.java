@@ -399,7 +399,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                        public void run() {
                                                            locationFakeGpsListener = locationFakeGpsListener + 1;
                                                        }
-                                                   }, 10);
+                                                   }, 0);
 
 
                                                }
@@ -456,7 +456,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                    }
                                    dialog.dismiss();
                                }
-                           }, 10);
+                           }, 0);
                        }
                    }
                });
@@ -1185,7 +1185,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
 
                             }
-                        }, 10);
+                        }, 5);
             }
 
         }else{
@@ -1778,7 +1778,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 public void run() {
 
                 }
-            },500);
+            },5);
 
 
         } else if(v==change_map_options){
