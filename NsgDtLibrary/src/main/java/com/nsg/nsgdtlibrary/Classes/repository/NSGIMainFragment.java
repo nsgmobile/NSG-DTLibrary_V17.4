@@ -118,7 +118,7 @@ import static java.lang.Math.sin;
 
 public class NSGIMainFragment extends Fragment implements View.OnClickListener, SensorEventListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private static final int SENSOR_DELAY_NORMAL =5000;
+    private static final int SENSOR_DELAY_NORMAL =50;
     private ProgressDialog dialog;
     private TextToSpeech textToSpeech;
     LatLng SourcePosition, DestinationPosition,OldGPSPosition,PointBeforeRouteDeviation;
