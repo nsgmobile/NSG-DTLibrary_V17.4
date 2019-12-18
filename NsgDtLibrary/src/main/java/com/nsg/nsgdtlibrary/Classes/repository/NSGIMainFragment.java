@@ -1109,11 +1109,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
 
-       // Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
-       // Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
         double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
-      //  Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
+        Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
         float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
          //   Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
@@ -1530,10 +1530,17 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLngDataArray.add(new LatLng(24.978449,55.067310));
         LatLngDataArray.add(new LatLng(24.978656,55.066997));
         LatLngDataArray.add(new LatLng(24.978408,55.066897));
+        LatLngDataArray.add(new LatLng(24.978349, 55.066801));
         LatLngDataArray.add(new LatLng(24.978025,55.066462));
         LatLngDataArray.add(new LatLng(24.977993,55.066226));
-        LatLngDataArray.add(new LatLng(24.97761,55.065815));
+
+        LatLngDataArray.add(new LatLng( 24.977771, 55.066040));
+        LatLngDataArray.add(new LatLng( 24.977636, 55.065907));
+
+
         LatLngDataArray.add(new LatLng(24.977358,55.065692));
+
+
         LatLngDataArray.add(new LatLng(24.977132,55.065436));
         LatLngDataArray.add(new LatLng(24.977126,55.065249));
         LatLngDataArray.add(new LatLng(24.977164,55.065171));
@@ -1571,11 +1578,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
         //Route Deviation points are uoto here---
 
-       // LatLngDataArray.add(new LatLng(24.978317, 55.064500));
-       // LatLngDataArray.add(new LatLng(24.978417, 55.064630));
-       // LatLngDataArray.add(new LatLng(24.978536, 55.064755));
-      //  LatLngDataArray.add(new LatLng(24.978645, 55.064879));
-      //  LatLngDataArray.add(new LatLng(24.978688, 55.064914));
+        LatLngDataArray.add(new LatLng(24.979304, 55.065536));
+        LatLngDataArray.add(new LatLng(24.979261, 55.065570));
         LatLngDataArray.add(new LatLng(24.979722, 55.066073));
         LatLngDataArray.add(new LatLng(24.979961, 55.066314));
         LatLngDataArray.add(new LatLng(24.980189, 55.066572));
