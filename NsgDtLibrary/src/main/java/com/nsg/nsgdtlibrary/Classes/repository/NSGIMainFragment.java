@@ -444,7 +444,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                    }else if(enteredMode==3){
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                            if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                                                Log.e("SourceNode","SourceNode -- "+SourceNode);
+                                                Log.e("SourceNode","SourceNode -- "+ SourceNode);
                                                      mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                .position(SourceNode)
                                                                .title("currentLocation")
