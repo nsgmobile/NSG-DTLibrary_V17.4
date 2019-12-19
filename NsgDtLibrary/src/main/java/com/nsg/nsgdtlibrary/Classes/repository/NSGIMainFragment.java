@@ -345,10 +345,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                    @Override
                    public void onClick(View v) {
                        if(RouteDataList!=null && RouteDataList.size()>0) {
-                           dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                           dialog.setMessage("Fetching Route");
-                           dialog.setMax(100);
-                           dialog.show();
+
                            new Handler().postDelayed(new Runnable() {
                                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                                @Override
@@ -369,6 +366,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                    mMap.getUiSettings().setTiltGesturesEnabled(true);
                                    mMap.getUiSettings().setRotateGesturesEnabled(true);
                                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                   mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                           .position(SourceNode)
+                                           .title("currentLocation")
+                                           .anchor(0.5f, 0.5f)
+                                           .flat(true));
                                    if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
                                        ETACalclator etaCalculator1=new ETACalclator();
                                        double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
@@ -376,7 +378,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                                        tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
-                                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {                                   // MoveWithGPSMARKER();
+                                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                           /*// MoveWithGPSMARKER();
 
                                            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                @Override
@@ -410,15 +413,14 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                                                }
                                            });
+                                           */
                                        }
                                    }else if(enteredMode==2){
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                    @Override
                                                    public void onMyLocationChange(Location location) {
-                                                       if (mPositionMarker != null) {
-                                                           mPositionMarker.remove();
-                                                       }
+
                                                        LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
                                                        Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
                                                         /*
@@ -460,7 +462,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                                        }
                                    }
-                                   dialog.dismiss();
+                                  // dialog.dismiss();
                                }
                            }, 0);
                        }
@@ -709,9 +711,13 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
 
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
+            Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
+            Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
+
 
         }
+
       //  Log.e("EdgeSt Point", "End point" + OldNearestGpsList.size());
         if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
             OldGps=OldNearestGpsList.get(0);
@@ -729,12 +735,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
        // }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .rotation(bearing)
-                .flat(true));
+
               //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
@@ -1388,6 +1389,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             }
            // Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGps);
             float bearing = (float) bearingBetweenLocations(OldGps, nayaGps); //correct method to change orientation of map
+
             mPositionMarker = mMap.addMarker(new MarkerOptions()
                     .position(SourceNode)
                     .title("currentLocation")
