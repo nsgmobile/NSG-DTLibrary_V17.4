@@ -300,7 +300,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
         if(RouteDataList!=null) {
-            RouteT route = RouteDataList.get(0);
+             route = RouteDataList.get(0);
         }
         final String routeData = route.getRouteData();
         String sourceText=route.getStartNode();
@@ -758,7 +758,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(18)
                 .build();
-        //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
 
 
 /*
