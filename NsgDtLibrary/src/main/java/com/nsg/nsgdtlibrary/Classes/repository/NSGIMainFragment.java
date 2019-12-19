@@ -392,11 +392,14 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                    }
                                                    getLatLngPoints();
                                                    currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
+
+
                                                    if(isRouteDeviated==false) {
                                                        MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
                                                    }else{
                                                        MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
                                                    }
+
                                                    new Handler().postDelayed(new Runnable() {
                                                        @Override
                                                        public void run() {
@@ -744,8 +747,16 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
         AlertDestination(currentGpsPosition);
 
-        Projection p = mMap.getProjection();
-        Point center = p.toScreenLocation(p.getVisibleRegion().latLngBounds.getCenter());
+        int width =getView().getMeasuredWidth();
+        Log.e("width","width"+width);
+        int height =getView().getMeasuredHeight();
+        Log.e("Height","Height"+height);
+
+
+/*
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
+
+
        // Point offset = new Point(center.x, (center.y + 320));
         Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         bottomRightPoint.y=center.y;
@@ -753,12 +764,46 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLng offsetNewLoc = p.fromScreenLocation(bottomRightPoint);
         double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
 
+
+
+        Projection p = mMap.getProjection();
+        Point somePoint=p.toScreenLocation(nearestPositionPoint);
+        // Point centerScreenPoint = p.toScreenLocation(p.getVisibleRegion().latLngBounds.getCenter());
+
+        Point somePoint1 = new Point(somePoint.x + height/2,somePoint.y + height);
+        LatLng somePoint1ll = p.fromScreenLocation(somePoint1);
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(somePoint1ll)
+                .bearing(bearing).tilt(65.5f).zoom(20)
+                .build();
+                */
+        Projection p = mMap.getProjection();
+       Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+        Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
+        Point offset = new Point(center.x, (center.y+(height/4)));
+        LatLng centerLoc = p.fromScreenLocation(center);
+        LatLng offsetNewLoc = p.fromScreenLocation(offset);
+        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
         LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
+
         CameraPosition currentPlace = new CameraPosition.Builder()
                 .target(shadowTgt)
-                .bearing(bearing).tilt(65.5f).zoom(18)
+                .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+
+
+
+       // LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
+        /*
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(aboveMarkerLatLng)
+                .bearing(bearing).tilt(65.5f).zoom(18)
+                .build();
+
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+        */
+        //mMap.setPadding(0,0,0,330);
 
 
 /*
@@ -1118,9 +1163,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
          //   Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
-
-
-                        mMap.stopAnimation();
+                      //  mMap.stopAnimation();
                         String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                         String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                         final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
@@ -1133,11 +1176,12 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                       //  Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
                      //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
                         //  DestinationPosition = new LatLng(destLat, destLng);
-                        dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                        dialog.setMessage("Fetching new Route");
-                        dialog.setMax(100);
-                        dialog.show();
-                        new Handler().postDelayed(new Runnable() {
+                     //   dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                     //   dialog.setMessage("Fetching new Route");
+                     //   dialog.setMax(100);
+                     //   dialog.show();
+                        //new Handler().postDelayed(new Runnable() {
+                    new Runnable() {
                             @Override
                             public void run() {
                                 dialog.dismiss();
@@ -1161,6 +1205,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                     toast.show();
                                     if(mPositionMarker!=null){
                                       mPositionMarker.remove();
+                                      Log.e("REMOVING MARKER","REMOVING MARKER");
                                     }
                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
                                             .position(currentGpsPosition)
@@ -1168,6 +1213,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             .anchor(0.5f, 0.5f)
                                             .flat(true)
                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+
                                     CameraUpdate center =
                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
@@ -1186,7 +1232,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
 
                             }
-                        }, 5);
+                        };
             }
 
         }else{
@@ -2339,7 +2385,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             Toast toast = new Toast(getActivity().getApplicationContext());
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.setGravity(Gravity.TOP, 0, 150);
+            toast.setGravity(Gravity.TOP, 0, 180);
             toast.setView(layout);
             toast.show();
 
