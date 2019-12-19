@@ -416,6 +416,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                            mPositionMarker.remove();
                                                        }
                                                        LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
+                                                       Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
 
                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                .position(currentGpsPosition)
