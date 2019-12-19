@@ -223,6 +223,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
+    RouteT route;
     boolean isRouteDeviated=false;
     private Button location_tracking_start,location_tracking_stop;
     StringBuilder time= new StringBuilder();
@@ -298,7 +299,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(this);
-        RouteT route = RouteDataList.get(0);
+        if(RouteDataList!=null) {
+            RouteT route = RouteDataList.get(0);
+        }
         final String routeData = route.getRouteData();
         String sourceText=route.getStartNode();
         String[]  text =sourceText.split(" ");
@@ -735,29 +738,27 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }else{
             animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
         }
-        animateCamera(nearestPositionPoint,bearing);
        // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
         verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
-
         AlertDestination(currentGpsPosition);
 
         Projection p = mMap.getProjection();
-        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-        Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
+        Point center = p.toScreenLocation(p.getVisibleRegion().latLngBounds.getCenter());
        // Point offset = new Point(center.x, (center.y + 320));
-        Point offset = new Point((center.x + 320), (center.y + 320));
+        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+        bottomRightPoint.y=center.y;
         LatLng centerLoc = p.fromScreenLocation(center);
-        LatLng offsetNewLoc = p.fromScreenLocation(offset);
+        LatLng offsetNewLoc = p.fromScreenLocation(bottomRightPoint);
         double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-        LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
 
+        LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
         CameraPosition currentPlace = new CameraPosition.Builder()
                 .target(shadowTgt)
-                .bearing(bearing).tilt(65.5f).zoom(20)
+                .bearing(bearing).tilt(65.5f).zoom(18)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+        //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
 
 
 /*
