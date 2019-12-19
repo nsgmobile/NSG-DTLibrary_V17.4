@@ -407,8 +407,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                        }
                                    }else if(enteredMode==2){
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                           if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-
                                                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                    @Override
                                                    public void onMyLocationChange(Location location) {
@@ -417,7 +415,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                        }
                                                        LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
                                                        Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
-
+                                                        /*
                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                .position(currentGpsPosition)
                                                                .title("currentLocation")
@@ -432,6 +430,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                                .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
                                                                .build();
                                                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+                                                       */
 
                                                        if(isRouteDeviated==false) {
                                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
@@ -719,9 +718,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
         nearestPointValuesList.add(nearestPositionPoint);
-        if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
-            nearestPointValuesList.add(DestinationPosition);
-        }
+      //  if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
+       //     nearestPointValuesList.add(DestinationPosition);
+       // }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         mPositionMarker = mMap.addMarker(new MarkerOptions()
