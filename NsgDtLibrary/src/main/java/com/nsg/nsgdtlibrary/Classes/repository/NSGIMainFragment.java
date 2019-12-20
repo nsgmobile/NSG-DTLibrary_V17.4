@@ -344,7 +344,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     return;
                 }
 
-                getRouteAccordingToRouteID(routeIDName);
+               getRouteAccordingToRouteID(routeIDName);
                location_tracking_start.setOnClickListener(new View.OnClickListener() {
                    @Override
                    public void onClick(View v) {
@@ -371,7 +371,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                    mMap.getUiSettings().setTiltGesturesEnabled(true);
                                    mMap.getUiSettings().setRotateGesturesEnabled(true);
                                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
-
                                    if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
                                        ETACalclator etaCalculator1=new ETACalclator();
                                        double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
@@ -380,8 +379,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                        tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                           // MoveWithGPSMARKER();
-
                                            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                @Override
                                                public void onMyLocationChange(Location location) {
