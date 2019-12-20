@@ -345,12 +345,16 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                    @Override
                    public void onClick(View v) {
                        if(RouteDataList!=null && RouteDataList.size()>0) {
-
                            new Handler().postDelayed(new Runnable() {
                                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                                @Override
                                public void run() {
                                    // dialog.dismiss();
+                                   mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                           .position(SourceNode)
+                                           .title("currentLocation")
+                                           .anchor(0.5f, 0.5f)
+                                           .flat(true));
                                    nearestPointValuesList=new ArrayList<LatLng>();
                                    nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                    OldNearestGpsList=new ArrayList<>();
@@ -366,11 +370,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                    mMap.getUiSettings().setTiltGesturesEnabled(true);
                                    mMap.getUiSettings().setRotateGesturesEnabled(true);
                                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                                   mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                           .position(SourceNode)
-                                           .title("currentLocation")
-                                           .anchor(0.5f, 0.5f)
-                                           .flat(true));
+
                                    if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
                                        ETACalclator etaCalculator1=new ETACalclator();
                                        double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
@@ -413,7 +413,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                                                }
                                            });
-                                         
+
                                        }
                                    }else if(enteredMode==2){
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
