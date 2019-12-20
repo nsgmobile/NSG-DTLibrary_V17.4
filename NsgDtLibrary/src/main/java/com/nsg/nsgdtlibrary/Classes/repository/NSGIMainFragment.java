@@ -2369,6 +2369,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         final String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
 
 
+        int count = 100; //Declare as inatance variable
 
 
 
@@ -2390,41 +2391,43 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
             final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
-            new Thread(new Runnable() {
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+
                 @Override
                 public void run() {
-                    // TODO Auto-generated method stub
-                    while (true) {
-                        try {
-                            Thread.sleep(10000);
-                            mHandler.post(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            final Toast toast = new Toast(getActivity().getApplicationContext());
+                            text.setText("" + data);
+                            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                            if (data.contains("Take Right")) {
+                                image.setImageResource(R.drawable.direction_right);
+                            } else if (data.contains("Take Left")) {
+                                image.setImageResource(R.drawable.direction_left);
+                            }
+
+
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.setGravity(Gravity.TOP, 0, 180);
+                            toast.setView(layout);
+                            toast.show();
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
 
                                 @Override
                                 public void run() {
-                                    text.setText("" + data);
-                                    ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-                                    if (data.contains("Take Right")) {
-                                        image.setImageResource(R.drawable.direction_right);
-                                    } else if (data.contains("Take Left")) {
-                                        image.setImageResource(R.drawable.direction_left);
-                                    }
-
-                                    Toast toast = new Toast(getActivity().getApplicationContext());
-                                    toast.setDuration(Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                    toast.setGravity(Gravity.TOP, 0, 180);
-                                    toast.setView(layout);
-                                    toast.show();
-
+                                    toast.cancel();
                                 }
-                            });
-                        } catch (Exception e) {
-                            // TODO: handle exception
-                        }
-                    }
-                }
-            }).start();
+                            }, 10000);
 
+                        }
+                    });
+                }
+            }, 0, 10000);
 
 
 
