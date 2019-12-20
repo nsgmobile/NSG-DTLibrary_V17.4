@@ -353,9 +353,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                                @Override
                                public void run() {
-                                   if(currentGpsPosition!=null && DestinationNode!=null) {
-                                       NavigationDirection(currentGpsPosition, DestinationNode);
-                                   }
+
                                    nearestPointValuesList=new ArrayList<LatLng>();
                                    nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                    OldNearestGpsList=new ArrayList<>();
@@ -377,6 +375,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                        double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
                                        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                                        tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
+
 
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -712,7 +711,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             int value1 = (int)y;
             LatLng source=new LatLng(FirstLongitude,FirstLatitude);
             LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
-
+            NavigationDirection(currentGpsPosition, DestinationNode);
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
             Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
