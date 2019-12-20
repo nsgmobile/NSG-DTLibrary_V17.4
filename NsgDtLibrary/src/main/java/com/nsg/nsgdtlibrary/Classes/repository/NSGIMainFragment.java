@@ -353,8 +353,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                //@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                                @Override
                                public void run() {
-                                   // dialog.dismiss();
-
+                                   if(currentGpsPosition!=null && DestinationNode!=null) {
+                                       NavigationDirection(currentGpsPosition, DestinationNode);
+                                   }
                                    nearestPointValuesList=new ArrayList<LatLng>();
                                    nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                    OldNearestGpsList=new ArrayList<>();
@@ -751,7 +752,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
        // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-        NavigationDirection(currentGpsPosition,DestinationNode);
         verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
         AlertDestination(currentGpsPosition);
 
