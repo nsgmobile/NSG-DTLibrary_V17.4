@@ -713,10 +713,12 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
             Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
-            Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
+
 
 
         }
+        Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
+
 
       //  Log.e("EdgeSt Point", "End point" + OldNearestGpsList.size());
         if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
@@ -724,9 +726,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
             nayaGps=OldNearestGpsList.get(indexVal);
         }else{
-            int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
-            OldGps=OldNearestGpsList.get(indexVal-1);
-            nayaGps=OldNearestGpsList.get(indexVal);
+            //int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
+            OldGps=OldNearestGpsList.get(OldNearestGpsList.size() - 2);
+            nayaGps= new LatLng(nearestPositionPoint.latitude, nearestPositionPoint.longitude);//OldNearestGpsList.get(indexVal);
         }
         nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
         nearestPointValuesList.add(nearestPositionPoint);
@@ -735,13 +737,15 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
        // }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-
+        Log.e("nearestPositionPoint","OldGps ----1"+ OldGps);
+        Log.e("nearestPositionPoint","nearestPositionPoint ----1"+nearestPositionPoint);
               //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
             animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
         }
+
        // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         NavigationDirection(currentGpsPosition,DestinationNode);
@@ -1149,10 +1153,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         double resultY = pointY + k * (endPointX - startPointX);
         StringBuilder sb=new StringBuilder();
         sb.append(resultX).append(",").append(resultY);
-
         return sb.toString();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
 
