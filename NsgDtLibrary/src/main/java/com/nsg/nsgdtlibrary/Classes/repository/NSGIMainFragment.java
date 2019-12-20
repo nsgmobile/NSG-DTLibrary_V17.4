@@ -102,6 +102,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -128,6 +131,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     String SourcePoint;
     String DestinationPoint,tokenResponse,etaResponse;
     Marker markerSource, markerDestination,mPositionMarker;
+    Handler mHandler = new Handler();
     private Polyline mPolyline;
     private GoogleMap mMap;
     private SqlHandler sqlHandler;
@@ -350,11 +354,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                @Override
                                public void run() {
                                    // dialog.dismiss();
-                                   mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                           .position(SourceNode)
-                                           .title("currentLocation")
-                                           .anchor(0.5f, 0.5f)
-                                           .flat(true));
+
                                    nearestPointValuesList=new ArrayList<LatLng>();
                                    nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                    OldNearestGpsList=new ArrayList<>();
@@ -648,6 +648,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
+        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                .position(SourceNode)
+                .title("currentLocation")
+                .anchor(0.5f, 0.5f)
+                .flat(true));
         LatLng OldGps,nayaGps;
         List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
         nearestValuesMap=new HashMap<>();
@@ -713,8 +718,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
             Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
-
-
 
         }
         Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
@@ -2364,6 +2367,36 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
         double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
         String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
+
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                while (true) {
+                    try {
+                        Thread.sleep(10000);
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                // TODO Auto-generated method stub
+                                // Write your code here to update the UI.
+                            }
+                        });
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            }
+        }).start();
+
+
+
+
+
+
         if(geometryTextimpValue.equals("-")){
 
         }else {
