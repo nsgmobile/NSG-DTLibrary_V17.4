@@ -379,7 +379,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                        tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
 
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                           /*// MoveWithGPSMARKER();
+                                           // MoveWithGPSMARKER();
 
                                            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                @Override
@@ -413,7 +413,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
                                                }
                                            });
-                                           */
+                                         
                                        }
                                    }else if(enteredMode==2){
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
