@@ -2369,14 +2369,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         final String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
 
 
-        int count = 100; //Declare as inatance variable
-
-
-
-
-
-
-
         if(geometryTextimpValue.equals("-")){
 
         }else {
@@ -2408,8 +2400,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                             } else if (data.contains("Take Left")) {
                                 image.setImageResource(R.drawable.direction_left);
                             }
-
-
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                             toast.setGravity(Gravity.TOP, 0, 180);
@@ -2428,9 +2418,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     });
                 }
             }, 0, 10000);
-
-
-
 
         }
 
