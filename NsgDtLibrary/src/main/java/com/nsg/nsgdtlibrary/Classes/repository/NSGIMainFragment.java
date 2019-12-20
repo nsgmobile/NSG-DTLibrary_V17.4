@@ -2412,7 +2412,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 public void run() {
                                     toast.cancel();
                                 }
-                            }, 10000);
+                            }, 0);
 
                         }
                     });
