@@ -2417,7 +2417,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         }
                     });
                 }
-            }, 0, 10000);
+            }, 0, 30000);
 
         }
 
