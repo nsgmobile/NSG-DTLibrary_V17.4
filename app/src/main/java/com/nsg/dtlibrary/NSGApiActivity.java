@@ -18,7 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment.FragmentToActivity {
+public class NSGApiActivity extends FragmentActivity implements SampleClass.FragmentToActivity {
     //implements HomeFragment.FragmentToActivity{
     private double srcLatitude;
     private double srcLongitude;
@@ -51,7 +51,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment
             enteredMode = NSGIBundle.getInt("enteredMode");
             bufferSize = NSGIBundle.getInt("bufferSize");
             // fragmentTransaction.add(R.id.map_container, new MainMapFragment(srcLatitude,srcLongitude,destLatitude,desLongitude,1,bufferSize));//getRoutes Direction
-            fragmentTransaction.add(R.id.map_container, new NSGIMainFragment(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,2,bufferSize));//getRoutes Direction
+            fragmentTransaction.add(R.id.map_container, new SampleClass(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,2,bufferSize));//getRoutes Direction
         }else if(charlsisNumber.equals("RD2")) {
             routeId="RD2";
             enteredMode = NSGIBundle.getInt("enteredMode");
