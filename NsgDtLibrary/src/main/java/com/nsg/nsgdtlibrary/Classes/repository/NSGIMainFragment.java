@@ -417,7 +417,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                    @Override
                                                    public void onMyLocationChange(Location location) {
-
+                                                       if (mPositionMarker != null) {
+                                                           mPositionMarker.remove();
+                                                       }
                                                        LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
                                                        Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
                                                         /*
@@ -645,11 +647,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .flat(true));
+
         LatLng OldGps,nayaGps;
         List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
         nearestValuesMap=new HashMap<>();
@@ -739,6 +737,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         Log.e("nearestPositionPoint","OldGps ----1"+ OldGps);
         Log.e("nearestPositionPoint","nearestPositionPoint ----1"+nearestPositionPoint);
+        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                .position(nearestPositionPoint)
+                .title("currentLocation")
+                .anchor(0.5f, 0.5f)
+                .flat(true));
               //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
         if( OldGps .equals(nearestPositionPoint)){
 
@@ -755,10 +758,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Log.e("width","width"+width);
         int height =getView().getMeasuredHeight();
         Log.e("Height","Height"+height);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
 
 
 /*
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
+
 
 
        // Point offset = new Point(center.x, (center.y + 320));
@@ -782,7 +786,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .build();
                 */
         Projection p = mMap.getProjection();
-       Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
         Point offset = new Point(center.x, (center.y+(height/4)));
         LatLng centerLoc = p.fromScreenLocation(center);
@@ -904,8 +908,8 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Intent i=new Intent(getActivity(), NSGIMainFragment.class);
-                                startActivity(i);
+                               // Intent i=new Intent(getActivity(), NSGIMainFragment.class);
+                               // startActivity(i);
                             }
                         });
                 AlertDialog alert = builder.create();
@@ -1734,6 +1738,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                       float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
                       computeRotation(10,beginAngle,endAngle);
                 }
+                /*
+
+                */
             }
         });
     }
