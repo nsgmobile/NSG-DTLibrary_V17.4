@@ -359,9 +359,7 @@ public class SampleClass extends Fragment  {
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
                                                 public void onMyLocationChange(Location location) {
-                                                    if (mPositionMarker != null) {
-                                                        mPositionMarker.remove();
-                                                    }
+
                                                     if (currentGpsPosition!=null){
                                                        OldGPSPosition=currentGpsPosition;
                                                     }
@@ -375,7 +373,6 @@ public class SampleClass extends Fragment  {
                                                             .rotation(location.bearingTo(location))
                                                             .flat(true)
                                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                                    animateMarker(mPositionMarker,OldGPSPosition,nPoint,false);
                                                 }
                                             });
                                         }
