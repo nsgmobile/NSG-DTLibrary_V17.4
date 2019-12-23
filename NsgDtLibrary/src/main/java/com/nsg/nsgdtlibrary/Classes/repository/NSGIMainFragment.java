@@ -750,7 +750,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
-           // animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
+          //  animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
         }
 
        // verifyRouteDeviation(currentGpsPosition,50);
