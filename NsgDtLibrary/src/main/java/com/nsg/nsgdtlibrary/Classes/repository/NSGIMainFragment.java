@@ -648,7 +648,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
 
-        LatLng OldGps,nayaGps;
+        LatLng OldGps = null,nayaGps;
         List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
         nearestValuesMap=new HashMap<>();
         if (EdgeWithoutDuplicates != null && EdgeWithoutDuplicates.size() > 0) {
@@ -710,6 +710,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             LatLng source=new LatLng(FirstLongitude,FirstLatitude);
             LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
             NavigationDirection(currentGpsPosition, DestinationNode);
+            OldGps=nearestPositionPoint;
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
             Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
@@ -717,7 +718,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
 
-
+/*
       //  Log.e("EdgeSt Point", "End point" + OldNearestGpsList.size());
         if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
             OldGps=OldNearestGpsList.get(0);
@@ -728,25 +729,28 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             OldGps=OldNearestGpsList.get(OldNearestGpsList.size() - 2);
             nayaGps= new LatLng(nearestPositionPoint.latitude, nearestPositionPoint.longitude);//OldNearestGpsList.get(indexVal);
         }
+        */
         nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
         nearestPointValuesList.add(nearestPositionPoint);
       //  if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
        //     nearestPointValuesList.add(DestinationPosition);
        // }
-
-        float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-        Log.e("nearestPositionPoint","OldGps ----1"+ OldGps);
-        Log.e("nearestPositionPoint","nearestPositionPoint ----1"+nearestPositionPoint);
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(nearestPositionPoint)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .flat(true));
-              //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+        float bearing=0;
+        if(OldGps!=null && nearestPositionPoint!=null) {
+             bearing = (float) bearingBetweenLocations(OldGps, nearestPositionPoint); //correct method to change orientation of map
+            Log.e("nearestPositionPoint", "OldGps ----1" + OldGps);
+            Log.e("nearestPositionPoint", "nearestPositionPoint ----1" + nearestPositionPoint);
+            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                    .position(nearestPositionPoint)
+                    .title("currentLocation")
+                    .anchor(0.5f, 0.5f)
+                    .flat(true)
+                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+        }
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000,currentGpsPosition);
+           // animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
         }
 
        // verifyRouteDeviation(currentGpsPosition,50);
