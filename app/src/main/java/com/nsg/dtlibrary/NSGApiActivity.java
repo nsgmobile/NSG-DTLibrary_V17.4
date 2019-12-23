@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 
 import com.nsg.nsgdtlibrary.Classes.repository.NSGIMainFragment;
+import com.nsg.nsgdtlibrary.Classes.util.SampleClass;
 
 import java.io.File;
 
@@ -17,7 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment.FragmentToActivity{
+public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment.FragmentToActivity {
     //implements HomeFragment.FragmentToActivity{
     private double srcLatitude;
     private double srcLongitude;
@@ -60,6 +61,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment
         }
         fragmentTransaction.commit();
     }
+
     @Override
     public String communicate(String comm) {
         Log.d("received", "Recieved From ETA Listener---"+ comm);
@@ -73,4 +75,5 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMainFragment
     public void onResume() {
         super.onResume();
     }
+
 }

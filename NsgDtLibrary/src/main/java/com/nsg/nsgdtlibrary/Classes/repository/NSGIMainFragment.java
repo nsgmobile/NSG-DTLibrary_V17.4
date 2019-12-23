@@ -710,7 +710,11 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
             LatLng source=new LatLng(FirstLongitude,FirstLatitude);
             LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
             NavigationDirection(currentGpsPosition, DestinationNode);
-            OldGps=nearestPositionPoint;
+
+            if(nearestPositionPoint != null) {
+                OldGps = nearestPositionPoint;
+            }
+
             nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
             Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
             OldNearestGpsList.add(nearestPositionPoint);
@@ -736,22 +740,27 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
        //     nearestPointValuesList.add(DestinationPosition);
        // }
         float bearing=0;
+
         if(OldGps!=null && nearestPositionPoint!=null) {
              bearing = (float) bearingBetweenLocations(OldGps, nearestPositionPoint); //correct method to change orientation of map
             Log.e("nearestPositionPoint", "OldGps ----1" + OldGps);
             Log.e("nearestPositionPoint", "nearestPositionPoint ----1" + nearestPositionPoint);
             mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(nearestPositionPoint)
+                    .position(OldGps)
                     .title("currentLocation")
                     .anchor(0.5f, 0.5f)
                     .flat(true)
                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+           // animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
+            animateMarker(mPositionMarker,OldGps,nearestPositionPoint,false);
         }
+        /*
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
           //  animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
         }
+        */
 
        // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
@@ -762,7 +771,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         Log.e("width","width"+width);
         int height =getView().getMeasuredHeight();
         Log.e("Height","Height"+height);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
 
 
 /*
@@ -2429,6 +2438,40 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
 
     }
+    public void animateMarker(final Marker marker,final LatLng startLatLng, final LatLng toPosition,
+                              final boolean hideMarker) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = mMap.getProjection();
+        Point startPoint = proj.toScreenLocation(marker.getPosition());
+        // final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+        final long duration = 10000;
+        final Interpolator interpolator = new LinearInterpolator();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed
+                        / duration);
+                double lng = t * toPosition.longitude + (1 - t)
+                        * startLatLng.longitude;
+                double lat = t * toPosition.latitude + (1 - t)
+                        * startLatLng.latitude;
+                marker.setPosition(new LatLng(lat, lng));
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                } else {
+                    if (hideMarker) {
+                        marker.setVisible(false);
+                    } else {
+                        marker.setVisible(true);
+                    }
+                }
+            }
+        });
+    }
+
     public void caclulateETA(final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
 
        // Log.e("Total Distance","Total Distance"+ TotalDistanceInMTS);
