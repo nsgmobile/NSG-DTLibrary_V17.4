@@ -358,47 +358,28 @@ public class SampleClass extends Fragment  {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
-                                                public void onMyLocationChange(final Location location) {
+                                                public void onMyLocationChange(Location location) {
                                                     if (mPositionMarker != null) {
                                                         mPositionMarker.remove();
                                                     }
                                                     if (currentGpsPosition!=null){
                                                        OldGPSPosition=currentGpsPosition;
                                                     }
-                                                       Timer timer=new Timer();
-                                                        TimerTask doAsynchronousTask = new TimerTask() {
-                                                            @Override
-                                                            public void run() {
-                                                                handler.post(new Runnable() {
-                                                                    public void run() {
-                                                                        currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
+                                                    currentGpsPosition =new LatLng(location.getLatitude(),location.getLongitude());
 
-                                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                                                .position(currentGpsPosition)
-                                                                                .title("currentLocation")
-                                                                                .anchor(0.5f, 0.5f)
-                                                                                .rotation(location.bearingTo(location))
-                                                                                .flat(true)
-                                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                                        if (OldGPSPosition !=null && currentGpsPosition!=null) {
-                                                                            LatLng nPoint = GetNearestPointOnRoadFromGPS(currentGpsPosition);
-                                                                            Log.e("Current","CURRENT"+currentGpsPosition +"||"+nPoint);
-                                                                            animateMarker(mPositionMarker,OldGPSPosition,nPoint,false);
-                                                                            // animateCarMove(mPositionMarker, OldGPSPosition, nPoint, 10);
-                                                                        }
-
-                                                                    }
-                                                                });
-                                                            }
-                                                        };
-                                                        timer.schedule(doAsynchronousTask, 20000,20000);  //
-
-
-
+                                                    LatLng nPoint = GetNearestPointOnRoadFromGPS(currentGpsPosition);
+                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                            .position(nPoint)
+                                                            .title("currentLocation")
+                                                            .anchor(0.5f, 0.5f)
+                                                            .rotation(location.bearingTo(location))
+                                                            .flat(true)
+                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    animateMarker(mPositionMarker,OldGPSPosition,nPoint,false);
                                                 }
                                             });
                                         }
-                                    }
+                                     }
                     }
 
                 });

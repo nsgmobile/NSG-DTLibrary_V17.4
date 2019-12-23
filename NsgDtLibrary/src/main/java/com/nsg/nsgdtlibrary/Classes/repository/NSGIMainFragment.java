@@ -416,33 +416,18 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                    @Override
-                                                   public void onMyLocationChange(Location location) {
+                                                   public void onMyLocationChange(final Location location) {
                                                        if (mPositionMarker != null) {
                                                            mPositionMarker.remove();
                                                        }
-                                                       LatLng currentGpsPosition=new LatLng(location.getLatitude(),location.getLongitude());
-                                                       Log.e("currentGpsPosition","currentGpsPosition"+currentGpsPosition);
-                                                        /*
-                                                       mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                               .position(currentGpsPosition)
-                                                               .title("currentLocation")
-                                                               .anchor(0.5f, 0.5f)
-                                                               .rotation(location.bearingTo(location))
-                                                               .flat(true)
-                                                               .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                                                       //changing direction to NORTH as Shown in vedio by DT Team 65.5f
 
-                                                       CameraPosition currentPlace = new CameraPosition.Builder()
-                                                               .target(new LatLng(currentGpsPosition.latitude, currentGpsPosition.longitude))
-                                                               .bearing(location.bearingTo(location)).tilt(65.5f).zoom(20)
-                                                               .build();
-                                                       mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
-                                                       */
 
-                                                       if(isRouteDeviated==false) {
-                                                           MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                                       }else{
-                                                           MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                                       if (OldGPSPosition !=null && currentGpsPosition!=null) {
+                                                           if(isRouteDeviated==false) {
+                                                               MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                                           }else{
+                                                               MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                                           }
                                                        }
 
                                                    }
