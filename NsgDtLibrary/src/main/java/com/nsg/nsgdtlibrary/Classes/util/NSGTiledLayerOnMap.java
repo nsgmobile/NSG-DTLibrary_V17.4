@@ -1975,16 +1975,15 @@ public class NSGTiledLayerOnMap extends Fragment  {
             bearing = (float) bearingBetweenLocations(OldGps, nearestPositionPoint); //correct method to change orientation of map
             Log.e("nearestPositionPoint", "OldGps ----1" + OldGps);
             Log.e("nearestPositionPoint", "nearestPositionPoint ----1" + nearestPositionPoint);
-            if(mPositionMarker==null) {
-                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                        .position(SourceNode)
-                        .title("currentLocation")
-                        .anchor(0.5f, 0.5f)
-                        .rotation(bearing)
-                        .flat(true));
-            }else{
+            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                    .position(SourceNode)
+                    .title("currentLocation")
+                    .anchor(0.5f, 0.5f)
+                    .rotation(bearing)
+                    .flat(true));
+
                animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000);
-             }
+
 
         }
 
