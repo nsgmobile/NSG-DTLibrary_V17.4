@@ -1,6 +1,7 @@
 package com.nsg.nsgdtlibrary.Classes.util;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -358,21 +359,40 @@ public class SampleClass extends Fragment  {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
-                                                public void onMyLocationChange(Location location) {
-
-                                                    if (currentGpsPosition!=null){
-                                                       OldGPSPosition=currentGpsPosition;
+                                                public void onMyLocationChange(final Location location) {
+                                                    if (currentGpsPosition != null) {
+                                                        OldGPSPosition = currentGpsPosition;
                                                     }
-                                                    currentGpsPosition =new LatLng(location.getLatitude(),location.getLongitude());
 
-                                                    LatLng nPoint = GetNearestPointOnRoadFromGPS(currentGpsPosition);
-                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                            .position(nPoint)
-                                                            .title("currentLocation")
-                                                            .anchor(0.5f, 0.5f)
-                                                            .rotation(location.bearingTo(location))
-                                                            .flat(true)
-                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                   Timer timer=new Timer();
+                                                    TimerTask doAsynchronousTask = new TimerTask() {
+                                                        @Override
+                                                        public void run() {
+                                                            handler.post(new Runnable() {
+                                                                public void run() {
+                                                                    currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                                                    Log.e("CurrentGpsPoint","CurrentGpsPoint"+ currentGpsPosition);
+
+                                                                    if (mPositionMarker == null) {
+                                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                                .position(currentGpsPosition)
+                                                                                .title("currentLocation")
+                                                                                .anchor(0.5f, 0.5f)
+                                                                                .rotation(location.getBearing())
+                                                                                .flat(true)
+                                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                                    } else {
+                                                                        if (OldGPSPosition != null) {
+                                                                            //    animateCarMove(mPositionMarker, OldGPSPosition, currentGpsPosition, 5000);
+                                                                            //  mPositionMarker.setPosition(currentGpsPosition);
+                                                                        }
+                                                                    }
+
+                                                                }
+                                                            });
+                                                        }
+                                                    };
+                                                    timer.schedule(doAsynchronousTask, 0,80000);
                                                 }
                                             });
                                         }
@@ -461,11 +481,67 @@ public class SampleClass extends Fragment  {
     }
 
 
+    public static void animateMarker(final Location destination, final Marker marker) {
+        if (marker != null) {
+            final LatLng startPosition = marker.getPosition();
+            final LatLng endPosition = new LatLng(destination.getLatitude(), destination.getLongitude());
 
+            final float startRotation = marker.getRotation();
 
+            final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
+            ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.setDuration(1000); // duration 1 second
+            valueAnimator.setInterpolator(new LinearInterpolator());
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override public void onAnimationUpdate(ValueAnimator animation) {
+                    try {
+                        float v = animation.getAnimatedFraction();
+                        LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
+                        marker.setPosition(newPosition);
+                        marker.setRotation(computeRotation(v, startRotation, destination.getBearing()));
+                    } catch (Exception ex) {
+                        // I don't care atm..
+                    }
+                }
+            });
 
+            valueAnimator.start();
+        }
+    }
 
+    private interface LatLngInterpolator {
+        LatLng interpolate(float fraction, LatLng a, LatLng b);
 
+        class LinearFixed implements LatLngInterpolator {
+            @Override
+            public LatLng interpolate(float fraction, LatLng a, LatLng b) {
+                double lat = (b.latitude - a.latitude) * fraction + a.latitude;
+                double lngDelta = b.longitude - a.longitude;
+                // Take the shortest path across the 180th meridian.
+                if (Math.abs(lngDelta) > 180) {
+                    lngDelta -= Math.signum(lngDelta) * 360;
+                }
+                double lng = lngDelta * fraction + a.longitude;
+                return new LatLng(lat, lng);
+            }
+        }
+    }
+
+    private static float computeRotation(float fraction, float start, float end) {
+        float normalizeEnd = end - start; // rotate start to 0
+        float normalizedEndAbs = (normalizeEnd + 360) % 360;
+
+        float direction = (normalizedEndAbs > 180) ? -1 : 1; // -1 = anticlockwise, 1 = clockwise
+        float rotation;
+        if (direction > 0) {
+            rotation = normalizedEndAbs;
+        } else {
+            rotation = normalizedEndAbs - 360;
+        }
+
+        float result = fraction * rotation + start;
+        return (result + 360) % 360;
+    }
 
 
 
@@ -885,7 +961,7 @@ public class SampleClass extends Fragment  {
         float angleDeg = (float)(180 * getAngle(beginLatLng, endLatLng) / Math.PI);
         Matrix matrix = new Matrix();
         matrix.postRotate(angleDeg);
-        marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(mMarkerIcon, 0, 0,mMarkerIcon.getWidth(), mMarkerIcon.getHeight(), matrix, true)));
+       // marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(mMarkerIcon, 0, 0,mMarkerIcon.getWidth(), mMarkerIcon.getHeight(), matrix, true)));
         //marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(mMarkerIcon, 0, 0, centerX,centerY, matrix, true)));
         handler.post(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
