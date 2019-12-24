@@ -383,8 +383,7 @@ public class SampleClass extends Fragment  {
                                                                                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                     } else {
                                                                         if (OldGPSPosition != null) {
-                                                                            //    animateCarMove(mPositionMarker, OldGPSPosition, currentGpsPosition, 5000);
-                                                                            //  mPositionMarker.setPosition(currentGpsPosition);
+                                                                              mPositionMarker.setPosition(currentGpsPosition);
                                                                         }
                                                                     }
 
@@ -392,7 +391,7 @@ public class SampleClass extends Fragment  {
                                                             });
                                                         }
                                                     };
-                                                    timer.schedule(doAsynchronousTask, 0,80000);
+                                                    timer.schedule(doAsynchronousTask, 0,5000);
                                                 }
                                             });
                                         }
