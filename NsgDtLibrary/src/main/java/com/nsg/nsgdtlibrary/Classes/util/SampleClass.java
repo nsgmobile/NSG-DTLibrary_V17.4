@@ -28,6 +28,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.os.SystemClock;
@@ -400,15 +401,16 @@ public class SampleClass extends Fragment  {
 
                             }
                         }else if(enteredMode==2){
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
                                                 public void onMyLocationChange(final Location location) {
                                                     if (currentGpsPosition != null) {
                                                         OldGPSPosition = currentGpsPosition;
                                                     }
-                                                    Runnable runnable = new Runnable() {
-                                                        public void run() {
+                                                  //  Runnable runnable = new Runnable() {
+                                                    //    public void run() {
                                                             currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                                             LatLng OldNearestPosition=null;
                                                            if(isRouteDeviated==false) {
@@ -423,9 +425,9 @@ public class SampleClass extends Fragment  {
                                                                         Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
                                                                         nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
                                                                         Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                                                                        if (mPositionMarker == null && OldNearestPosition !=null) {
+                                                                        if (mPositionMarker == null ) {
                                                                             mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                                                    .position(OldNearestPosition)
+                                                                                    .position(SourceNode)
                                                                                     .title("Nearest GpsPoint")
                                                                                     .anchor(0.5f, 0.5f)
                                                                                     .flat(true)
@@ -447,12 +449,11 @@ public class SampleClass extends Fragment  {
                                                                                 verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
                                                                                 NavigationDirection(currentGpsPosition, DestinationNode);
                                                                                 AlertDestination(currentGpsPosition);
-
                                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                               // mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                               mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
                                                                             }
 
                                                                         }
@@ -464,15 +465,19 @@ public class SampleClass extends Fragment  {
                                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                                            }
                                                         }
-                                                    };
+                                                   // };
 
-                                                    Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 0);
-                                                }
+                                                  //  Handler handler1 = new Handler();
+                                                  //  handler1.postDelayed(runnable, 0);
+
+                                              //  }
+
                                             });
 
                                         }
-                            }else if(enteredMode==3){
+
+
+                        }else if(enteredMode==3){
                                Marker marker = mMap.addMarker(new MarkerOptions()
                                    .position(SourceNode)
                                    .title("currentLocation")
@@ -626,9 +631,9 @@ public class SampleClass extends Fragment  {
         return shortestDistancePoint;
 
     }
-    public String  GetSortetPoint(HashMap EdgeDistancesMap, ArrayList<Double>  EdgeDistancesList, LatLng currentGpsPosition ){
-        String vfinalValue = "";
-        String FirstShortestDistance = String.valueOf(EdgeDistancesList.get(0));
+    public String  GetSortetPoint(HashMap EdgeDistancesMap, ArrayList<Double>  EdgeDistancesList, final LatLng currentGpsPosition ){
+         String vfinalValue = "";
+         String FirstShortestDistance = String.valueOf(EdgeDistancesList.get(0));
         boolean verify=EdgeDistancesMap.containsKey(FirstShortestDistance.trim());
         if(verify){
 
@@ -641,6 +646,18 @@ public class SampleClass extends Fragment  {
 
 
         EdgesEndContaingData(currentGpsPosition,vfinalValue);
+        final String finalVfinalValue = vfinalValue;
+        new CountDownTimer(50000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                EdgesEndContaingData(currentGpsPosition, finalVfinalValue);
+
+
+            }
+            public void onFinish() {
+
+            }
+        }.start();
 
         return vfinalValue;
     }
@@ -683,18 +700,34 @@ public class SampleClass extends Fragment  {
         }else {
 
           final  String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+          Log.e("Direction Text","DIRECTION TEXT"+ data);
             //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-            if (speechStatus == TextToSpeech.ERROR) {
-                Log.e("TTS", "Error in converting Text to Speech!");
-            }
+
             // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
             LayoutInflater inflater1 = getActivity().getLayoutInflater();
             @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
             final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
             final ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
 
+            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+            if (speechStatus == TextToSpeech.ERROR) {
+                Log.e("TTS", "Error in converting Text to Speech!");
+            }
+            Toast toast = new Toast(getActivity().getApplicationContext());
+            text.setText("" + data);
 
+            if (data.contains("Take Right")) {
+                image.setImageResource(R.drawable.direction_right);
+            } else if (data.contains("Take Left")) {
+                image.setImageResource(R.drawable.direction_left);
+            }
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.setGravity(Gravity.TOP, 0, 180);
+            toast.setView(layout);
+            toast.show();
+
+        /*
           new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -727,6 +760,7 @@ public class SampleClass extends Fragment  {
                     }
                 }
           }).start();
+          */
         }
     }
 
