@@ -326,7 +326,7 @@ public class SampleClass extends Fragment  {
                 }
                 StringBuilder routeAlert=new StringBuilder();
                 // routeAlert.append("src");
-              //  sendData(routeAlert.toString());
+                // sendData(routeAlert.toString());
                 // sendTokenRequest();
                 getAllEdgesData();
                 addMarkers();
