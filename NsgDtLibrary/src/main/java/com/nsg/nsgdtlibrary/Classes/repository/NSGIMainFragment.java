@@ -405,20 +405,33 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                     @Override
                                     public void onMyLocationChange(final Location location) {
-                                        if (currentGpsPosition != null) {
+                                       if (currentGpsPosition != null) {
                                             OldGPSPosition = currentGpsPosition;
-                                        }
-                                        currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                                        double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                                        Log.e("distance", "distance" + distance);
-                                        if (distance > 10) {
+                                       }
+                                       currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                        if(isRouteDeviated==false) {
+                                            if (OldGPSPosition != null) {
+                                                double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+                                                Log.e("distance", "distance" + distance);
+                                                if (distance > 10) {
 
-                                        } else {
-                                            if (isRouteDeviated == false) {
-                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                            } else {
-                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                } else {
+                                                    if (mPositionMarker == null) {
+                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                .position(SourceNode)
+                                                                .title("Nearest GpsPoint")
+                                                                .anchor(0.5f, 0.5f)
+                                                                .flat(true)
+                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    } else {
+                                                        MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+
+                                                    }
+
+                                                }
                                             }
+                                        }else{
+                                            MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }
                                     }
 
