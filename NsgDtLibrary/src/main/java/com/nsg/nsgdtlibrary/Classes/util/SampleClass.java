@@ -341,7 +341,6 @@ public class SampleClass extends Fragment  {
                     @Override
                     public void onClick(View v) {
 
-
                                     nearestPointValuesList=new ArrayList<LatLng>();
                                     nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                     OldNearestGpsList=new ArrayList<>();
@@ -433,7 +432,7 @@ public class SampleClass extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             if (OldNearestPosition != null) {
-                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,2000);
+                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,3000);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -449,19 +448,19 @@ public class SampleClass extends Fragment  {
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
-                                                                                NavigationDirection(currentGpsPosition, DestinationNode);
+                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 3000, null);
+                                                                                //NavigationDirection(currentGpsPosition, DestinationNode);
                                                                                 caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
                                                                                 verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
-                                                                                AlertDestination(currentGpsPosition);
-
 
                                                                             }
-
+                                                                            NavigationDirection(currentGpsPosition, DestinationNode);
+                                                                            AlertDestination(currentGpsPosition);
                                                                         }
 
                                                                     }
                                                                 }
+
                                                            }else{
                                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                                            }
@@ -469,7 +468,7 @@ public class SampleClass extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 200);
+                                                    handler1.postDelayed(runnable, 3000);
                                                 }
                                             });
 
@@ -683,27 +682,45 @@ public class SampleClass extends Fragment  {
 
         }else {
              final String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+             Log.e("DIRECTION TEXT","DIRECTION TEXT ####### "+data);
             //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-            if (speechStatus == TextToSpeech.ERROR) {
-                Log.e("TTS", "Error in converting Text to Speech!");
-            }
-            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-            final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-            Toast toast = new Toast(getActivity().getApplicationContext());
-            text.setText("" + data);
-            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-            if (data.contains("Take Right")) {
-                image.setImageResource(R.drawable.direction_right);
-            } else if (data.contains("Take Left")) {
-                image.setImageResource(R.drawable.direction_left);
-            }
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.setGravity(Gravity.TOP, 0, 180);
-            toast.setView(layout);
-            toast.show();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+                                if (speechStatus == TextToSpeech.ERROR) {
+                                    Log.e("TTS", "Error in converting Text to Speech!");
+                                }
+                                LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                Toast toast = new Toast(getActivity().getApplicationContext());
+                                text.setText("" + data);
+                                ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                                if (data.contains("Take Right")) {
+                                    image.setImageResource(R.drawable.direction_right);
+                                } else if (data.contains("Take Left")) {
+                                    image.setImageResource(R.drawable.direction_left);
+                                }
+                                toast.setDuration(Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                toast.setGravity(Gravity.TOP, 0, 180);
+                                toast.setView(layout);
+                                toast.show();
+                            }
+                        });
+                    }
+                    catch (Exception e) {
+
+                    }
+                }
+            }).start();
+
            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
             /*
             Timer timer = new Timer();
