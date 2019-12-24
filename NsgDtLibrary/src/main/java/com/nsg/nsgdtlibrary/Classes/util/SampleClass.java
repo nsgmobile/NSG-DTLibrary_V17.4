@@ -429,7 +429,7 @@ public class SampleClass extends Fragment  {
                                                                                     .position(OldNearestPosition)
                                                                                     .title("Nearest GpsPoint")
                                                                                     .anchor(0.5f, 0.5f)
-                                                                                    //  .rotation(location.getBearing())
+                                                                                    .rotation(location.getBearing())
                                                                                     .flat(true)
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
@@ -507,7 +507,7 @@ public class SampleClass extends Fragment  {
                             mMap.setMyLocationEnabled(false);
                             sendData(currentGpsPosition.toString());
                         }
-                        getActivity().onBackPressed();
+                       // getActivity().onBackPressed();
 
 
                     }
@@ -516,7 +516,11 @@ public class SampleClass extends Fragment  {
         });
         return rootView;
     }
-
+    @Override
+    public void onDetach() {
+        Callback = null;
+        super.onDetach();
+    }
     private  List<RouteT> getRouteAccordingToRouteID(String routeIDName) {
         String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE routeID = "+"'"+routeIDName+"'";
         Cursor c1 = sqlHandler.selectQuery(query);
@@ -672,33 +676,33 @@ public class SampleClass extends Fragment  {
         }else {
              final String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
             //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-
-             Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+            if (speechStatus == TextToSpeech.ERROR) {
+                Log.e("TTS", "Error in converting Text to Speech!");
+            }
+            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+            final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+            Toast toast = new Toast(getActivity().getApplicationContext());
+            text.setText("" + data);
+            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+            if (data.contains("Take Right")) {
+                image.setImageResource(R.drawable.direction_right);
+            } else if (data.contains("Take Left")) {
+                image.setImageResource(R.drawable.direction_left);
+            }
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.setGravity(Gravity.TOP, 0, 180);
+            toast.setView(layout);
+            toast.show();
+            Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
 
             Timer timer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-                    if (speechStatus == TextToSpeech.ERROR) {
-                        Log.e("TTS", "Error in converting Text to Speech!");
-                    }
-                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                    @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                    final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                    Toast toast = new Toast(getActivity().getApplicationContext());
-                    text.setText("" + data);
-                    ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-                    if (data.contains("Take Right")) {
-                        image.setImageResource(R.drawable.direction_right);
-                    } else if (data.contains("Take Left")) {
-                        image.setImageResource(R.drawable.direction_left);
-                    }
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.setGravity(Gravity.TOP, 0, 180);
-                    toast.setView(layout);
-                    toast.show();
+
                 }
             };
             timer.schedule(task, 0,2000);
@@ -1177,7 +1181,7 @@ public class SampleClass extends Fragment  {
                         float bearing =(float) getAngle(startPosition,destination);
                         LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
                         marker.setPosition(newPosition);
-                        marker.setRotation(computeRotation(v, startRotation,bearing));
+                        marker.setRotation(bearing);
                     } catch (Exception ex) {
                         // I don't care atm..
                     }
@@ -1190,8 +1194,9 @@ public class SampleClass extends Fragment  {
     public void AlertDestination(LatLng currentGpsPosition){
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
         if (currentGpsPosition.equals(DestinationNode)) {
-            lastDistance= showDistance(currentGpsPosition,DestinationNode);
-            if (lastDistance <5) {
+            double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, DestinationNode.latitude, DestinationNode.longitude);
+           // lastDistance= showDistance(currentGpsPosition,DestinationNode);
+            if (distanceAtLast <5) {
                 if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
@@ -1217,8 +1222,7 @@ public class SampleClass extends Fragment  {
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // Intent i=new Intent(getActivity(), NSGIMainFragment.class);
-                                // startActivity(i);
+                                getActivity().onBackPressed();
                             }
                         });
                 AlertDialog alert = builder.create();
