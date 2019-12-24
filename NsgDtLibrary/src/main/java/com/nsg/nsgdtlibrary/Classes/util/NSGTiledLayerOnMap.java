@@ -1316,7 +1316,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
             Toast toast = new Toast(getActivity().getApplicationContext());
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.setGravity(Gravity.TOP, 0, 150);
+            toast.setGravity(Gravity.TOP, 0, 180);
             toast.setView(layout);
             toast.show();
 
