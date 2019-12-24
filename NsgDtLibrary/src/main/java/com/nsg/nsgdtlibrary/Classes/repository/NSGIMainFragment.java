@@ -368,9 +368,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                 mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                     @Override
                                     public void onMyLocationChange(Location location) {
-                                        if (mPositionMarker != null) {
-                                            mPositionMarker.remove();
-                                        }
+
                                         vehicleSpeed=location.getSpeed();
                                         if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
                                             lastGPSPosition=new ArrayList<>();
@@ -382,7 +380,18 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
 
                                         if(isRouteDeviated==false) {
-                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                            if (mPositionMarker == null) {
+                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(currentGpsPosition)
+                                                        .title("Nearest GpsPoint")
+                                                        .anchor(0.5f, 0.5f)
+                                                        .flat(true)
+                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                            } else {
+                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+
+                                            }
+
                                         }else{
                                             MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
                                         }
@@ -418,7 +427,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                                 } else {
                                                     if (mPositionMarker == null) {
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                                .position(SourceNode)
+                                                                .position(currentGpsPosition)
                                                                 .title("Nearest GpsPoint")
                                                                 .anchor(0.5f, 0.5f)
                                                                 .flat(true)
@@ -719,18 +728,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
         nearestPointValuesList.add(nearestPositionPoint);
-       // if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
-       //     nearestPointValuesList.add(DestinationPosition);
-       // }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
-        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .title("currentLocation")
-                .anchor(0.5f, 0.5f)
-                .rotation(bearing)
-                .flat(true));
-              //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
