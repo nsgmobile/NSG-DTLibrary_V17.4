@@ -839,8 +839,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Intent i=new Intent(getActivity(), NSGIMainFragment.class);
-                                startActivity(i);
+                                getActivity().onBackPressed();
                             }
                         });
                 AlertDialog alert = builder.create();
