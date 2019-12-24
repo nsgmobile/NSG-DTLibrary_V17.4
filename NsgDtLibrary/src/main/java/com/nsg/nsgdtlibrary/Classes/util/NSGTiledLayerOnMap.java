@@ -495,7 +495,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                             text.setText("Navigation Stopped" );
                             toast.setDuration(Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                            toast.setGravity(Gravity.TOP, 0, 180);
+                            toast.setGravity(Gravity.TOP, 0, 200);
                             toast.setView(layout);
                             toast.show();
                         }
@@ -1975,13 +1975,16 @@ public class NSGTiledLayerOnMap extends Fragment  {
             bearing = (float) bearingBetweenLocations(OldGps, nearestPositionPoint); //correct method to change orientation of map
             Log.e("nearestPositionPoint", "OldGps ----1" + OldGps);
             Log.e("nearestPositionPoint", "nearestPositionPoint ----1" + nearestPositionPoint);
-            mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(SourceNode)
-                    .title("currentLocation")
-                    .anchor(0.5f, 0.5f)
-                    .rotation(bearing)
-                    .flat(true));
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000);
+            if(mPositionMarker==null) {
+                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                        .position(SourceNode)
+                        .title("currentLocation")
+                        .anchor(0.5f, 0.5f)
+                        .rotation(bearing)
+                        .flat(true));
+            }else{
+               animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000);
+             }
 
         }
 
