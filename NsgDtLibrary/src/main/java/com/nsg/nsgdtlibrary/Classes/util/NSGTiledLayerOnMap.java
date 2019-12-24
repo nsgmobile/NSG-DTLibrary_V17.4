@@ -102,7 +102,7 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class SampleClass extends Fragment  {
+public class NSGTiledLayerOnMap extends Fragment  {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final int SENSOR_DELAY_NORMAL =50;
     private ProgressDialog dialog;
@@ -208,15 +208,15 @@ public class SampleClass extends Fragment  {
         String communicate(String comm);
     }
     private FragmentToActivity Callback;
-    public SampleClass(){ }
+    public NSGTiledLayerOnMap(){ }
     @SuppressLint("ValidFragment")
-    public SampleClass(String BASE_MAP_URL_FORMAT, String DBCSV_PATH, String jobId, String routeId, int mode, int radius ) {
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT, String DBCSV_PATH, String jobId, String routeId, int mode, int radius ) {
         enteredMode = mode;
         routeDeviationDistance=radius;
-        SampleClass.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
-        SampleClass.this.DBCSV_PATH = DBCSV_PATH;
-        SampleClass.this.routeIDName=routeId;
-        SampleClass.this.jobId=jobId;
+        NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
+        NSGTiledLayerOnMap.this.DBCSV_PATH = DBCSV_PATH;
+        NSGTiledLayerOnMap.this.routeIDName=routeId;
+        NSGTiledLayerOnMap.this.jobId=jobId;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -245,7 +245,7 @@ public class SampleClass extends Fragment  {
         super.onAttach(context);
         try {
             sqlHandler = new SqlHandler(getContext());// Sqlite handler
-            Callback = (SampleClass.FragmentToActivity) context;
+            Callback = (NSGTiledLayerOnMap.FragmentToActivity) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement FragmentToActivity");
@@ -275,7 +275,7 @@ public class SampleClass extends Fragment  {
         InsertAllRouteData(DBCSV_PATH);
         getRouteAccordingToRouteID(routeIDName);
        // change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-      //  change_map_options.setOnClickListener(SampleClass.this);
+      //  change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
         if(RouteDataList!=null) {
             route = RouteDataList.get(0);
         }
@@ -294,8 +294,8 @@ public class SampleClass extends Fragment  {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googlemap) {
-                SampleClass.this.mMap = googlemap;
-                SampleClass.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
+                NSGTiledLayerOnMap.this.mMap = googlemap;
+                NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
                 TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
                 TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
                 tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
