@@ -638,6 +638,8 @@ public class SampleClass extends Fragment  {
         } else{
             System.out.println("Key not matched with ID");
         }
+
+
         EdgesEndContaingData(currentGpsPosition,vfinalValue);
 
         return vfinalValue;
@@ -680,46 +682,24 @@ public class SampleClass extends Fragment  {
 
         }else {
 
-            String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+          final  String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
             //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
             int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
             if (speechStatus == TextToSpeech.ERROR) {
                 Log.e("TTS", "Error in converting Text to Speech!");
             }
-           // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-            text.setText("" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
-            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-            if (geometryTextimpValue.contains("Take Right")) {
-                image.setImageResource(R.drawable.direction_right);
-            } else if (geometryTextimpValue.contains("Take Left")) {
-                image.setImageResource(R.drawable.direction_left);
-            }
-
-            Toast toast = new Toast(getActivity().getApplicationContext());
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.setGravity(Gravity.TOP, 0, 150);
-            toast.setView(layout);
-            toast.show();
-        }
-            /*
-        {
-            final String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
-            Log.e("DIRECTION TEXT","DIRECTION TEXT ####### "+data);
-            //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
+            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
             LayoutInflater inflater1 = getActivity().getLayoutInflater();
             @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
             final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
             final ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
 
-            new Thread(new Runnable() {
+
+          new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        Thread.sleep(1000);
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -742,26 +722,12 @@ public class SampleClass extends Fragment  {
                                 toast.show();
                             }
                         });
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
 
                     }
                 }
-            }).start();
-
-            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-            /*
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-
-                }
-            };
-            timer.schedule(task, 0,2000);
-
+          }).start();
         }
-        */
     }
 
     public void caclulateETA(final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
