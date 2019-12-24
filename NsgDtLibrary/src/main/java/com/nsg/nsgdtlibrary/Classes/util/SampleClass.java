@@ -106,6 +106,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -425,7 +426,7 @@ public class SampleClass extends Fragment  {
                                                                         Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
                                                                         if (mPositionMarker == null) {
                                                                             mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                                                    .position(nPosition)
+                                                                                    .position(OldNearestPosition)
                                                                                     .title("Nearest GpsPoint")
                                                                                     .anchor(0.5f, 0.5f)
                                                                                     //  .rotation(location.getBearing())
@@ -669,52 +670,40 @@ public class SampleClass extends Fragment  {
         if(geometryTextimpValue.equals("-")){
 
         }else {
-            final String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+             final String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
             //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
             int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
             if (speechStatus == TextToSpeech.ERROR) {
                 Log.e("TTS", "Error in converting Text to Speech!");
             }
             // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-            final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
             Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
 
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            final Toast toast = new Toast(getActivity().getApplicationContext());
-                            text.setText("" + data);
-                            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-                            if (data.contains("Take Right")) {
-                                image.setImageResource(R.drawable.direction_right);
-                            } else if (data.contains("Take Left")) {
-                                image.setImageResource(R.drawable.direction_left);
-                            }
-                            toast.setDuration(Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                            toast.setGravity(Gravity.TOP, 0, 180);
-                            toast.setView(layout);
-                            toast.show();
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    toast.cancel();
-                                }
-                            }, 1000);
-
-                        }
-                    });
+                    handler.postDelayed(this, 2 * 60 * 1000); // every 2 minutes
+                    /* your code here */
+                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                    @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                    final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                    Toast toast = new Toast(getActivity().getApplicationContext());
+                    text.setText("" + data);
+                    ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                    if (data.contains("Take Right")) {
+                        image.setImageResource(R.drawable.direction_right);
+                    } else if (data.contains("Take Left")) {
+                        image.setImageResource(R.drawable.direction_left);
+                    }
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.setGravity(Gravity.TOP, 0, 180);
+                    toast.setView(layout);
+                    toast.show();
                 }
-            }, 0, 20000);
+            }, 2 * 60 * 1000); // first run after 2 minutes
 
         }
 
@@ -1191,7 +1180,7 @@ public class SampleClass extends Fragment  {
                         float bearing =(float) getAngle(startPosition,destination);
                         LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
                         marker.setPosition(newPosition);
-                        marker.setRotation(bearing);
+                        marker.setRotation(computeRotation(v, startRotation,bearing));
                     } catch (Exception ex) {
                         // I don't care atm..
                     }
