@@ -734,7 +734,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         if( OldGps .equals(nearestPositionPoint)){
 
         }else{
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000,currentGpsPosition);
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 2000,currentGpsPosition);
         }
         animateCamera(nearestPositionPoint,bearing);
        // verifyRouteDeviation(currentGpsPosition,50);
@@ -757,7 +757,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
 
 
 /*
