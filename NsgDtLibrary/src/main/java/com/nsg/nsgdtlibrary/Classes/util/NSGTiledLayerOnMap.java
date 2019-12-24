@@ -921,12 +921,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
             // Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGps);
             float bearing = (float) bearingBetweenLocations(OldGps, nayaGps); //correct method to change orientation of map
 
-            mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(SourceNode)
-                    .title("currentLocation")
-                    .anchor(0.5f, 0.5f)
-                    .rotation(bearing)
-                    .flat(true));
 
             //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
             if (OldGps.equals(nearestPositionPoint)) {
