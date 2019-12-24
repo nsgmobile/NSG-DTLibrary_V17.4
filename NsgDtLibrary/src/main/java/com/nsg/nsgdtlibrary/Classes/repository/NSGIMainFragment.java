@@ -84,6 +84,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -855,7 +857,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
     public Bitmap fromDrawable(final Drawable drawable) {
         final Bitmap bitmap = Bitmap.createBitmap(25, 25, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+//        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
     }
@@ -1738,55 +1740,63 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         jsonObject.accumulate("Username","nsgadmin");
         jsonObject.accumulate("Password","nsgadmin");
         return jsonObject;
-    }
-    /*
-    public void InsertAllRouteData(String DBCSV_PATH){
-        StringBuilder query = new StringBuilder("INSERT INTO ");
-        query.append(RouteT.TABLE_NAME).append("(routeID,startNode,endNode,routeData) values (")
-                .append("'").append("RD1").append("',")
-                .append("'").append("55.067291 24.978782").append("',")
-                .append("'").append("55.067205 24.979878").append("',")
-                .append("'").append("{\"$id\":\"1\",\"Message\":\"Sucess\",\"Status\":\"Success\",\"TotalDistance\":0.00884315523,\"Route\":[{\"$id\":\"2\",\"EdgeNo\":\"102\",\"GeometryText\":\"Take Left at Shell Trading Middle East Private Limited\",\"Geometry\":{\"$id\":\"3\",\"type\":\"LineString\",\"coordinates\":[[55.06727997182,24.9787947412557],[55.067020892000073,24.978570495000042],[55.066790925000078,24.978370131000077],[55.066620030000081,24.978221328000075],[55.06650374700007,24.97812037500006],[55.066452143000049,24.978075252000053],[55.066388841000048,24.978020054000069],[55.066216137000083,24.977870199000051],[55.06598632500004,24.97767018400009],[55.065755946000081,24.977470103000087],[55.065526233000071,24.977270178000083],[55.065312867000046,24.977084458000036]]}},{\"$id\":\"4\",\"EdgeNo\":\"1334\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"5\",\"type\":\"LineString\",\"coordinates\":[[55.065312867000046,24.977084458000036],[55.065287629000068,24.977076221000061],[55.065261227000065,24.97707199000007],[55.065234420000081,24.97707188600009],[55.065207979000036,24.977075912000089],[55.065182665000066,24.97708395300009],[55.065159206000033,24.977095778000091],[55.065138276000084,24.977111045000072],[55.065138276000084,24.977111045000072],[55.065120166000042,24.977128114000038],[55.064756250000073,24.977475793000053],[55.064379641000073,24.977835331000051],[55.064249201000052,24.977960644000063]]}},{\"$id\":\"6\",\"EdgeNo\":\"383\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"7\",\"type\":\"LineString\",\"coordinates\":[[55.064249201000052,24.977960644000063],[55.064238539000087,24.977972603000069],[55.064230288000033,24.977986052000062],[55.064224693000085,24.978000592000058],[55.064221918000044,24.978015793000054],[55.064222048000033,24.978031201000078],[55.064222048000033,24.978031201000078],[55.064387059000069,24.978174369000044],[55.064439134000054,24.978219639000088]]}},{\"$id\":\"8\",\"EdgeNo\":\"405\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"9\",\"type\":\"LineString\",\"coordinates\":[[55.064439134000054,24.978219639000088],[55.064525820000085,24.978294996000045],[55.064525820000085,24.978294996000045],[55.064649532000033,24.978402540000047],[55.06498055600008,24.978690915000072]]}},{\"$id\":\"10\",\"EdgeNo\":\"413\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"11\",\"type\":\"LineString\",\"coordinates\":[[55.06498055600008,24.978690915000072],[55.065164137000068,24.978850842000043],[55.065338824000037,24.979002188000038],[55.065338824000037,24.979002188000038],[55.065422408000074,24.979074604000061],[55.065573362000066,24.979205705000084]]}},{\"$id\":\"12\",\"EdgeNo\":\"396\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"13\",\"type\":\"LineString\",\"coordinates\":[[55.065573362000066,24.979205705000084],[55.065666012000065,24.979286171000069],[55.065666012000065,24.979286171000069],[55.065681098000084,24.979299272000048],[55.065938324000058,24.979522600000053],[55.066002768000033,24.979578645000061]]}},{\"$id\":\"14\",\"EdgeNo\":\"423\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"15\",\"type\":\"LineString\",\"coordinates\":[[55.066002768000033,24.979578645000061],[55.066081442000041,24.979647065000051],[55.066081442000041,24.979647065000051],[55.066110416000072,24.979672262000065],[55.066245676000051,24.979789959000072]]}},{\"$id\":\"16\",\"EdgeNo\":\"440\",\"GeometryText\":\"Take Right at\",\"Geometry\":{\"$id\":\"17\",\"type\":\"LineString\",\"coordinates\":[[55.066245676000051,24.979789959000072],[55.06634370900008,24.979875263000054],[55.06634370900008,24.979875263000054],[55.066752725000072,24.980231166000067]]}},{\"$id\":\"18\",\"EdgeNo\":\"454\",\"GeometryText\":\"Take Left at\",\"Geometry\":{\"$id\":\"19\",\"type\":\"LineString\",\"coordinates\":[[55.066752725000072,24.980231166000067],[55.066772902000082,24.980240215000038],[55.066794299000037,24.98024651500009],[55.066816470000049,24.980249936000064],[55.066838951000079,24.980250405000049],[55.066861270000061,24.980247913000085]]}},{\"$id\":\"20\",\"EdgeNo\":\"443\",\"GeometryText\":\"-\",\"Geometry\":{\"$id\":\"21\",\"type\":\"LineString\",\"coordinates\":[[55.066861270000061,24.980247913000085],[55.0672260238388,24.9799000715094]]}}]}").append("'");
-        sqlHandler.executeQuery(query.toString());
-    }
-*/
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    } @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    List resultList=new ArrayList();
     public void InsertAllRouteData(String DBCSV_PATH){
         File file = new File(DBCSV_PATH);
         CsvReader csvReader = new CsvReader();
         csvReader.setContainsHeader(true);
         Log.e("OUTPUT FILE","OUTPUT FILE"+file);
-        if(file.exists()) {
-            try (CsvParser csvParser = csvReader.parse(file, StandardCharsets.UTF_8)) {
-                CsvRow row;
-                while ((row = csvParser.nextRow()) != null) {
-                    System.out.println("Read line: " + row);
-                    String ID = row.getField("ID");
-                    String RouteID = row.getField("RouteID");
-                    String startNode = row.getField("StartPoint");
-                    String endNode = row.getField("EndPoint");
-                    String routeData = row.getField("Route");
+        if (file.exists())
+        {
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new FileReader(file));
+                String csvLine;
+                while ((csvLine = br.readLine()) != null)
+                {
+                    String[] data=csvLine.split("@");
+                    try
+                    {
+                       // Toast.makeText(getContext(),data[0]+" "+data[1],Toast.LENGTH_SHORT).show();
+                        //Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[0] + " " + data[1] +" " +  data[2] +" " +  data[3]+ " " + data[4]);
+                        String route=data[4].toString();
+                        Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[4]);
 
-                    StringBuilder query = new StringBuilder("INSERT INTO ");
-                    query.append(RouteT.TABLE_NAME).append("(routeID,startNode,endNode,routeData) values (")
-                            .append("'").append(RouteID).append("',")
-                            .append("'").append(startNode).append("',")
-                            .append("'").append(endNode).append("',")
-                            .append("'").append(routeData).append("')");
+                        Log.e("OUTPUT FILE"," QUERY "+route);
+                        StringBuilder query = new StringBuilder("INSERT INTO ");
+                        query.append(RouteT.TABLE_NAME).append("(routeID,startNode,endNode,routeData) values (")
+                                .append("'").append(data[1] ).append("',")
+                                .append("'").append(data[2]).append("',")
+                                .append("'").append(data[3]).append("',")
+                                .append("'").append(route).append("')");
+                        Log.e("OUTPUT FILE"," QUERY "+query);
 
-                    sqlHandler.executeQuery(query.toString());
-                    sqlHandler.closeDataBaseConnection();
+                        sqlHandler.executeQuery(query.toString());
+                        sqlHandler.closeDataBaseConnection();
 
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("Problem",e.toString());
+                    }
                 }
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-       }else{
 
-       }
+        }
+        else
+        {
+            Toast.makeText(getContext(),"file not exists",Toast.LENGTH_SHORT).show();
+        }
 
     }
-
 
     public void GetRouteFromDBPlotOnMap(String FeatureResponse){
         JSONObject jsonObject = null;
