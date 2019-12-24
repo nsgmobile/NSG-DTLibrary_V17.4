@@ -450,6 +450,10 @@ public class SampleClass extends Fragment  {
                                                                                         .bearing(bearing).tilt(65.5f).zoom(20)
                                                                                         .build();
                                                                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+                                                                                caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
+                                                                                verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
+                                                                                AlertDestination(currentGpsPosition);
+
 
                                                                             }
 
@@ -554,6 +558,141 @@ public class SampleClass extends Fragment  {
             }
         }
     return newGPS;
+    }
+    public void caclulateETA(final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
+
+        // Log.e("Total Distance","Total Distance"+ TotalDistanceInMTS);
+        ETACalclator etaCalculator1=new ETACalclator();
+        double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+        final double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+        //Log.e("resultTotalTime ","resultTotalTimeConverted ------- "+ resultTotalTimeConverted);
+
+        double resultTravelledTimeConverted=0.0;
+        // double resultNeedToTeavelTimeConverted=0.0;
+        double resultNeedToTeavelTime=0.0;
+        double EtaCrossedTime = 0.0;
+        double EtaElapsed = 0.0;
+        String etaCrossedFlag = "NO";
+
+        double travelledDistance = showDistance(sourcePosition, currentGpsPosition);
+        String travelledDistanceInMTS = String.format("%.0f", travelledDistance);
+        ETACalclator etaCalculator = new ETACalclator();
+        double resultTravelledTime = etaCalculator.cal_time(travelledDistance, 10);
+        resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
+
+
+        double needToTravelDistance = TotalDistance - travelledDistance;
+        String needToTravelDistanceInMTS = String.format("%.0f", needToTravelDistance);
+        ETACalclator etaCalculator2 = new ETACalclator();
+        resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, 10);
+        resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
+
+        // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
+        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+
+        if (resultTravelledTimeConverted > resultTotalTimeConverted) {
+            etaCrossedFlag = "YES";
+            EtaCrossedTime = resultTravelledTime - resultTotalTimeConverted;
+            EtaElapsed = DecimalUtils.round(EtaCrossedTime, 0);
+        } else {
+            etaCrossedFlag = "NO";
+        }
+
+
+        time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
+        sendData(time.toString());
+
+        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+        tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
+
+        tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
+    }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
+
+        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+        if (PrevousGpsPosition != null){
+            double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
+            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
+            float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
+            //   Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
+            if(returnedDistance > markDistance) {
+                //  mMap.stopAnimation();
+                String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+
+                String destLatPos = String.valueOf(DestinationPosition.latitude);
+                String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                RouteDeviatedSourcePosition=new LatLng(Double.parseDouble(cgpsLat),Double.parseDouble(cgpsLat));
+
+                //  Log.e("returnedDistance", "RouteDiationPosition --------- " + routeDiationPosition);
+                //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+                //  DestinationPosition = new LatLng(destLat, destLng);
+                //   dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                //   dialog.setMessage("Fetching new Route");
+                //   dialog.setMax(100);
+                //   dialog.show();
+                //new Handler().postDelayed(new Runnable() {
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        String MESSAGE = "";
+                        GetRouteDetails(routeDiationPosition, destPoint);
+                        //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
+                        if(RouteDeviationConvertedPoints!=null &&RouteDeviationConvertedPoints.size()>0 ) {
+                            isRouteDeviated = true;
+
+                            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                            text.setText("Route Deviated");
+
+                            Toast toast = new Toast(getActivity().getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.setGravity(Gravity.TOP, 0, 150);
+                            toast.setView(layout);
+                            toast.show();
+                            if(mPositionMarker!=null){
+                                mPositionMarker.remove();
+                                Log.e("REMOVING MARKER","REMOVING MARKER");
+                            }
+                            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                    .position(currentGpsPosition)
+                                    .title("currentLocation")
+                                    .anchor(0.5f, 0.5f)
+                                    .flat(true)
+                                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+
+                            CameraUpdate center =
+                                    CameraUpdateFactory.newLatLng(currentGpsPosition);
+                            CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                            mMap.moveCamera(center);
+                            mMap.animateCamera(zoom);
+                            if(mPositionMarker!=null && mPositionMarker.isVisible()==true) {
+                                PolylineOptions polylineOptions = new PolylineOptions();
+                                polylineOptions.add(OldGPSPosition);
+                                polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                Polyline polyline = mMap.addPolyline(polylineOptions);
+                                polylineOptions.color(Color.RED).width(30);
+                                mMap.addPolyline(polylineOptions);
+                                polyline.setJointType(JointType.ROUND);
+                            }
+                        }
+
+
+                    }
+                };
+            }
+
+        }else{
+
+        }
     }
     public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
         LatLng FirstCordinate = null,SecondCordinate=null;
@@ -682,6 +821,178 @@ public class SampleClass extends Fragment  {
 
         }
     }
+    private void GetRouteDetails(final String deviationPoint, final String newDestinationPoint){
+        try{
+            // Log.e("Deviation Point","Deviation Point" + deviationPoint);
+            // Log.e("newDestinationPoint","newDestinationPoint" + newDestinationPoint);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (Build.VERSION.SDK_INT > 9) {
+                        StrictMode.ThreadPolicy policy =
+                                new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                        try {
+                            String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
+                            //  Log.e("HTTP REQUEST","HTTP REQUEST"+httprequest);
+                            String FeatureResponse = HttpPost(httprequest,deviationPoint,newDestinationPoint);
+                            //  Log.e("HTTP REQUEST","HTTP REQUEST"+ FeatureResponse);
+                            JSONObject jsonObject = null;
+                            try {
+                                if(FeatureResponse!=null){
+                                    String delQuery = "DELETE  FROM " + GeometryT.TABLE_NAME;
+                                    sqlHandler.executeQuery(delQuery.toString());
+                                    //   Log.e("DelQuery","DelQuery"+delQuery);
+                                    jsonObject = new JSONObject(FeatureResponse);
+                                    String ID = String.valueOf(jsonObject.get("$id"));
+                                    // MESSAGE = jsonObject.getString("Message");
+                                    String Status = jsonObject.getString("Status");
+                                    double TotalDistance = jsonObject.getDouble("TotalDistance");
+                                    TotalRouteDeviatedDistanceInMTS = jsonObject.getDouble("TotalDistance");
+                                    JSONArray jSonRoutes = new JSONArray(jsonObject.getString("Route"));
+                                    PolylineOptions polylineOptions = new PolylineOptions();
+
+                                    polylineOptions.add(OldGPSPosition);
+                                    PointBeforeRouteDeviation=new LatLng(OldGPSPosition.latitude,OldGPSPosition.longitude);
+                                    Polyline polyline = null;
+                                    RouteDeviationConvertedPoints=new ArrayList<LatLng>();
+                                    geometryRouteDeviatedEdgesData=new ArrayList<GeometryT>();
+                                    for (int i = 0; i < jSonRoutes.length(); i++) {
+                                        List deviationPoints=new ArrayList();
+                                        JSONObject Routes = new JSONObject(jSonRoutes.get(i).toString());
+                                        String $id = Routes.getString("$id");
+                                        String EdgeNo = Routes.getString("EdgeNo");
+                                        String GeometryText = Routes.getString("GeometryText");
+                                        String Geometry = Routes.getString("Geometry");
+                                        JSONObject geometryObject = new JSONObject(Routes.getString("Geometry"));
+                                        String $id1 = geometryObject.getString("$id");
+                                        String type = geometryObject.getString("type");
+                                        String coordinates = geometryObject.getString("coordinates");
+                                        JSONArray jSonLegs = new JSONArray(geometryObject.getString("coordinates"));
+                                        for (int j = 0; j < jSonLegs.length(); j++) {
+                                            deviationPoints.add(jSonLegs.get(j));
+
+                                        }
+                                        //   Log.e("DEVIATION POINTS","DEVIATION POINTS"+deviationPoints.size());
+                                        String  stPoint=String.valueOf(jSonLegs.get(0));
+                                        stPoint=stPoint.replace("[","");
+                                        stPoint=stPoint.replace("]","");
+                                        String [] firstPoint=stPoint.split(",");
+                                        Double stPointLat= Double.valueOf(firstPoint[0]);
+                                        Double stPointLongi= Double.valueOf(firstPoint[1]);
+                                        LatLng stVertex=new LatLng(stPointLongi,stPointLat);
+
+                                        StringBuilder query = new StringBuilder("INSERT INTO ");
+                                        query.append(GeometryT.TABLE_NAME).append("(edgeNo,distanceInVertex,startPoint,allPoints,geometryText,endPoint) values (")
+                                                .append("'").append(EdgeNo).append("',")
+                                                .append("'").append("distanceInKM").append("',")
+                                                .append("'").append(jSonLegs.get(0)).append("',")
+                                                .append("'").append(deviationPoints).append("',")
+                                                .append("'").append(GeometryText).append("',")
+                                                .append("'").append(jSonLegs.get(jSonLegs.length()-1)).append("')");
+                                        sqlHandler.executeQuery(query.toString());
+                                        // Log.e("INSERTION QUERY","INSERTION QUERY ----- "+ query);
+                                        sqlHandler.closeDataBaseConnection();
+                                        for (int p = 0; p < deviationPoints.size(); p++) {
+
+                                            String listItem = deviationPoints.get(p).toString();
+                                            listItem = listItem.replace("[", "");
+                                            listItem = listItem.replace("]", "");
+                                            String[] subListItem = listItem.split(",");
+                                            Double y = Double.valueOf(subListItem[0]);
+                                            Double x = Double.valueOf(subListItem[1]);
+                                            StringBuilder sb=new StringBuilder();
+                                            LatLng latLng = new LatLng(x, y);
+                                            RouteDeviationConvertedPoints.add(latLng);
+                                            GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(latLng),GeometryText,"");
+                                            geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
+                                        }
+                                        // Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints);
+                                        MarkerOptions markerOptions = new MarkerOptions();
+                                        for (int k = 0; k < RouteDeviationConvertedPoints.size(); k++) {
+                                            if(polylineOptions!=null && mMap!=null) {
+                                                // markerOptions.position(RouteDeviationConvertedPoints.get(k));
+                                                // Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints.get(k));
+                                                markerOptions.title("Position");
+                                            }
+                                        }
+                                    }
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }catch (Exception ex){
+
+                        }
+                        dialog.dismiss();
+                    }
+                }
+            });
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        dialog.dismiss();
+    }
+    private String HttpPost(String myUrl,String latLng1,String latLng2) throws IOException, JSONException {
+        StringBuilder sb = new StringBuilder();
+        String LoginResponse = "";
+        String result = "";
+        URL url = new URL(myUrl);
+        Log.v("URL ", " URL: " + url);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setRequestProperty("Accept", "text/plain");
+        JSONObject jsonObject = buidJsonObject(latLng1,latLng2);
+        // Log.e("JSON OBJECT","JSON OBJECT ------- "+jsonObject);
+        setPostRequestContent(conn, jsonObject);
+        conn.connect();
+        result = conn.getResponseMessage();
+        if (conn.getResponseCode() != 200) {
+
+        } else {
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            String output = null;
+            //   System.out.println("Output from Server .... \n");
+            while ((output = br.readLine()) != null) {
+                System.out.println(output);
+                LoginResponse = sb.append(output).append(" ").toString();
+
+            }
+        }
+        conn.disconnect();
+        return LoginResponse;
+    }
+
+    private JSONObject buidJsonObject(String latLng1,String latLng2) throws JSONException {
+        JSONObject buidJsonObject = new JSONObject();
+        buidJsonObject.accumulate("UserData", buidJsonObject1());
+        buidJsonObject.accumulate("StartNode", latLng1);
+        buidJsonObject.accumulate("EndNode", latLng2);
+        return buidJsonObject;
+    }
+
+    private JSONObject buidJsonObject1() throws JSONException {
+        JSONObject buidJsonObject1 = new JSONObject();
+        buidJsonObject1.accumulate("username", "admin");
+        buidJsonObject1.accumulate("password", "admin");
+        buidJsonObject1.accumulate("License", "b3TIz98wORn6daqmthiEu48TAW1ZEQjPuRLapxJPV6HJQiJtO9LsOErPexmDhbZtD76U2AbJ+jXarYr3gAqkkRiofLSN+321AlzVW1K3L8feXLYTRSP8NSgJ7v7460H1hxKIp+mbak6+Q6tNoWgKpA==");
+
+        return buidJsonObject1;
+    }
+
+    private void setPostRequestContent(HttpURLConnection conn,
+                                       JSONObject jsonObject) throws IOException {
+        OutputStream os = conn.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(jsonObject.toString());
+        // Log.i(LoginActivity.class.toString(), jsonObject.toString());
+        writer.flush();
+        writer.close();
+        os.close();
+    }
+
 
     private List<LatLng> removeDuplicatesRouteDeviated(List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints)
     {
