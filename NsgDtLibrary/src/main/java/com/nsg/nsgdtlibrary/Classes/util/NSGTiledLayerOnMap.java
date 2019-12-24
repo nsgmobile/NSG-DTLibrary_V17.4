@@ -362,10 +362,22 @@ public class NSGTiledLayerOnMap extends Fragment  {
 
 
                                         if(isRouteDeviated==false) {
-                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                            if (mPositionMarker == null) {
+                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                        .position(currentGpsPosition)
+                                                        .title("Nearest GpsPoint")
+                                                        .anchor(0.5f, 0.5f)
+                                                        .flat(true)
+                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                            } else {
+                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+
+                                            }
+
                                         }else{
                                             MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
                                         }
+
 
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
