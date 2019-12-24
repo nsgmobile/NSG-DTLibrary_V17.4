@@ -429,7 +429,6 @@ public class SampleClass extends Fragment  {
                                                                                     .position(OldNearestPosition)
                                                                                     .title("Nearest GpsPoint")
                                                                                     .anchor(0.5f, 0.5f)
-                                                                                    .rotation(location.getBearing())
                                                                                     .flat(true)
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
@@ -470,7 +469,7 @@ public class SampleClass extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 0);
+                                                    handler1.postDelayed(runnable, 2000);
                                                 }
                                             });
 
@@ -1378,7 +1377,6 @@ public class SampleClass extends Fragment  {
             }
         }
     }
-
     private static float computeRotation(float fraction, float start, float end) {
         float normalizeEnd = end - start; // rotate start to 0
         float normalizedEndAbs = (normalizeEnd + 360) % 360;
@@ -1900,17 +1898,18 @@ public class SampleClass extends Fragment  {
                 //  float bearingMap= mMap.getCameraPosition().bearing;
                 float bearing = (float) bearingBetweenLocations(beginLatLng,endLatLng);
                 float angle = -azimuthInDegress+bearing;
-                float rotation = -azimuthInDegress * 360 / (2 * 3.14159f) ;
+               // float rotation = -azimuthInDegress * 360 / (2 * 3.14159f) ;
                 double lng = lngDelta * t + beginLatLng.longitude;
                 marker.setPosition(new LatLng(lat, lng));
                 marker.setAnchor(0.5f, 0.5f);
                 marker.setFlat(true);
-                marker.setRotation(rotation);
+                marker.setRotation(bearing);
                 if (t < 1.0) {
                     handler.postDelayed(this, 16);
                 } else {
                     float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
                     float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
+                    computeRotation(10,beginAngle,endAngle);
                 }
             }
         });
