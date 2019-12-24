@@ -407,18 +407,21 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                                             OldGPSPosition = currentGpsPosition;
                                         }
                                         currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                                        if(isRouteDeviated==false) {
-                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                        }else{
-                                            MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
-                                        }
+                                        double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+                                        Log.e("distance", "distance" + distance);
+                                        if (distance > 10) {
 
+                                        } else {
+                                            if (isRouteDeviated == false) {
+                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                            } else {
+                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                            }
+                                        }
                                     }
 
                                 });
-
                             }
-
 
                         }else if(enteredMode==3){
                             Marker marker = mMap.addMarker(new MarkerOptions()
@@ -701,9 +704,9 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         }
         nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
         nearestPointValuesList.add(nearestPositionPoint);
-        if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
-            nearestPointValuesList.add(DestinationPosition);
-        }
+       // if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
+       //     nearestPointValuesList.add(DestinationPosition);
+       // }
 
         float bearing = (float) bearingBetweenLocations(OldGps,nayaGps); //correct method to change orientation of map
         mPositionMarker = mMap.addMarker(new MarkerOptions()
