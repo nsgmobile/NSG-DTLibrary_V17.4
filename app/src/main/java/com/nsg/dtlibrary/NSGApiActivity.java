@@ -51,7 +51,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
             enteredMode = NSGIBundle.getInt("enteredMode");
             bufferSize = NSGIBundle.getInt("bufferSize");
             // fragmentTransaction.add(R.id.map_container, new MainMapFragment(srcLatitude,srcLongitude,destLatitude,desLongitude,1,bufferSize));//getRoutes Direction
-            fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,2,bufferSize));//getRoutes Direction
+            fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,1,bufferSize));//getRoutes Direction
         }else if(charlsisNumber.equals("RD2")) {
             routeId="RD2";
             enteredMode = NSGIBundle.getInt("enteredMode");

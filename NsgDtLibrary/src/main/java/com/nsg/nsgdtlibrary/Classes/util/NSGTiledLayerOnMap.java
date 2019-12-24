@@ -362,17 +362,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
 
 
                                         if(isRouteDeviated==false) {
-                                            if (mPositionMarker == null) {
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(currentGpsPosition)
-                                                        .title("Nearest GpsPoint")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                            } else {
-                                                MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-
-                                            }
+                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
 
                                         }else{
                                             MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
@@ -1991,12 +1981,12 @@ public class NSGTiledLayerOnMap extends Fragment  {
             Log.e("nearestPositionPoint", "OldGps ----1" + OldGps);
             Log.e("nearestPositionPoint", "nearestPositionPoint ----1" + nearestPositionPoint);
             mPositionMarker = mMap.addMarker(new MarkerOptions()
-                    .position(OldGps)
+                    .position(SourceNode)
                     .title("currentLocation")
                     .anchor(0.5f, 0.5f)
-                    .flat(true)
-                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000);
+                    .rotation(bearing)
+                    .flat(true));
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 10000);
 
         }
 
@@ -2024,7 +2014,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
     }
 
 }
