@@ -411,11 +411,12 @@ public class SampleClass extends Fragment  {
                                                         public void run() {
                                                             currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                                             LatLng OldNearestPosition=null;
-
+                                                           if(isRouteDeviated==false) {
                                                                 if (OldGPSPosition != null) {
-                                                                    double distance =distFrom(OldGPSPosition.latitude,OldGPSPosition.longitude,currentGpsPosition.latitude,currentGpsPosition.longitude);
+
+                                                                    double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                     Log.e("distance", "distance" + distance);
-                                                                    if (distance >20) {
+                                                                    if (distance > 20) {
 
                                                                     } else {
                                                                         OldNearestPosition = nPosition;
@@ -423,39 +424,42 @@ public class SampleClass extends Fragment  {
                                                                         nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
                                                                         Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
                                                                         if (mPositionMarker == null) {
-                                                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                                                        .position(nPosition)
-                                                                                        .title("Nearest GpsPoint")
-                                                                                        .anchor(0.5f, 0.5f)
-                                                                                      //  .rotation(location.getBearing())
-                                                                                        .flat(true)
-                                                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                                            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                                    .position(nPosition)
+                                                                                    .title("Nearest GpsPoint")
+                                                                                    .anchor(0.5f, 0.5f)
+                                                                                    //  .rotation(location.getBearing())
+                                                                                    .flat(true)
+                                                                                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
-                                                                                if(OldNearestPosition!=null) {
-                                                                                    animateMarker(OldNearestPosition, nPosition, mPositionMarker);
-                                                                                    float bearing=(float)bearingBetweenLocations(OldNearestPosition,nPosition);
-                                                                                    int height =getView().getMeasuredHeight();
-                                                                                    Projection p = mMap.getProjection();
-                                                                                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                                                                                    Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
-                                                                                    Point offset = new Point(center.x, (center.y+(height/4)));
-                                                                                    LatLng centerLoc = p.fromScreenLocation(center);
-                                                                                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                                                                                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                                                                                    LatLng shadowTgt = SphericalUtil.computeOffset(nPosition,offsetDistance,bearing);
+                                                                            if (OldNearestPosition != null) {
+                                                                                animateMarker(OldNearestPosition, nPosition, mPositionMarker);
+                                                                                float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
+                                                                                int height = getView().getMeasuredHeight();
+                                                                                Projection p = mMap.getProjection();
+                                                                                Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                                                                                Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                                                                                Point offset = new Point(center.x, (center.y + (height / 4)));
+                                                                                LatLng centerLoc = p.fromScreenLocation(center);
+                                                                                LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                                                                                double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                                                                                LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
 
-                                                                                    CameraPosition currentPlace = new CameraPosition.Builder()
-                                                                                            .target(shadowTgt)
-                                                                                            .bearing(bearing).tilt(65.5f).zoom(20)
-                                                                                            .build();
-                                                                                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+                                                                                CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                                        .target(shadowTgt)
+                                                                                        .bearing(bearing).tilt(65.5f).zoom(20)
+                                                                                        .build();
+                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
 
-                                                                                }
+                                                                            }
 
                                                                         }
 
+                                                                    }
                                                                 }
-                                                            }
+                                                           }else{
+                                                               MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                           }
                                                         }
                                                     };
 
@@ -551,7 +555,151 @@ public class SampleClass extends Fragment  {
         }
     return newGPS;
     }
+    public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
+        LatLng FirstCordinate = null,SecondCordinate=null;
+        String st_vertex="",end_vertex="", directionTextRouteDeviation="";
+        if(RouteDeviationConvertedPoints!=null) {
+            //  Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
+            //   Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
+            List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
+            for (int k = 0; k < EdgeWithoutDuplicatesInRouteDeviationPoints.size(); k++) {
+                //  Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
+            }
+            if (EdgeWithoutDuplicatesInRouteDeviationPoints != null && EdgeWithoutDuplicatesInRouteDeviationPoints.size() > 0) {
 
+                List distancesInDeviation = new ArrayList();
+                HashMap<String, LatLng> distancesMapInRouteDeviation = new HashMap<String, LatLng>();
+                for (int epList = 0; epList < EdgeWithoutDuplicatesInRouteDeviationPoints.size(); epList++) {
+                    LatLng PositionMarkingPoint = EdgeWithoutDuplicatesInRouteDeviationPoints.get(epList);
+                    //  Log.e("Route Deviation", " Route Deviation PositionMarking Point" + PositionMarkingPoint);
+                    double distance = distFrom(PositionMarkingPoint.longitude, PositionMarkingPoint.latitude, currentGpsPosition.longitude, currentGpsPosition.latitude);
+                    distancesMapInRouteDeviation.put(String.valueOf(distance), PositionMarkingPoint);
+                    distancesInDeviation.add(distance);
+                    Collections.sort(distancesInDeviation);
+                }
+                for (int k = 0; k < distancesInDeviation.size(); k++) {
+                    // Log.e("Route Deviation", " distancesInDeviation" + distancesInDeviation.get(k));
+                }
+                // Log.e("Route Deviation", " distancesInDeviation" + distancesInDeviation);
+                // Log.e("Route Deviation", " distancesMapInRouteDeviation" + distancesMapInRouteDeviation);
+                String firstShortestDistance = String.valueOf(distancesInDeviation.get(0));
+                String secondShortestDistance = String.valueOf(distancesInDeviation.get(1));
+                boolean answerFirst = distancesMapInRouteDeviation.containsKey(firstShortestDistance);
+                if (answerFirst) {
+                    System.out.println("The list contains " + firstShortestDistance);
+                    FirstCordinate = distancesMapInRouteDeviation.get(firstShortestDistance);
+                    // Log.e("Route Deviation", " FIRST Cordinate  From Route deviation" + FirstCordinate);
+                    for(int i=0;i<geometryRouteDeviatedEdgesData.size();i++){
+                        GeometryT geometry=geometryRouteDeviatedEdgesData.get(i);
+                        String routeDeviationTextPoint= geometry.getPositionMarkingPoint();
+                        // Log.e("Route Deviation", " ST_VERTEX From Route deviation" + routeDeviationTextPoint);
+
+                        if(routeDeviationTextPoint.equals(FirstCordinate.toString())){
+                            int index = geometryRouteDeviatedEdgesData.indexOf(routeDeviationTextPoint);
+                            st_vertex=geometry.getStartPoint();
+                            end_vertex=geometry.getEndPoint();
+                            directionTextRouteDeviation=geometry.getGeometryText();
+
+                        }
+                    }
+                    //  Log.e("Route Deviation", " ST_VERTEX From Route deviation" + st_vertex);
+                    //  Log.e("Route Deviation", " END_VERTEX  From Route deviation" + end_vertex);
+                    //  Log.e("Route Deviation", " DIRECTION TEXT Cordinate  From Route deviation" + directionTextRouteDeviation);
+
+                    // key= getKeysFromValueinLatLng(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate);
+                    // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
+                } else {
+                    System.out.println("The list does not contains " + "FALSE");
+                }
+                boolean answerSecond = distancesMapInRouteDeviation.containsKey(secondShortestDistance);
+                if (answerSecond) {
+                    System.out.println("The list contains " + secondShortestDistance);
+                    SecondCordinate = distancesMapInRouteDeviation.get(secondShortestDistance);
+                    //  Log.e("Route Deviation", " SECOND Cordinate  From Route deviation" + SecondCordinate);
+                    // key= String.valueOf(getKeysFromValue(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate));
+                    // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
+                } else {
+                    System.out.println("The list does not contains " + "FALSE");
+                }
+                // Log.e("Route Deviation", " currentGpsPosition From Route deviation " + currentGpsPosition);
+                // Log.e("Route Deviation", " FirstCordinate From Route deviation " + FirstCordinate);
+                // Log.e("Route Deviation", " Second Cordinate From Route deviation " + SecondCordinate);
+
+
+                nearestPositionPoint = findNearestPoint(currentGpsPosition, FirstCordinate, SecondCordinate);
+                // Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
+                OldNearestGpsList.add(nearestPositionPoint);
+            }
+            if (OldNearestGpsList.isEmpty() && OldNearestGpsList.size() == 0) {
+                OldGps = OldNearestGpsList.get(0);
+                int indexVal = OldNearestGpsList.indexOf(nearestPositionPoint);
+                nayaGps = OldNearestGpsList.get(indexVal);
+            } else {
+                int indexVal = OldNearestGpsList.indexOf(nearestPositionPoint);
+                OldGps = OldNearestGpsList.get(indexVal - 1);
+                nayaGps = OldNearestGpsList.get(indexVal);
+            }
+            nearestValuesMap.put(String.valueOf(nearestPositionPoint), geometryDirectionText);
+            nearestPointValuesList.add(nearestPositionPoint);
+            if (currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size() - 1))) {
+                nearestPointValuesList.add(DestinationPosition);
+            }
+            // Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGps);
+            float bearing = (float) bearingBetweenLocations(OldGps, nayaGps); //correct method to change orientation of map
+
+            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                    .position(SourceNode)
+                    .title("currentLocation")
+                    .anchor(0.5f, 0.5f)
+                    .rotation(bearing)
+                    .flat(true));
+
+            //  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+            if (OldGps.equals(nearestPositionPoint)) {
+
+            } else {
+                //animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000, currentGpsPosition);
+            }
+            //  animateCamera(nearestPositionPoint, bearing);
+            Projection p = mMap.getProjection();
+            Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+            Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
+            //  Point offset = new Point(center.x, (center.y + 320));
+            Point offset = new Point((center.x + 320), (center.y + 320));
+            LatLng centerLoc = p.fromScreenLocation(center);
+            LatLng offsetNewLoc = p.fromScreenLocation(offset);
+            double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+            LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
+
+            CameraPosition currentPlace = new CameraPosition.Builder()
+                    .target(shadowTgt)
+                    .bearing(bearing).tilt(65.5f).zoom(20)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+            TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation,st_vertex,end_vertex);
+            CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS,RouteDeviatedSourcePosition,currentGpsPosition,DestinationNode);
+            AlertDestination(currentGpsPosition);
+
+        }
+    }
+
+    private List<LatLng> removeDuplicatesRouteDeviated(List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints)
+    {
+        int count = RouteDeviationConvertedPoints.size();
+
+        for (int i = 0; i < count; i++)
+        {
+            for (int j = i + 1; j < count; j++)
+            {
+                if (RouteDeviationConvertedPoints.get(i).equals(RouteDeviationConvertedPoints.get(j)))
+                {
+                    RouteDeviationConvertedPoints.remove(j--);
+                    count--;
+                }
+            }
+        }
+        return EdgeWithoutDuplicatesInRouteDeviationPoints;
+    }
 
     public static void animateMarker( final LatLng startPosition,final LatLng destination, final Marker marker) {
         if (marker != null) {
@@ -581,7 +729,167 @@ public class SampleClass extends Fragment  {
             valueAnimator.start();
         }
     }
+    public void AlertDestination(LatLng currentGpsPosition){
+        int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
+        LatLng cameraPosition=OldNearestGpsList.get(GpsIndex);
+        if (currentGpsPosition.equals(DestinationNode)) {
+            lastDistance= showDistance(cameraPosition,DestinationNode);
+            if (lastDistance <5) {
+                if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
 
+                mMap.setMyLocationEnabled(false);
+                //Speech implementation
+                String data1=" Your Destination Reached ";
+                int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
+                if (speechStatus1 == TextToSpeech.ERROR) {
+                    Log.e("TTS", "Error in converting Text to Speech!");
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
+                builder.setTitle("Alert");
+                builder.setIcon(R.drawable.car_icon_32);
+                builder.setMessage("Destination Reached")
+                        .setCancelable(false)
+                        .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // Intent i=new Intent(getActivity(), NSGIMainFragment.class);
+                                // startActivity(i);
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }else{
+        }
+    }
+
+    public void CaluculateETAInRouteDeviationDirection( final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
+        // Log.e("Total Distance"," Route Deviation  ETA sourcePosition "+ sourcePosition);
+        // Log.e("Total Distance"," Route Deviation  ETA  DestinationPosition "+ DestinationPosition);
+        // Log.e("Total Distance"," Route Deviation  ETA  currentGpsPosition "+ currentGpsPosition);
+
+
+        // Log.e("Total Distance","Total Distance"+ TotalRouteDeviatedDistanceInMTS);
+        double  TotalDistanceDeviated= TotalRouteDeviatedDistanceInMTS*100000;
+
+        // Log.e("Total Distance","Total Distance"+ TotalDistanceDeviated);
+
+        ETACalclator etaCalculator1=new ETACalclator();
+        double resultTotalETA=etaCalculator1.cal_time(TotalDistanceDeviated, maxSpeed);
+        final double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+        //  Log.e("resultTotalTime ","resultTotalTimeConverted ------- "+ resultTotalTimeConverted);
+
+        double resultTravelledTimeConverted=0.0;
+        // double resultNeedToTeavelTimeConverted=0.0;
+        double resultNeedToTeavelTime=0.0;
+        double EtaCrossedTime = 0.0;
+        double EtaElapsed = 0.0;
+        String etaCrossedFlag = "NO";
+
+        double travelledDistance = showDistance(sourcePosition, currentGpsPosition);
+        String travelledDistanceInMTS = String.format("%.0f", travelledDistance);
+        ETACalclator etaCalculator = new ETACalclator();
+        double resultTravelledTime = etaCalculator.cal_time(travelledDistance, 10);
+        resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
+
+
+        double needToTravelDistance = TotalDistanceDeviated - travelledDistance;
+        String needToTravelDistanceInMTS = String.format("%.0f", needToTravelDistance);
+        ETACalclator etaCalculator2 = new ETACalclator();
+        resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, 10);
+        resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
+
+        // Log.e("TAG", " currentGpsPosition @@@@ " + currentGpsPosition);
+        // Log.e("TAG", " travelledDistanceInMTS " + travelledDistanceInMTS);
+        // Log.e("TAG", " travelled Time  " + resultTravelledTime);
+        // Log.e("TAG", "  Need To travel DistanceInMTS " + needToTravelDistanceInMTS);
+        // Log.e("TAG", "  Need To travel  Time " + resultNeedToTeavelTime);
+        // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
+        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+
+        if (resultTravelledTimeConverted > resultTotalTimeConverted) {
+            etaCrossedFlag = "YES";
+            EtaCrossedTime = resultTravelledTime - resultTotalTimeConverted;
+            EtaElapsed = DecimalUtils.round(EtaCrossedTime, 0);
+        } else {
+            etaCrossedFlag = "NO";
+        }
+
+
+        time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
+        sendData(time.toString());
+
+        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+        tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
+
+        tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
+    }
+    public void TextImplementationRouteDeviationDirectionText(String directionTextInDeviation,String stPoint,String endPoint){
+        // Log.e("TAG", "  START POSITION " + stPoint);
+        //  Log.e("TAG", " END POSITION " + endPoint);
+        //  Log.e("TAG", " END POSITION " + directionTextInDeviation);
+        String stPoint_data=stPoint.replace("[","");
+        String stPoint_data1=stPoint_data.replace("]","");
+        String[] st_point=stPoint_data1.split(",");
+        double st_point_lat= Double.parseDouble(st_point[1]);
+        double st_point_lnag= Double.parseDouble(st_point[0]);
+        LatLng st_Point_vertex=new LatLng(st_point_lat,st_point_lnag);
+
+        String endPoint_data=endPoint.replace("[","");
+        String endPoint_data1=endPoint_data.replace("]","");
+        String[] end_point=endPoint_data1.split(",");
+        double end_point_lat= Double.parseDouble(end_point[1]);
+        double end_point_lnag= Double.parseDouble(end_point[0]);
+        LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
+        double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
+        String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
+
+        if(directionTextInDeviation.equals("-")){
+
+        }else {
+            String data = directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+            //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
+            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+            if (speechStatus == TextToSpeech.ERROR) {
+                //   Log.e("TTS", "Error in converting Text to Speech!");
+            }
+            // Toast.makeText(getActivity(), "" + directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+            text.setText("" + directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
+            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+            if (directionTextInDeviation.contains("Take Right")) {
+                image.setImageResource(R.drawable.direction_right);
+            } else if (directionTextInDeviation.contains("Take Left")) {
+                image.setImageResource(R.drawable.direction_left);
+            }
+
+            Toast toast = new Toast(getActivity().getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.setGravity(Gravity.TOP, 0, 150);
+            toast.setView(layout);
+            toast.show();
+
+        }
+
+    }
+    private void sendData(String comm) {
+        //comm=time.toString();
+        Log.e("SendData","SendData ------- "+ comm);
+        Callback.communicate(comm);
+
+    }
     private interface LatLngInterpolator {
         LatLng interpolate(float fraction, LatLng a, LatLng b);
 

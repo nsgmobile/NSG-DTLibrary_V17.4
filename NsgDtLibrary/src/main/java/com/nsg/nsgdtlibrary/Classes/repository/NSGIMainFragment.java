@@ -739,18 +739,10 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                     .anchor(0.5f, 0.5f)
                     .flat(true)
                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-           // animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
-            animateMarker(mPositionMarker,OldGps,nearestPositionPoint,false);
-        }
-        /*
-        if( OldGps .equals(nearestPositionPoint)){
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 1000,currentGpsPosition);
 
-        }else{
-          //  animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 500,currentGpsPosition);
         }
-        */
 
-       // verifyRouteDeviation(currentGpsPosition,50);
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
         verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
         AlertDestination(currentGpsPosition);
@@ -762,30 +754,6 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
         //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
 
 
-/*
-
-
-
-       // Point offset = new Point(center.x, (center.y + 320));
-        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-        bottomRightPoint.y=center.y;
-        LatLng centerLoc = p.fromScreenLocation(center);
-        LatLng offsetNewLoc = p.fromScreenLocation(bottomRightPoint);
-        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-
-
-
-        Projection p = mMap.getProjection();
-        Point somePoint=p.toScreenLocation(nearestPositionPoint);
-        // Point centerScreenPoint = p.toScreenLocation(p.getVisibleRegion().latLngBounds.getCenter());
-
-        Point somePoint1 = new Point(somePoint.x + height/2,somePoint.y + height);
-        LatLng somePoint1ll = p.fromScreenLocation(somePoint1);
-        CameraPosition currentPlace = new CameraPosition.Builder()
-                .target(somePoint1ll)
-                .bearing(bearing).tilt(65.5f).zoom(20)
-                .build();
-                */
         Projection p = mMap.getProjection();
         Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
         Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
@@ -799,32 +767,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
-
-
-
-       // LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
-        /*
-        CameraPosition currentPlace = new CameraPosition.Builder()
-                .target(aboveMarkerLatLng)
-                .bearing(bearing).tilt(65.5f).zoom(18)
-                .build();
-
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
-        */
-        //mMap.setPadding(0,0,0,330);
-
-
-/*
-
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override            public void onCameraChange(CameraPosition cameraPosition) {
-                Log.e("Destination points","Destination points "+destLat+destLng);
-                getTextImplementation(currentGpsPosition,DestinationNode);
-               // verifyRouteDeviation(currentGpsPosition,10);
-            }
-        });
-        */
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
     }
     public void animateCamera(LatLng nearestPositionPoint,float bearing ){
         Projection p = mMap.getProjection();
@@ -840,7 +783,7 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
                 .target(shadowTgt)
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 100, null);
 
     }
 
