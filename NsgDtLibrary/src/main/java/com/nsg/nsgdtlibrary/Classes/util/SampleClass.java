@@ -450,6 +450,7 @@ public class SampleClass extends Fragment  {
                                                                                         .bearing(bearing).tilt(65.5f).zoom(20)
                                                                                         .build();
                                                                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+                                                                                NavigationDirection(currentGpsPosition, DestinationNode);
                                                                                 caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
                                                                                 verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
                                                                                 AlertDestination(currentGpsPosition);
@@ -486,6 +487,30 @@ public class SampleClass extends Fragment  {
                 });
 
 
+                location_tracking_stop.setOnClickListener(new View.OnClickListener() {
+                    LatLng currentGpsPosition;
+                    @Override
+                    public void onClick(View v) {
+
+                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                            @Override
+                            public void onMyLocationChange(final Location location) {
+                                if (mPositionMarker != null) {
+                                    mPositionMarker.remove();
+                                }
+                                currentGpsPosition = new LatLng(location.getLatitude(),location.getLongitude());
+
+                            }
+                        });
+                        if(currentGpsPosition!=null){
+                            mMap.setMyLocationEnabled(false);
+                            sendData(currentGpsPosition.toString());
+                        }
+                        getActivity().onBackPressed();
+
+
+                    }
+                });
             }
         });
         return rootView;
@@ -559,6 +584,142 @@ public class SampleClass extends Fragment  {
         }
     return newGPS;
     }
+    public String NavigationDirection(final LatLng currentGpsPosition, LatLng DestinationPosition) {
+        final String shortestDistancePoint = "";
+
+        ArrayList<Double> EdgeDistancesList=new ArrayList<Double>();
+        HashMap EdgeDistancesMap=new HashMap<String,String>();
+        String stPoint = "", endPoint = "", geometryTextimpValue = "", distanceInEdge = "";
+        String position="";
+        for(int k=0;k<EdgeContainsDataList.size();k++){
+            EdgeDataT edgeK=EdgeContainsDataList.get(k);
+            StringBuilder sb=new StringBuilder();
+            sb.append("STPOINT :"+edgeK.getStartPoint()+"EndPt:"+edgeK.getEndPoint()+"Points:"+edgeK.getPositionMarkingPoint()+"Geometry TEXT:"+ edgeK.getGeometryText());
+
+            String pointDataText=edgeK.getPositionMarkingPoint();
+            String stPoint_data=pointDataText.replace("lat/lng: (","");
+            String stPoint_data1=stPoint_data.replace(")","");
+            String[] st_point=stPoint_data1.split(",");
+            double st_point_lat= Double.parseDouble(st_point[1]);
+            double st_point_lnag= Double.parseDouble(st_point[0]);
+            LatLng st_Point_vertex_main=new LatLng(st_point_lnag,st_point_lat);
+            double distanceOfCurrentPosition=showDistance(st_Point_vertex_main,currentGpsPosition);
+            EdgeDistancesList.add(distanceOfCurrentPosition);
+            EdgeDistancesMap.put(String.valueOf(distanceOfCurrentPosition).trim(),String.valueOf(pointDataText));
+
+            Collections.sort(EdgeDistancesList);
+        }
+
+        GetSortetPoint(EdgeDistancesMap,EdgeDistancesList, currentGpsPosition );
+
+        return shortestDistancePoint;
+
+    }
+    public String  GetSortetPoint(HashMap EdgeDistancesMap, ArrayList<Double>  EdgeDistancesList, LatLng currentGpsPosition ){
+        String vfinalValue = "";
+        String FirstShortestDistance = String.valueOf(EdgeDistancesList.get(0));
+        boolean verify=EdgeDistancesMap.containsKey(FirstShortestDistance.trim());
+        if(verify){
+
+            Object Value =String.valueOf( EdgeDistancesMap.get(FirstShortestDistance));
+            vfinalValue= String.valueOf(EdgeDistancesMap.get(FirstShortestDistance));
+
+        } else{
+            System.out.println("Key not matched with ID");
+        }
+        EdgesEndContaingData(currentGpsPosition,vfinalValue);
+
+        return vfinalValue;
+    }
+    public void EdgesEndContaingData(LatLng currentGpsPosition, String shortestDistancePoint){
+        String stPoint = "", endPoint = "", geometryTextimpValue = "", distanceInEdge = "";
+        String position="";
+        int indexPosition=0;
+        EdgeDataT edgeCurrentPoint= null;
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<EdgeContainsDataList.size();i++){
+            edgeCurrentPoint=EdgeContainsDataList.get(i);
+            position=edgeCurrentPoint.getPositionMarkingPoint();
+            if(position.equals(shortestDistancePoint)){
+                distanceInEdge=EdgeContainsDataList.get(i).getGeometryText();
+                stPoint=  EdgeContainsDataList.get(i).getStartPoint();
+                endPoint= EdgeContainsDataList.get(i).getEndPoint();
+                geometryTextimpValue=EdgeContainsDataList.get(i).getGeometryText();
+            }else{
+            }
+        }
+
+        String stPoint_data=stPoint.replace("[","");
+        String stPoint_data1=stPoint_data.replace("]","");
+        String[] st_point=stPoint_data1.split(",");
+        double st_point_lat= Double.parseDouble(st_point[1]);
+        double st_point_lnag= Double.parseDouble(st_point[0]);
+        LatLng st_Point_vertex=new LatLng(st_point_lat,st_point_lnag);
+
+        String endPoint_data=endPoint.replace("[","");
+        String endPoint_data1=endPoint_data.replace("]","");
+        String[] end_point=endPoint_data1.split(",");
+        double end_point_lat= Double.parseDouble(end_point[1]);
+        double end_point_lnag= Double.parseDouble(end_point[0]);
+        LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
+        double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
+        final String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
+
+
+        if(geometryTextimpValue.equals("-")){
+
+        }else {
+            final String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+            //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
+            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+            if (speechStatus == TextToSpeech.ERROR) {
+                Log.e("TTS", "Error in converting Text to Speech!");
+            }
+            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+            final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            final Toast toast = new Toast(getActivity().getApplicationContext());
+                            text.setText("" + data);
+                            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                            if (data.contains("Take Right")) {
+                                image.setImageResource(R.drawable.direction_right);
+                            } else if (data.contains("Take Left")) {
+                                image.setImageResource(R.drawable.direction_left);
+                            }
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.setGravity(Gravity.TOP, 0, 180);
+                            toast.setView(layout);
+                            toast.show();
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    toast.cancel();
+                                }
+                            }, 1000);
+
+                        }
+                    });
+                }
+            }, 0, 20000);
+
+        }
+
+    }
+
     public void caclulateETA(final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
 
         // Log.e("Total Distance","Total Distance"+ TotalDistanceInMTS);
@@ -1042,9 +1203,8 @@ public class SampleClass extends Fragment  {
     }
     public void AlertDestination(LatLng currentGpsPosition){
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
-        LatLng cameraPosition=OldNearestGpsList.get(GpsIndex);
         if (currentGpsPosition.equals(DestinationNode)) {
-            lastDistance= showDistance(cameraPosition,DestinationNode);
+            lastDistance= showDistance(currentGpsPosition,DestinationNode);
             if (lastDistance <5) {
                 if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
