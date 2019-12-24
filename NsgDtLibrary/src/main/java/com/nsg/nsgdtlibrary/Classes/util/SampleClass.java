@@ -424,7 +424,7 @@ public class SampleClass extends Fragment  {
                                                                         Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
                                                                         nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
                                                                         Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                                                                        if (mPositionMarker == null) {
+                                                                        if (mPositionMarker == null && OldNearestPosition !=null) {
                                                                             mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                                     .position(OldNearestPosition)
                                                                                     .title("Nearest GpsPoint")
