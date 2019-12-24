@@ -222,6 +222,7 @@ public class SampleClass extends Fragment  {
     boolean isRouteDeviated=false;
     private Button location_tracking_start,location_tracking_stop;
     StringBuilder time= new StringBuilder();
+    LatLng nPosition= null;
     public interface FragmentToActivity {
         String communicate(String comm);
     }
@@ -334,11 +335,11 @@ public class SampleClass extends Fragment  {
                     //    ActivityCompat#requestPermissions
                     return;
                 }
-
                 getRouteAccordingToRouteID(routeIDName);
                 location_tracking_start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
 
                                     nearestPointValuesList=new ArrayList<LatLng>();
                                     nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
@@ -348,14 +349,57 @@ public class SampleClass extends Fragment  {
                                     mMap.setBuildingsEnabled(true);
                                     mMap.getUiSettings().setZoomControlsEnabled(true);
                                     mMap.getUiSettings().setCompassEnabled(true);
-                                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
                                     mMap.getUiSettings().setMapToolbarEnabled(true);
                                     mMap.getUiSettings().setZoomGesturesEnabled(true);
                                     mMap.getUiSettings().setScrollGesturesEnabled(true);
                                     mMap.getUiSettings().setTiltGesturesEnabled(true);
                                     mMap.getUiSettings().setRotateGesturesEnabled(true);
                                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                                     if(enteredMode==2){
+                        if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
+                            ETACalclator etaCalculator1=new ETACalclator();
+                            double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+                            double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+                            tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+                            tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                                    @Override
+                                    public void onMyLocationChange(Location location) {
+                                        if (mPositionMarker != null) {
+                                            mPositionMarker.remove();
+                                        }
+                                        vehicleSpeed=location.getSpeed();
+                                        if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
+                                            lastGPSPosition=new ArrayList<>();
+                                            lastGPSPosition.add(currentGpsPosition);
+                                            OldGPSPosition=lastGPSPosition.get(0);
+                                        }
+                                        getLatLngPoints();
+                                        currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
+
+
+                                        if(isRouteDeviated==false) {
+                                            GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
+                                        }else{
+                                           // MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                        }
+
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                locationFakeGpsListener = locationFakeGpsListener + 1;
+                                            }
+                                        }, 0);
+
+
+                                    }
+                                });
+
+                            }
+                        }else if(enteredMode==2){
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
@@ -363,39 +407,72 @@ public class SampleClass extends Fragment  {
                                                     if (currentGpsPosition != null) {
                                                         OldGPSPosition = currentGpsPosition;
                                                     }
-
-                                                   Timer timer=new Timer();
-                                                    TimerTask doAsynchronousTask = new TimerTask() {
-                                                        @Override
+                                                    Runnable runnable = new Runnable() {
                                                         public void run() {
-                                                            handler.post(new Runnable() {
-                                                                public void run() {
-                                                                    currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                                                                    Log.e("CurrentGpsPoint","CurrentGpsPoint"+ currentGpsPosition);
+                                                            currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                                            LatLng OldNearestPosition=null;
 
-                                                                    if (mPositionMarker == null) {
-                                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                                                .position(currentGpsPosition)
-                                                                                .title("currentLocation")
-                                                                                .anchor(0.5f, 0.5f)
-                                                                                .rotation(location.getBearing())
-                                                                                .flat(true)
-                                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                                if (OldGPSPosition != null) {
+                                                                    double distance =distFrom(OldGPSPosition.latitude,OldGPSPosition.longitude,currentGpsPosition.latitude,currentGpsPosition.longitude);
+                                                                    Log.e("distance", "distance" + distance);
+                                                                    if (distance >20) {
+
                                                                     } else {
-                                                                        if (OldGPSPosition != null) {
-                                                                              mPositionMarker.setPosition(currentGpsPosition);
+                                                                        OldNearestPosition = nPosition;
+                                                                        Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
+                                                                        nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
+                                                                        Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
+                                                                        if (mPositionMarker == null) {
+                                                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                                        .position(nPosition)
+                                                                                        .title("Nearest GpsPoint")
+                                                                                        .anchor(0.5f, 0.5f)
+                                                                                      //  .rotation(location.getBearing())
+                                                                                        .flat(true)
+                                                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                                        } else {
+                                                                                if(OldNearestPosition!=null) {
+                                                                                    animateMarker(OldNearestPosition, nPosition, mPositionMarker);
+                                                                                    float bearing=(float)bearingBetweenLocations(OldNearestPosition,nPosition);
+                                                                                    int height =getView().getMeasuredHeight();
+                                                                                    Projection p = mMap.getProjection();
+                                                                                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                                                                                    Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
+                                                                                    Point offset = new Point(center.x, (center.y+(height/4)));
+                                                                                    LatLng centerLoc = p.fromScreenLocation(center);
+                                                                                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                                                                                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                                                                                    LatLng shadowTgt = SphericalUtil.computeOffset(nPosition,offsetDistance,bearing);
+
+                                                                                    CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                                            .target(shadowTgt)
+                                                                                            .bearing(bearing).tilt(65.5f).zoom(20)
+                                                                                            .build();
+                                                                                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+
+                                                                                }
+
                                                                         }
-                                                                    }
 
                                                                 }
-                                                            });
+                                                            }
                                                         }
                                                     };
-                                                    timer.schedule(doAsynchronousTask, 0,5000);
+
+                                                    Handler handler1 = new Handler();
+                                                    handler1.postDelayed(runnable, 0);
                                                 }
                                             });
+
                                         }
-                                     }
+                            }else if(enteredMode==3){
+                               Marker marker = mMap.addMarker(new MarkerOptions()
+                                   .position(SourceNode)
+                                   .title("currentLocation")
+                                   .anchor(0.5f, 0.5f)
+                                   .flat(true)
+                                   .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+                            }
                     }
 
                 });
@@ -405,6 +482,7 @@ public class SampleClass extends Fragment  {
         });
         return rootView;
     }
+
     private  List<RouteT> getRouteAccordingToRouteID(String routeIDName) {
         String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE routeID = "+"'"+routeIDName+"'";
         Cursor c1 = sqlHandler.selectQuery(query);
@@ -416,7 +494,7 @@ public class SampleClass extends Fragment  {
 
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public LatLng GetNearestPointOnRoadFromGPS(final LatLng currentGpsPosition)    {
+    public LatLng GetNearestPointOnRoadFromGPS(final LatLng OldGpsPosition,final LatLng currentGpsPosition)    {
         List distancesList=new ArrayList();
         HashMap<String,String>  hash_map=new HashMap<>();
         String FirstCordinate=null,SecondCordinate=null;
@@ -445,8 +523,6 @@ public class SampleClass extends Fragment  {
                 SecondCordinate = (String)hash_map.get(SecondShortestDistance);
 
             }
-
-
             if(FirstCordinate != null && SecondCordinate != null)
             {
                 String First= FirstCordinate.replace("lat/lng: (","");
@@ -471,33 +547,31 @@ public class SampleClass extends Fragment  {
                 LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
 
                 newGPS= findNearestPoint(currentGpsPosition,source,destination);
-
-
             }
-
         }
     return newGPS;
     }
 
 
-    public static void animateMarker(final Location destination, final Marker marker) {
+    public static void animateMarker( final LatLng startPosition,final LatLng destination, final Marker marker) {
         if (marker != null) {
-            final LatLng startPosition = marker.getPosition();
-            final LatLng endPosition = new LatLng(destination.getLatitude(), destination.getLongitude());
+           // final LatLng startPosition = marker.getPosition();
+            final LatLng endPosition = new LatLng(destination.latitude, destination.longitude);
 
             final float startRotation = marker.getRotation();
 
             final LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
             ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
-            valueAnimator.setDuration(1000); // duration 1 second
+            valueAnimator.setDuration(2000); // duration 1 second
             valueAnimator.setInterpolator(new LinearInterpolator());
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override public void onAnimationUpdate(ValueAnimator animation) {
                     try {
                         float v = animation.getAnimatedFraction();
+                        float bearing =(float) getAngle(startPosition,destination);
                         LatLng newPosition = latLngInterpolator.interpolate(v, startPosition, endPosition);
                         marker.setPosition(newPosition);
-                        marker.setRotation(computeRotation(v, startRotation, destination.getBearing()));
+                        marker.setRotation(bearing);
                     } catch (Exception ex) {
                         // I don't care atm..
                     }
@@ -793,6 +867,71 @@ public class SampleClass extends Fragment  {
         }
 
     }
+    public int getLatLngPoints(){
+
+        LatLngDataArray.add(new LatLng(24.978782,55.067291));
+        LatLngDataArray.add(new LatLng(24.978792,55.067279));
+        LatLngDataArray.add(new LatLng(24.978762,55.067241));
+        LatLngDataArray.add(new LatLng(24.978765,55.067237));
+        LatLngDataArray.add(new LatLng(24.978755,55.067218));
+        LatLngDataArray.add(new LatLng(24.978449,55.067310));
+        LatLngDataArray.add(new LatLng(24.978656,55.066997));
+        LatLngDataArray.add(new LatLng(24.978408,55.066897));
+        LatLngDataArray.add(new LatLng(24.978349, 55.066801));
+        LatLngDataArray.add(new LatLng(24.978025,55.066462));
+        LatLngDataArray.add(new LatLng(24.977993,55.066226));
+
+        LatLngDataArray.add(new LatLng( 24.977771, 55.066040));
+        LatLngDataArray.add(new LatLng( 24.977636, 55.065907));
+
+
+        LatLngDataArray.add(new LatLng(24.977358,55.065692));
+
+
+        LatLngDataArray.add(new LatLng(24.977132,55.065436));
+        LatLngDataArray.add(new LatLng(24.977126,55.065249));
+        LatLngDataArray.add(new LatLng(24.977164,55.065171));
+        LatLngDataArray.add(new LatLng(24.977257,55.064874));
+        LatLngDataArray.add(new LatLng(24.977631,55.06466));
+        LatLngDataArray.add(new LatLng(24.977690, 55.064490));
+        LatLngDataArray.add(new LatLng(24.977881, 55.064262));
+        LatLngDataArray.add(new LatLng( 24.977960, 55.064183));
+        LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
+        LatLngDataArray.add(new LatLng(24.978098, 55.064253));
+        LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
+        //Route Deviation points starts from here ----
+        LatLngDataArray.add(new LatLng( 24.978179,55.064389)); //Route deviation point
+        LatLngDataArray.add(new LatLng(24.978547,55.064227));
+        LatLngDataArray.add(new LatLng( 24.978617,55.064152));
+        LatLngDataArray.add(new LatLng( 24.978720,55.064048));
+        LatLngDataArray.add(new LatLng(24.978816,55.063959 ));
+        LatLngDataArray.add(new LatLng(24.978879,55.063874 ));
+        LatLngDataArray.add(new LatLng(24.978968,55.063839 ));
+        LatLngDataArray.add(new LatLng( 24.979060,55.063933));//
+        LatLngDataArray.add(new LatLng( 24.979202,55.064101));
+        LatLngDataArray.add(new LatLng(24.979288,55.064200 ));
+        LatLngDataArray.add(new LatLng( 24.979387,55.064313));
+        LatLngDataArray.add(new LatLng( 24.979527,55.064469));
+        LatLngDataArray.add(new LatLng( 24.979651,55.064618));
+        LatLngDataArray.add(new LatLng( 24.979770,55.064747));
+        LatLngDataArray.add(new LatLng( 24.979840,55.064828));
+        LatLngDataArray.add(new LatLng(24.979861,55.064973));
+        LatLngDataArray.add(new LatLng( 24.979760,55.065077));
+        LatLngDataArray.add(new LatLng( 24.979559,55.065288));
+        LatLngDataArray.add(new LatLng( 24.979448,55.065401));
+        LatLngDataArray.add(new LatLng( 24.979342,55.065516));
+        //Route Deviation points are uoto here---
+        LatLngDataArray.add(new LatLng(24.979304, 55.065536));
+        LatLngDataArray.add(new LatLng(24.979261, 55.065570));
+        LatLngDataArray.add(new LatLng(24.979722, 55.066073));
+        LatLngDataArray.add(new LatLng(24.979961, 55.066314));
+        LatLngDataArray.add(new LatLng(24.980189, 55.066572));
+        LatLngDataArray.add(new LatLng(24.980335, 55.066770));
+        LatLngDataArray.add(new LatLng(24.980174, 55.066937));
+        LatLngDataArray.add(new LatLng(24.979878,55.067205));  //Destinationm point
+        return LatLngDataArray.size();
+
+    }
 
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
@@ -1015,7 +1154,7 @@ public class SampleClass extends Fragment  {
         return brng;
     }
 
-    private double getAngle(LatLng beginLatLng, LatLng endLatLng) {
+    private static double getAngle(LatLng beginLatLng, LatLng endLatLng) {
         double f1 = Math.PI * beginLatLng.latitude / 180;
         double f2 = Math.PI * endLatLng.latitude / 180;
         double dl = Math.PI * (endLatLng.longitude - beginLatLng.longitude) / 180;
@@ -1023,3 +1162,38 @@ public class SampleClass extends Fragment  {
     }
 }
 
+
+///Timer Task Code
+
+
+
+                                                   /*
+                                                   Timer timer=new Timer();
+                                                    TimerTask doAsynchronousTask = new TimerTask() {
+                                                        @Override
+                                                        public void run() {
+                                                            handler.post(new Runnable() {
+                                                                public void run() {
+                                                                    currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                                                    Log.e("CurrentGpsPoint","CurrentGpsPoint"+ currentGpsPosition);
+
+                                                                    if (mPositionMarker == null) {
+                                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                                .position(currentGpsPosition)
+                                                                                .title("currentLocation")
+                                                                                .anchor(0.5f, 0.5f)
+                                                                                .rotation(location.getBearing())
+                                                                                .flat(true)
+                                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                                    } else {
+                                                                        if (OldGPSPosition != null) {
+                                                                              mPositionMarker.setPosition(currentGpsPosition);
+                                                                        }
+                                                                    }
+
+                                                                }
+                                                            });
+                                                        }
+                                                    };
+                                                    timer.schedule(doAsynchronousTask, 0,100000);
+                                                    */

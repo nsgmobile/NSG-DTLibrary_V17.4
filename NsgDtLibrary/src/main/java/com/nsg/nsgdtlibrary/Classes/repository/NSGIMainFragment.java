@@ -423,10 +423,13 @@ public class NSGIMainFragment extends Fragment implements View.OnClickListener, 
 
 
                                                        if (OldGPSPosition !=null && currentGpsPosition!=null) {
-                                                           if(isRouteDeviated==false) {
-                                                               MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-                                                           }else{
-                                                               MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                                           double distance =distFrom(OldGPSPosition.latitude,OldGPSPosition.longitude,currentGpsPosition.latitude,currentGpsPosition.longitude);
+                                                           if (distance >30) {
+                                                               if (isRouteDeviated == false) {
+                                                                   MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
+                                                               } else {
+                                                                   MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                               }
                                                            }
                                                        }
 
