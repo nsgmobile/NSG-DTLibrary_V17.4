@@ -409,8 +409,8 @@ public class SampleClass extends Fragment  {
                                                     if (currentGpsPosition != null) {
                                                         OldGPSPosition = currentGpsPosition;
                                                     }
-                                                  //  Runnable runnable = new Runnable() {
-                                                    //    public void run() {
+                                                    Runnable runnable = new Runnable() {
+                                                       public void run() {
                                                             currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                                             LatLng OldNearestPosition=null;
                                                            if(isRouteDeviated==false) {
@@ -465,12 +465,12 @@ public class SampleClass extends Fragment  {
                                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                                            }
                                                         }
-                                                   // };
+                                                    };
 
-                                                  //  Handler handler1 = new Handler();
-                                                  //  handler1.postDelayed(runnable, 0);
+                                                    Handler handler1 = new Handler();
+                                                    handler1.postDelayed(runnable, 0);
 
-                                              //  }
+                                               }
 
                                             });
 
