@@ -432,7 +432,7 @@ public class SampleClass extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             if (OldNearestPosition != null) {
-                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,3000);
+                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,2000);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -443,19 +443,18 @@ public class SampleClass extends Fragment  {
                                                                                 LatLng offsetNewLoc = p.fromScreenLocation(offset);
                                                                                 double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                                                                                 LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
+                                                                                caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
+                                                                                verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
+                                                                                NavigationDirection(currentGpsPosition, DestinationNode);
+                                                                                AlertDestination(currentGpsPosition);
 
                                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 3000, null);
-                                                                                //NavigationDirection(currentGpsPosition, DestinationNode);
-                                                                                caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-                                                                                verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
-
+                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
                                                                             }
-                                                                            NavigationDirection(currentGpsPosition, DestinationNode);
-                                                                            AlertDestination(currentGpsPosition);
+
                                                                         }
 
                                                                     }
@@ -468,7 +467,7 @@ public class SampleClass extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 3000);
+                                                    handler1.postDelayed(runnable, 500);
                                                 }
                                             });
 
@@ -687,7 +686,7 @@ public class SampleClass extends Fragment  {
             if (speechStatus == TextToSpeech.ERROR) {
                 Log.e("TTS", "Error in converting Text to Speech!");
             }
-            Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
             LayoutInflater inflater1 = getActivity().getLayoutInflater();
             @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
             TextView text = (TextView) layout.findViewById(R.id.textView_toast);
