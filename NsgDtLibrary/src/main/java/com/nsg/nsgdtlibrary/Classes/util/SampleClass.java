@@ -416,7 +416,7 @@ public class SampleClass extends Fragment  {
 
                                                                     double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                     Log.e("distance", "distance" + distance);
-                                                                    if (distance > 20) {
+                                                                    if (distance > 10) {
 
                                                                     } else {
                                                                         OldNearestPosition = nPosition;
@@ -432,7 +432,7 @@ public class SampleClass extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             if (OldNearestPosition != null) {
-                                                                                animateMarker(OldNearestPosition, nPosition,mPositionMarker);
+                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,1000);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -452,7 +452,7 @@ public class SampleClass extends Fragment  {
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+                                                                               // mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
                                                                             }
 
                                                                         }
@@ -467,7 +467,7 @@ public class SampleClass extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 500);
+                                                    handler1.postDelayed(runnable, 0);
                                                 }
                                             });
 
