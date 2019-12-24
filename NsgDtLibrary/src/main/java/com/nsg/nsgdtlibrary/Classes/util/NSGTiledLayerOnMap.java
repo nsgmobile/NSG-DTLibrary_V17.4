@@ -1649,6 +1649,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
         LatLngDataArray.add(new LatLng(24.977881, 55.064262));
         LatLngDataArray.add(new LatLng( 24.977960, 55.064183));
         LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
+        LatLngDataArray.add(new LatLng(24.978086, 55.064233));
         LatLngDataArray.add(new LatLng(24.978098, 55.064253));
         LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
         //Route Deviation points starts from here ----
