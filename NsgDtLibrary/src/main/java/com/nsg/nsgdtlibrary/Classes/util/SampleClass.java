@@ -383,9 +383,9 @@ public class SampleClass extends Fragment  {
 
 
                                         if(isRouteDeviated==false) {
-                                            GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
+                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
                                         }else{
-                                           // MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
+                                            MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
                                         }
 
                                         new Handler().postDelayed(new Runnable() {
@@ -434,7 +434,7 @@ public class SampleClass extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             if (OldNearestPosition != null) {
-                                                                                animateMarker(OldNearestPosition, nPosition, mPositionMarker);
+                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,2000);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -448,7 +448,7 @@ public class SampleClass extends Fragment  {
 
                                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                                         .target(shadowTgt)
-                                                                                        .bearing(bearing).tilt(65.5f).zoom(20)
+                                                                                        .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
                                                                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
                                                                                 NavigationDirection(currentGpsPosition, DestinationNode);
@@ -492,7 +492,6 @@ public class SampleClass extends Fragment  {
                     LatLng currentGpsPosition;
                     @Override
                     public void onClick(View v) {
-
                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                             @Override
                             public void onMyLocationChange(final Location location) {
@@ -506,6 +505,16 @@ public class SampleClass extends Fragment  {
                         if(currentGpsPosition!=null){
                             mMap.setMyLocationEnabled(false);
                             sendData(currentGpsPosition.toString());
+                            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                            final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                            Toast toast = new Toast(getActivity().getApplicationContext());
+                            text.setText("Navigation Stopped" );
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.setGravity(Gravity.TOP, 0, 180);
+                            toast.setView(layout);
+                            toast.show();
                         }
                        // getActivity().onBackPressed();
 
@@ -696,8 +705,8 @@ public class SampleClass extends Fragment  {
             toast.setGravity(Gravity.TOP, 0, 180);
             toast.setView(layout);
             toast.show();
-            Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-
+           // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+            /*
             Timer timer = new Timer();
             TimerTask task = new TimerTask() {
                 @Override
@@ -706,6 +715,7 @@ public class SampleClass extends Fragment  {
                 }
             };
             timer.schedule(task, 0,2000);
+            */
         }
 
     }
@@ -1929,6 +1939,143 @@ public class SampleClass extends Fragment  {
         double dl = Math.PI * (endLatLng.longitude - beginLatLng.longitude) / 180;
         return atan2(sin(dl) * cos(f2) , cos(f1) * sin(f2) - sin(f1) * cos(f2) * cos(dl));
     }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
+
+        LatLng OldGps = null,nayaGps;
+        List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+        nearestValuesMap=new HashMap<>();
+        if (EdgeWithoutDuplicates != null && EdgeWithoutDuplicates.size() > 0) {
+            String FirstCordinate="",SecondCordinate="";
+            List distancesList = new ArrayList();
+            distanceValuesList = new ArrayList();
+            HashMap<String,String> hash_map = new HashMap<String, String>();
+            for (int epList = 0; epList < EdgeWithoutDuplicates.size(); epList++) {
+                LatLng PositionMarkingPoint = EdgeWithoutDuplicates.get(epList);
+                // Log.e("Distances List","Distances List PositionMarkingPoint"+PositionMarkingPoint);
+                // Log.e("Distances List","Distances List currentGpsPosition "+currentGpsPosition);
+                double distance = distFrom(PositionMarkingPoint.latitude,PositionMarkingPoint.longitude,currentGpsPosition.longitude,currentGpsPosition.latitude);
+                hash_map.put(String.valueOf(distance), String.valueOf(EdgeWithoutDuplicates.get(epList)));
+                distancesList.add(distance);
+                Collections.sort(distancesList);
+            }
+            for(int i=0;i<distancesList.size();i++) {
+                // Log.e("Distances List","Distances List"+distancesList.get(i));
+            }
+
+            String FirstShortestDistance = String.valueOf(distancesList.get(0));
+            String SecondShortestDistance = String.valueOf(distancesList.get(1));
+            boolean answerFirst= hash_map.containsKey(FirstShortestDistance);
+            if (answerFirst) {
+                System.out.println("The list contains " + FirstShortestDistance);
+                FirstCordinate = (String)hash_map.get(FirstShortestDistance);
+                key= String.valueOf(getKeysFromValue(AllPointEdgeNo,FirstCordinate));
+                distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
+            } else {
+                System.out.println("The list does not contains "+ "FALSE");
+            }
+            boolean answerSecond= hash_map.containsKey(SecondShortestDistance);
+            if (answerSecond) {
+                System.out.println("The list contains " + SecondShortestDistance);
+                SecondCordinate = (String)hash_map.get(SecondShortestDistance);
+
+            } else {
+                System.out.println("The list does not contains "+ "FALSE");
+            }
+            String First= FirstCordinate.replace("lat/lng: (","");
+            First= First.replace(")","");
+            String[] FirstLatLngsData=First.split(",");
+            double FirstLatitude= Double.valueOf(FirstLatLngsData[0]);
+            double FirstLongitude= Double.valueOf(FirstLatLngsData[1]);
+
+            geometryDirectionText=key;
+            geometryDirectionDistance=distanceKey;
+
+            String Second= SecondCordinate.replace("lat/lng: (","");
+            Second= Second.replace(")","");
+            String[] SecondLatLngsData=Second.split(",");
+            double SecondLatitude= Double.valueOf(SecondLatLngsData[0]);
+            double SecondLongitude= Double.valueOf(SecondLatLngsData[1]);
+
+            double x= currentGpsPosition.longitude;
+            double y= currentGpsPosition.longitude;
+            int value = (int)x;
+            int value1 = (int)y;
+            LatLng source=new LatLng(FirstLongitude,FirstLatitude);
+            LatLng destination=new LatLng(SecondLongitude,SecondLatitude);
+            NavigationDirection(currentGpsPosition, DestinationNode);
+
+            if(nearestPositionPoint != null) {
+                OldGps = nearestPositionPoint;
+            }
+
+            nearestPositionPoint= findNearestPoint(currentGpsPosition,source,destination);
+            Log.e("nearestPositionPoint","nearestPositionPoint"+nearestPositionPoint);
+            OldNearestGpsList.add(nearestPositionPoint);
+
+        }
+        Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
+
+/*
+      //  Log.e("EdgeSt Point", "End point" + OldNearestGpsList.size());
+        if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
+            OldGps=OldNearestGpsList.get(0);
+            int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
+            nayaGps=OldNearestGpsList.get(indexVal);
+        }else{
+            //int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
+            OldGps=OldNearestGpsList.get(OldNearestGpsList.size() - 2);
+            nayaGps= new LatLng(nearestPositionPoint.latitude, nearestPositionPoint.longitude);//OldNearestGpsList.get(indexVal);
+        }
+        */
+        nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
+        nearestPointValuesList.add(nearestPositionPoint);
+        //  if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
+        //     nearestPointValuesList.add(DestinationPosition);
+        // }
+        float bearing=0;
+
+        if(OldGps!=null && nearestPositionPoint!=null) {
+            bearing = (float) bearingBetweenLocations(OldGps, nearestPositionPoint); //correct method to change orientation of map
+            Log.e("nearestPositionPoint", "OldGps ----1" + OldGps);
+            Log.e("nearestPositionPoint", "nearestPositionPoint ----1" + nearestPositionPoint);
+            mPositionMarker = mMap.addMarker(new MarkerOptions()
+                    .position(OldGps)
+                    .title("currentLocation")
+                    .anchor(0.5f, 0.5f)
+                    .flat(true)
+                    .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+            animateCarMove(mPositionMarker, OldGps, nearestPositionPoint, 5000);
+
+        }
+
+        caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
+        verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+        AlertDestination(currentGpsPosition);
+
+        int width =getView().getMeasuredWidth();
+        Log.e("width","width"+width);
+        int height =getView().getMeasuredHeight();
+        Log.e("Height","Height"+height);
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(nearestPositionPoint, 18));
+
+
+        Projection p = mMap.getProjection();
+        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+        Point center = new Point(bottomRightPoint.x/2,bottomRightPoint.y/2);
+        Point offset = new Point(center.x, (center.y+(height/4)));
+        LatLng centerLoc = p.fromScreenLocation(center);
+        LatLng offsetNewLoc = p.fromScreenLocation(offset);
+        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+        LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint,offsetDistance,bearing);
+
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(shadowTgt)
+                .bearing(bearing).tilt(65.5f).zoom(20)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 5000, null);
+    }
+
 }
 
 
