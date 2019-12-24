@@ -631,9 +631,9 @@ public class SampleClass extends Fragment  {
         return shortestDistancePoint;
 
     }
-    public String  GetSortetPoint(HashMap EdgeDistancesMap, ArrayList<Double>  EdgeDistancesList, final LatLng currentGpsPosition ){
-         String vfinalValue = "";
-         String FirstShortestDistance = String.valueOf(EdgeDistancesList.get(0));
+    public String  GetSortetPoint(HashMap EdgeDistancesMap, ArrayList<Double>  EdgeDistancesList, LatLng currentGpsPosition ){
+        String vfinalValue = "";
+        String FirstShortestDistance = String.valueOf(EdgeDistancesList.get(0));
         boolean verify=EdgeDistancesMap.containsKey(FirstShortestDistance.trim());
         if(verify){
 
@@ -643,21 +643,7 @@ public class SampleClass extends Fragment  {
         } else{
             System.out.println("Key not matched with ID");
         }
-
-
         EdgesEndContaingData(currentGpsPosition,vfinalValue);
-        final String finalVfinalValue = vfinalValue;
-        new CountDownTimer(50000, 1000) {
-
-            public void onTick(long millisUntilFinished) {
-                EdgesEndContaingData(currentGpsPosition, finalVfinalValue);
-
-
-            }
-            public void onFinish() {
-
-            }
-        }.start();
 
         return vfinalValue;
     }
@@ -693,75 +679,38 @@ public class SampleClass extends Fragment  {
         double end_point_lnag= Double.parseDouble(end_point[0]);
         LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
         double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
-        final String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
-
+        String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
         if(geometryTextimpValue.equals("-")){
 
         }else {
-
-          final  String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
-          Log.e("Direction Text","DIRECTION TEXT"+ data);
+            String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
             //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-
-            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-            final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-            final ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-
             int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
             if (speechStatus == TextToSpeech.ERROR) {
                 Log.e("TTS", "Error in converting Text to Speech!");
             }
-            Toast toast = new Toast(getActivity().getApplicationContext());
-            text.setText("" + data);
+            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
-            if (data.contains("Take Right")) {
+            text.setText("" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
+            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+            if (geometryTextimpValue.contains("Take Right")) {
                 image.setImageResource(R.drawable.direction_right);
-            } else if (data.contains("Take Left")) {
+            } else if (geometryTextimpValue.contains("Take Left")) {
                 image.setImageResource(R.drawable.direction_left);
             }
-            toast.setDuration(Toast.LENGTH_SHORT);
+
+            Toast toast = new Toast(getActivity().getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.setGravity(Gravity.TOP, 0, 180);
+            toast.setGravity(Gravity.TOP, 0, 150);
             toast.setView(layout);
             toast.show();
 
-        /*
-          new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(1000);
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-                                if (speechStatus == TextToSpeech.ERROR) {
-                                    Log.e("TTS", "Error in converting Text to Speech!");
-                                }
-                                Toast toast = new Toast(getActivity().getApplicationContext());
-                                text.setText("" + data);
-
-                                if (data.contains("Take Right")) {
-                                    image.setImageResource(R.drawable.direction_right);
-                                } else if (data.contains("Take Left")) {
-                                    image.setImageResource(R.drawable.direction_left);
-                                }
-                                toast.setDuration(Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                toast.setGravity(Gravity.TOP, 0, 180);
-                                toast.setView(layout);
-                                toast.show();
-                            }
-                        });
-                    } catch (Exception e) {
-
-                    }
-                }
-          }).start();
-          */
         }
+
     }
 
     public void caclulateETA(final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
