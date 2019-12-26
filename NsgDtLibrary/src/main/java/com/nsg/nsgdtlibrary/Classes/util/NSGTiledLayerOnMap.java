@@ -1191,7 +1191,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
     }
     public void AlertDestination(LatLng currentGpsPosition){
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
-        if (currentGpsPosition.equals(DestinationNode)) {
+       // if (currentGpsPosition.equals(DestinationNode)) {
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, DestinationNode.latitude, DestinationNode.longitude);
            // lastDistance= showDistance(currentGpsPosition,DestinationNode);
             if (distanceAtLast <5) {
@@ -1226,8 +1226,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 AlertDialog alert = builder.create();
                 alert.show();
             }
-        }else{
-        }
+        //}
     }
 
     public void CaluculateETAInRouteDeviationDirection( final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
