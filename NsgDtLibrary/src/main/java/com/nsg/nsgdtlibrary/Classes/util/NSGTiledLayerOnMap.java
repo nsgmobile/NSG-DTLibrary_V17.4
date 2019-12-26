@@ -1194,7 +1194,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
         Log.e("LAST DISTANCE"," Destination Node @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, DestinationNode.latitude, DestinationNode.longitude);
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+distanceAtLast);
-              if (distanceAtLast <= 5.0) {
+              if (distanceAtLast <= 10.0) {
                     if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                       // TODO: Consider calling
                       //    ActivityCompat#requestPermissions
