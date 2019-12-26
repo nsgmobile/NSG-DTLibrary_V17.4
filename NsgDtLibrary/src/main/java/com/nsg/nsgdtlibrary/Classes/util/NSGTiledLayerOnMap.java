@@ -334,7 +334,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                     }
                                 }
 
-                            }, 0, 20000);
+                            }, 0, 10000);
                         }
                         nearestPointValuesList=new ArrayList<LatLng>();
                                     nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
