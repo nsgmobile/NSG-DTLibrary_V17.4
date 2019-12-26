@@ -342,12 +342,11 @@ public class NSGTiledLayerOnMap extends Fragment  {
                             double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
                             tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                             tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
-
-
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                 mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                     @Override
                                     public void onMyLocationChange(Location location) {
+                                        /*
                                         if (mPositionMarker != null) {
                                             mPositionMarker.remove();
                                         }
@@ -375,11 +374,10 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                 locationFakeGpsListener = locationFakeGpsListener + 1;
                                             }
                                         }, 0);
-
+                                        */
 
                                     }
                                 });
-
                             }
                         }else if(enteredMode==2){
 
@@ -428,7 +426,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                 LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                                                 caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
                                                                                 verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
-                                                                                NavigationDirection(currentGpsPosition, DestinationNode);
+                                                                               // NavigationDirection(currentGpsPosition, DestinationNode);
                                                                                 AlertDestination(currentGpsPosition);
                                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                                         .target(shadowTgt)
@@ -449,14 +447,12 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 0);
+                                                    handler1.postDelayed(runnable, 2000);
 
                                                }
 
                                             });
-
                                         }
-
 
                         }else if(enteredMode==3){
                                Marker marker = mMap.addMarker(new MarkerOptions()
