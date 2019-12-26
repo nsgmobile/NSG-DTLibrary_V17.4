@@ -640,7 +640,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
         return vfinalValue;
     }
     public void EdgesEndContaingData(LatLng currentGpsPosition, String shortestDistancePoint){
-        String stPoint = "", endPoint = "", geometryTextimpValue =null, distanceInEdge = "";
+        String stPoint = "", endPoint = "", geometryTextimpValue = null, distanceInEdge = "";
         String position="";
         int indexPosition=0;
         EdgeDataT edgeCurrentPoint= null;
