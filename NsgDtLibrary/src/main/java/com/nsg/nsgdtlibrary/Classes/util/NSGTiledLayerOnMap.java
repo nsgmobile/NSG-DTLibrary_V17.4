@@ -427,7 +427,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             if (OldNearestPosition != null) {
-                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,1000);
+                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,1500);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -1191,20 +1191,20 @@ public class NSGTiledLayerOnMap extends Fragment  {
     }
     public void AlertDestination(LatLng currentGpsPosition){
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
-       // if (currentGpsPosition.equals(DestinationNode)) {
+        Log.e("LAST DISTANCE"," Destination Node @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, DestinationNode.latitude, DestinationNode.longitude);
-           // lastDistance= showDistance(currentGpsPosition,DestinationNode);
-            if (distanceAtLast <5) {
-                if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
+            Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+distanceAtLast);
+              if (distanceAtLast <= 5.0) {
+                    if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                      // TODO: Consider calling
+                      //    ActivityCompat#requestPermissions
+                      // here to request the missing permissions, and then overriding
+                      //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                      //                                          int[] grantResults)
+                      // to handle the case where the user grants the permission. See the documentation
+                      // for ActivityCompat#requestPermissions for more details.
+                      return;
+                  }
 
                 mMap.setMyLocationEnabled(false);
                 //Speech implementation
@@ -1226,7 +1226,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 AlertDialog alert = builder.create();
                 alert.show();
             }
-        //}
     }
 
     public void CaluculateETAInRouteDeviationDirection( final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
