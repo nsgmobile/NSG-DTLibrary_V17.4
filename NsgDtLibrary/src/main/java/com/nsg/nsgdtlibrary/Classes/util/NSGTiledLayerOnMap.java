@@ -89,6 +89,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -426,13 +428,23 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                 LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                                                 caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
                                                                                 verifyRouteDeviation(OldGPSPosition,currentGpsPosition,DestinationNode,40,null);
-                                                                               // NavigationDirection(currentGpsPosition, DestinationNode);
+
                                                                                 AlertDestination(currentGpsPosition);
                                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                                Timer myTimer = new Timer();
+                                                                                myTimer.schedule(new TimerTask() {
+                                                                                    @Override
+                                                                                    public void run() {
+                                                                                        NavigationDirection(currentGpsPosition, DestinationNode);
+                                                                                    }
+
+                                                                                }, 0, 10000);
+
+
                                                                             }
 
                                                                         }
@@ -447,7 +459,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 2000);
+                                                    handler1.postDelayed(runnable, 3000);
 
                                                }
 
