@@ -427,7 +427,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             if (OldNearestPosition != null) {
-                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,1500);
+                                                                                animateCarMove(mPositionMarker,OldNearestPosition, nPosition,2000);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -446,7 +446,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                               mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                               mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
 
                                                                             }
 
@@ -683,7 +683,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 if (speechStatus == TextToSpeech.ERROR) {
                     Log.e("TTS", "Error in converting Text to Speech!");
                 }
-                // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
                 LayoutInflater inflater1 = getActivity().getLayoutInflater();
                 @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                 TextView text = (TextView) layout.findViewById(R.id.textView_toast);
