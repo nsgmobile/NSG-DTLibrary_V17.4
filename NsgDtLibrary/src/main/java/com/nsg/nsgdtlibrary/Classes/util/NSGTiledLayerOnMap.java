@@ -642,7 +642,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
         return vfinalValue;
     }
     public void EdgesEndContaingData(LatLng currentGpsPosition, String shortestDistancePoint){
-        String stPoint = "", endPoint = "", geometryTextimpValue = "", distanceInEdge = "";
+        String stPoint = "", endPoint = "", geometryTextimpValue =null, distanceInEdge = "";
         String position="";
         int indexPosition=0;
         EdgeDataT edgeCurrentPoint= null;
@@ -674,41 +674,42 @@ public class NSGTiledLayerOnMap extends Fragment  {
         LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
         double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
         String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
-        if(geometryTextimpValue.equals("-")){
+        if(geometryTextimpValue!=null) {
+            if (geometryTextimpValue.equals("-")) {
 
-        }else {
-            String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
-            //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
-            int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
-            if (speechStatus == TextToSpeech.ERROR) {
-                Log.e("TTS", "Error in converting Text to Speech!");
-            }
-            // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-            text.setText("" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
-            ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-            if (geometryTextimpValue.contains("Take Right")) {
-                image.setImageResource(R.drawable.direction_right);
-            } else if (geometryTextimpValue.contains("Take Left")) {
-                image.setImageResource(R.drawable.direction_left);
-            }
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast toast = new Toast(getActivity().getApplicationContext());
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.setGravity(Gravity.TOP, 0, 150);
-                    toast.setView(layout);
-                    toast.show();
+            } else {
+                String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+                //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
+                int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
+                if (speechStatus == TextToSpeech.ERROR) {
+                    Log.e("TTS", "Error in converting Text to Speech!");
                 }
-            });
+                // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+                LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                text.setText("" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
+                ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                if (geometryTextimpValue.contains("Take Right")) {
+                    image.setImageResource(R.drawable.direction_right);
+                } else if (geometryTextimpValue.contains("Take Left")) {
+                    image.setImageResource(R.drawable.direction_left);
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = new Toast(getActivity().getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                        toast.setGravity(Gravity.TOP, 0, 150);
+                        toast.setView(layout);
+                        toast.show();
+                    }
+                });
 
 
-
+            }
         }
 
     }
