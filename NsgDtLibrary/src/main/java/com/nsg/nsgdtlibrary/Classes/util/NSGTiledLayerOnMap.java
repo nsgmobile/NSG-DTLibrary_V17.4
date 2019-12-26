@@ -22,6 +22,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.speech.tts.TextToSpeech;
@@ -107,6 +108,7 @@ import static java.lang.Math.sin;
 public class NSGTiledLayerOnMap extends Fragment  {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final int SENSOR_DELAY_NORMAL =50;
+    boolean isTimerStarted=false;
     private ProgressDialog dialog;
     private TextToSpeech textToSpeech;
     LatLng SourcePosition, DestinationPosition,OldGPSPosition,PointBeforeRouteDeviation;
@@ -197,6 +199,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
     float azimuthInRadians;
     float azimuthInDegress;
     float degree,lastUpdate;
+    Timer myTimer =new Timer();
     private String TotalDistance;
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
@@ -322,8 +325,18 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 location_tracking_start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(isTimerStarted=true  ) {
+                            myTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if(currentGpsPosition!=null && DestinationNode!=null){
+                                        NavigationDirection(currentGpsPosition, DestinationNode);
+                                    }
+                                }
 
-                                    nearestPointValuesList=new ArrayList<LatLng>();
+                            }, 0, 20000);
+                        }
+                        nearestPointValuesList=new ArrayList<LatLng>();
                                     nearestPointValuesList.add(new LatLng(sourceLat,sourceLng));
                                     OldNearestGpsList=new ArrayList<>();
                                     OldNearestGpsList.add(new LatLng(sourceLat,sourceLng));
@@ -382,8 +395,8 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                 });
                             }
                         }else if(enteredMode==2){
-
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                isTimerStarted=true;
                                             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                                 @Override
                                                 public void onMyLocationChange(final Location location) {
@@ -396,7 +409,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                             LatLng OldNearestPosition=null;
                                                            if(isRouteDeviated==false) {
                                                                 if (OldGPSPosition != null) {
-
                                                                     double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                     Log.e("distance", "distance" + distance);
                                                                     if (distance > 10) {
@@ -435,14 +447,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                                                                Timer myTimer = new Timer();
-                                                                                myTimer.schedule(new TimerTask() {
-                                                                                    @Override
-                                                                                    public void run() {
-                                                                                        NavigationDirection(currentGpsPosition, DestinationNode);
-                                                                                    }
 
-                                                                                }, 0, 10000);
 
 
                                                                             }
@@ -460,7 +465,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
 
                                                     Handler handler1 = new Handler();
                                                     handler1.postDelayed(runnable, 3000);
-
                                                }
 
                                             });
@@ -632,6 +636,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
         } else{
             System.out.println("Key not matched with ID");
         }
+
         EdgesEndContaingData(currentGpsPosition,vfinalValue);
 
         return vfinalValue;
@@ -680,7 +685,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
             }
             // Toast.makeText(getActivity(), "" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
             LayoutInflater inflater1 = getActivity().getLayoutInflater();
-            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+            @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
             TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
             text.setText("" + geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
@@ -690,13 +695,19 @@ public class NSGTiledLayerOnMap extends Fragment  {
             } else if (geometryTextimpValue.contains("Take Left")) {
                 image.setImageResource(R.drawable.direction_left);
             }
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast toast = new Toast(getActivity().getApplicationContext());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.setGravity(Gravity.TOP, 0, 150);
+                    toast.setView(layout);
+                    toast.show();
+                }
+            });
 
-            Toast toast = new Toast(getActivity().getApplicationContext());
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-            toast.setGravity(Gravity.TOP, 0, 150);
-            toast.setView(layout);
-            toast.show();
+
 
         }
 
