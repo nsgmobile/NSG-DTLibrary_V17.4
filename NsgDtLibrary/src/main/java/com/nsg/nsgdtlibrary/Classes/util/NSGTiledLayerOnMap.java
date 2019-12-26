@@ -448,8 +448,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                         .build();
                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
 
-
-
                                                                             }
 
                                                                         }
