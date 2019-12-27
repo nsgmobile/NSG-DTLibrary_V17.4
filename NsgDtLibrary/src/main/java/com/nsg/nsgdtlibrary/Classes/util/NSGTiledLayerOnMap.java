@@ -429,7 +429,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                         } else {
                                                                             Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
                                                                             if (OldNearestPosition != null) {
-                                                                                animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
+                                                                                animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 2000);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -448,7 +448,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
 
                                                                             }
                                                                         }
