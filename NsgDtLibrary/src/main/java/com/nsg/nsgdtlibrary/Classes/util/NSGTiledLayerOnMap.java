@@ -408,7 +408,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                             currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                                             Log.e("CurrentGpsPoint", " currentGpsPosition GpsPoint " + currentGpsPosition);
                                                             LatLng OldNearestPosition = null;
-                                                           // if(isRouteDeviated==false) {
+                                                            if(isRouteDeviated==false) {
                                                                 if (OldGPSPosition != null) {
                                                                     double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                     Log.e("distance", "distance" + distance);
@@ -456,9 +456,9 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                     }
                                                                 }
 
-                                                          //  }else {
-                                                          //      MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                                          //  }
+                                                           }else {
+                                                               MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                           }
                                                         }
 
                                                     };
@@ -1857,7 +1857,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 marker.setPosition(new LatLng(lat, lng));
                 marker.setAnchor(0.5f, 0.5f);
                 marker.setFlat(true);
-                marker.setRotation(rotation);
+                marker.setRotation(bearing);
                 if (t < 1.0) {
                     handler.postDelayed(this, 16);
                 } else {
