@@ -431,6 +431,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                             if (OldNearestPosition != null) {
                                                                                 animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
+                                                                                Log.e("BEARING","BEARING @@@@@@@ "+bearing);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
                                                                                 Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
@@ -444,11 +445,15 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                 verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
 
                                                                                 AlertDestination(currentGpsPosition);
-                                                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                                                        .target(shadowTgt)
-                                                                                        .bearing(bearing).tilt(65.5f).zoom(18)
-                                                                                        .build();
-                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                                if(bearing>0.0){
+
+                                                                                }else {
+                                                                                    CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                                            .target(shadowTgt)
+                                                                                            .bearing(bearing).tilt(65.5f).zoom(18)
+                                                                                            .build();
+                                                                                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                                }
 
                                                                             }
                                                                         }
