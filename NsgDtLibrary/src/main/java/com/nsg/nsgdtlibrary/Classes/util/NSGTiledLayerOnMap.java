@@ -464,7 +464,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 1000);
+                                                    handler1.postDelayed(runnable, 0);
                                                }
 
                                             });

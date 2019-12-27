@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 
-import com.nsg.nsgdtlibrary.Classes.OldCode.NSGIMainFragment;
+//import com.nsg.nsgdtlibrary.Classes.OldCode.NSGIMainFragment;
 import com.nsg.nsgdtlibrary.Classes.util.NSGTiledLayerOnMap;
 
 import java.io.File;
