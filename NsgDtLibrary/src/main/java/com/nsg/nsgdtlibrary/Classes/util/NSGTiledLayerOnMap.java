@@ -429,7 +429,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                         } else {
                                                                             Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
                                                                             if (OldNearestPosition != null) {
-                                                                                animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 2000);
+                                                                                animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                                 int height = getView().getMeasuredHeight();
                                                                                 Projection p = mMap.getProjection();
@@ -448,7 +448,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                               // mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
 
                                                                             }
                                                                         }
@@ -1852,23 +1852,22 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 //  float bearingMap= mMap.getCameraPosition().bearing;
                 float bearing = (float) bearingBetweenLocations(beginLatLng,endLatLng);
                 float angle = -azimuthInDegress+bearing;
-               // float rotation = -azimuthInDegress * 360 / (2 * 3.14159f) ;
+                float rotation = -azimuthInDegress * 360 / (2 * 3.14159f) ;
                 double lng = lngDelta * t + beginLatLng.longitude;
                 marker.setPosition(new LatLng(lat, lng));
                 marker.setAnchor(0.5f, 0.5f);
                 marker.setFlat(true);
-               //marker.setRotation(bearing);
+                marker.setRotation(rotation);
                 if (t < 1.0) {
                     handler.postDelayed(this, 16);
                 } else {
                     float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
                     float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
-                   // computeRotation(10,beginAngle,endAngle);
+                  computeRotation(10,beginAngle,endAngle);
                 }
             }
         });
     }
-
 
     private double bearingBetweenLocations(LatLng latLng1, LatLng latLng2) {
         double PI = 3.14159;
