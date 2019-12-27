@@ -464,7 +464,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                     };
 
                                                     Handler handler1 = new Handler();
-                                                    handler1.postDelayed(runnable, 2000);
+                                                    handler1.postDelayed(runnable, 1000);
                                                }
 
                                             });
@@ -1863,7 +1863,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 } else {
                     float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
                     float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
-                 // computeRotation(10,beginAngle,endAngle);
+                    computeRotation(10,beginAngle,endAngle);
                 }
             }
         });
