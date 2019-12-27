@@ -448,7 +448,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                         .target(shadowTgt)
                                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                         .build();
-                                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
+                                                                               // mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 2000, null);
 
                                                                             }
                                                                         }
@@ -1857,13 +1857,13 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 marker.setPosition(new LatLng(lat, lng));
                 marker.setAnchor(0.5f, 0.5f);
                 marker.setFlat(true);
-                marker.setRotation(bearing);
+               //marker.setRotation(bearing);
                 if (t < 1.0) {
                     handler.postDelayed(this, 16);
                 } else {
                     float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
                     float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
-                    computeRotation(10,beginAngle,endAngle);
+                   // computeRotation(10,beginAngle,endAngle);
                 }
             }
         });
