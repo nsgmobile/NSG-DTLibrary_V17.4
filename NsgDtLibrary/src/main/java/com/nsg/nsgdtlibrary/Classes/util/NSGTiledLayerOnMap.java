@@ -428,7 +428,6 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                                         } else {
                                                                             Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
-
                                                                             if (OldNearestPosition != null) {
                                                                                 animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
                                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
@@ -457,7 +456,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                     }
                                                                 }
 
-                                                           // }else {
+                                                          //  }else {
                                                           //      MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                                           //  }
                                                         }
@@ -1864,7 +1863,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 } else {
                     float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
                     float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
-                   // computeRotation(10,beginAngle,endAngle);
+                    computeRotation(10,beginAngle,endAngle);
                 }
             }
         });
