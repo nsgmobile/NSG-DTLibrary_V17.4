@@ -446,13 +446,13 @@ public class NSGTiledLayerOnMap extends Fragment  {
 
                                                                                 AlertDestination(currentGpsPosition);
                                                                                 if(bearing>0.0){
-
-                                                                                }else {
                                                                                     CameraPosition currentPlace = new CameraPosition.Builder()
                                                                                             .target(shadowTgt)
                                                                                             .bearing(bearing).tilt(65.5f).zoom(18)
                                                                                             .build();
                                                                                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                                }else {
+
                                                                                 }
 
                                                                             }
@@ -1859,10 +1859,16 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 float angle = -azimuthInDegress+bearing;
                 float rotation = -azimuthInDegress * 360 / (2 * 3.14159f) ;
                 double lng = lngDelta * t + beginLatLng.longitude;
-                marker.setPosition(new LatLng(lat, lng));
-                marker.setAnchor(0.5f, 0.5f);
-                marker.setFlat(true);
-                marker.setRotation(bearing);
+                if(bearing>0.0) {
+                    marker.setPosition(new LatLng(lat, lng));
+                    marker.setAnchor(0.5f, 0.5f);
+                    marker.setFlat(true);
+                    marker.setRotation(bearing);
+                }else{
+                    marker.setPosition(new LatLng(lat, lng));
+                    marker.setAnchor(0.5f, 0.5f);
+                    marker.setFlat(true);
+                }
                 if (t < 1.0) {
                     handler.postDelayed(this, 16);
                 } else {
