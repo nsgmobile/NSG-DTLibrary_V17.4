@@ -408,7 +408,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                             currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                                             Log.e("CurrentGpsPoint", " currentGpsPosition GpsPoint " + currentGpsPosition);
                                                             LatLng OldNearestPosition = null;
-                                                            if(isRouteDeviated==false) {
+                                                           // if(isRouteDeviated==false) {
                                                                 if (OldGPSPosition != null) {
                                                                     double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                     Log.e("distance", "distance" + distance);
@@ -457,9 +457,9 @@ public class NSGTiledLayerOnMap extends Fragment  {
                                                                     }
                                                                 }
 
-                                                            }else {
-                                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                                            }
+                                                           // }else {
+                                                          //      MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                          //  }
                                                         }
 
                                                     };
