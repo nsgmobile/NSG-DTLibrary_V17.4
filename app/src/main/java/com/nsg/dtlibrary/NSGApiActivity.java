@@ -6,7 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 
-import com.nsg.nsgdtlibrary.Classes.repository.NSGIMainFragment;
+import com.nsg.nsgdtlibrary.Classes.OldCode.NSGIMainFragment;
 import com.nsg.nsgdtlibrary.Classes.util.NSGTiledLayerOnMap;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
             enteredMode = NSGIBundle.getInt("enteredMode");
             bufferSize = NSGIBundle.getInt("bufferSize");
           //  Log.e("Route Details------", " Route Details------ " +" srcLatitude : "+ srcLatitude +"\n"+" srcLongitude : "+ srcLongitude +"\n"+" destLatitude : "+destLatitude+"\n"+" desLongitude : "+desLongitude+"\n");
-            fragmentTransaction.add(R.id.map_container, new NSGIMainFragment(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,3,bufferSize));//getRoutes Direction
+            fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,CSVFile_Path,jobId,routeId,3,bufferSize));//getRoutes Direction
         }
         fragmentTransaction.commit();
     }
