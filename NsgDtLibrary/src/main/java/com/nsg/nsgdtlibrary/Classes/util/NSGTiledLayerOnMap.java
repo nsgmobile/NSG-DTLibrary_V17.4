@@ -1863,7 +1863,7 @@ public class NSGTiledLayerOnMap extends Fragment  {
                 } else {
                     float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
                     float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
-                  computeRotation(10,beginAngle,endAngle);
+                 // computeRotation(10,beginAngle,endAngle);
                 }
             }
         });
