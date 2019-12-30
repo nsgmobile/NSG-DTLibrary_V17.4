@@ -29,6 +29,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -36,6 +37,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,7 +107,7 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class NSGTiledLayerOnMap extends Fragment  {
+public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final int SENSOR_DELAY_NORMAL =50;
     boolean isTimerStarted=false;
@@ -279,8 +281,8 @@ public class NSGTiledLayerOnMap extends Fragment  {
         sqlHandler.executeQuery(delQuery);
         InsertAllRouteData(DBCSV_PATH);
         getRouteAccordingToRouteID(routeIDName);
-       // change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-      //  change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+        change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
+        change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
         if(RouteDataList!=null) {
             route = RouteDataList.get(0);
         }
@@ -524,6 +526,49 @@ public class NSGTiledLayerOnMap extends Fragment  {
             }
         });
         return rootView;
+    }
+    @Override
+    public void onClick(View v) {
+       if(v==change_map_options){
+
+            PopupMenu popup = new PopupMenu(getContext(), change_map_options);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater()
+                    .inflate(R.menu.popup_menu, popup.getMenu());
+            //registering popup with OnMenuItemClickListener
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.slot1) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                            Toast.makeText(getContext(), "NORMAL MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    } else if (itemId == R.id.slot2) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                            Toast.makeText(getContext(), "SATELLITE MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    } else if (itemId == R.id.slot3) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                            Toast.makeText(getContext(), "TERRAIN MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }else if (itemId == R.id.slot4) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                            Toast.makeText(getContext(), "HYBRID MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                    return true;
+                }
+            });
+            popup.show();
+        }
     }
     @Override
     public void onDetach() {
