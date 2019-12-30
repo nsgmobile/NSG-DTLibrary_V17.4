@@ -313,9 +313,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     GetRouteFromDBPlotOnMap(routeData);
                     // GetRouteDetails(SourcePosition.toString(),DestinationPosition.toString());
                 }
-                StringBuilder routeAlert=new StringBuilder();
-                // routeAlert.append("src");
-                // sendData(routeAlert.toString());
+
                 // sendTokenRequest();
                 getAllEdgesData();
                 addMarkers();
@@ -326,6 +324,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     return;
                 }
                 getRouteAccordingToRouteID(routeIDName);
+                StringBuilder routeAlert=new StringBuilder();
+                routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
+                sendData(routeAlert.toString(),1);
                 location_tracking_start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -356,9 +357,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     mMap.getUiSettings().setRotateGesturesEnabled(true);
                                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
                         if(enteredMode==1 &&edgeDataList!=null && edgeDataList.size()>0){
-                            ETACalclator etaCalculator1=new ETACalclator();
-                            double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-                            double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
+                           // ETACalclator etaCalculator1=new ETACalclator();
+                          //  double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
+                           // double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
                           //  tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
                           //  tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -864,6 +865,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             toast.setGravity(Gravity.TOP, 0, 150);
                             toast.setView(layout);
                             toast.show();
+                            StringBuilder routeDeviatedAlert=new StringBuilder();
+                            routeDeviatedAlert.append("ROUTE DEVIATED"+"RouteDeviatedSourcePosition : "+RouteDeviatedSourcePosition);
+                            sendData(routeDeviatedAlert.toString(),3);
                             if(mPositionMarker!=null){
                                 mPositionMarker.remove();
                                 Log.e("REMOVING MARKER","REMOVING MARKER");
@@ -874,6 +878,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     .anchor(0.5f, 0.5f)
                                     .flat(true)
                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
+
 
                             CameraUpdate center =
                                     CameraUpdateFactory.newLatLng(currentGpsPosition);
@@ -1264,6 +1269,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 if (speechStatus1 == TextToSpeech.ERROR) {
                     Log.e("TTS", "Error in converting Text to Speech!");
                 }
+                StringBuilder destinationAlert=new StringBuilder("Destination Reached");
+                sendData(destinationAlert.toString(),4);
+                /*
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
                 builder.setIcon(R.drawable.car_icon_32);
@@ -1276,6 +1284,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
+                */
             }
     }
 
