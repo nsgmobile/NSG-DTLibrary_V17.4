@@ -213,6 +213,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LatLng nPosition= null;
     public interface FragmentToActivity {
         String communicate(String comm);
+
+        String communicate(String comm, int alertType);
     }
     private FragmentToActivity Callback;
     public NSGTiledLayerOnMap(){ }
@@ -506,7 +508,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         });
                         if(currentGpsPosition!=null){
                             mMap.setMyLocationEnabled(false);
-                            sendData(currentGpsPosition.toString());
+                            sendData(currentGpsPosition.toString(),5);
                             LayoutInflater inflater1 = getActivity().getLayoutInflater();
                             @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                             final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -804,7 +806,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
-        sendData(time.toString());
+        sendData(time.toString(),2);
 
       // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
        // tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
@@ -1331,7 +1333,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
-        sendData(time.toString());
+        sendData(time.toString(),2);
 
        // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
       //  tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
@@ -1390,10 +1392,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
-    private void sendData(String comm) {
+    private void sendData(String comm,int AlertType) {
         //comm=time.toString();
-        Log.e("SendData","SendData ------- "+ comm);
-        Callback.communicate(comm);
+        Log.e("SendData","SendData ------- "+ comm +"AlertType"+ AlertType);
+        Callback.communicate(comm,AlertType);
 
     }
     private interface LatLngInterpolator {

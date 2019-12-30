@@ -64,6 +64,11 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
 
     @Override
     public String communicate(String comm) {
+        return null;
+    }
+
+    @Override
+    public String communicate(String comm, int alertType) {
         Log.d("received", "Recieved From ETA Listener---"+ comm);
 
        //  tv=(TextView)findViewById(R.id.tv);
