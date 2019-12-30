@@ -311,6 +311,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 tileOverlay.setVisible(true);
                 if(routeData!=null) {
                     GetRouteFromDBPlotOnMap(routeData);
+                    StringBuilder routeAlert=new StringBuilder();
+                    routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
+                    sendData(routeAlert.toString(),1);
+                    Log.e("Route Alert Loaded","Route Alert Loaded");
                     // GetRouteDetails(SourcePosition.toString(),DestinationPosition.toString());
                 }
 
@@ -324,9 +328,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     return;
                 }
                 getRouteAccordingToRouteID(routeIDName);
-                StringBuilder routeAlert=new StringBuilder();
-                routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
-                sendData(routeAlert.toString(),1);
+
                 location_tracking_start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
