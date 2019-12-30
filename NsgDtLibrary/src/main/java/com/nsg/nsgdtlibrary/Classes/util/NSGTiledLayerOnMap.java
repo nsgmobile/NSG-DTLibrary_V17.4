@@ -792,7 +792,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
 
         // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
-        tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+      //  tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
 
         if (resultTravelledTimeConverted > resultTotalTimeConverted) {
             etaCrossedFlag = "YES";
