@@ -262,10 +262,10 @@ public class NSGTiledLayerOnMap extends Fragment  {
                              Bundle savedInstanceState) {
         mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gps_transperent_98);
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        tv = (TextView) rootView.findViewById(R.id.tv);
-        tv1 = (TextView) rootView.findViewById(R.id.tv1);
-        tv2 = (TextView) rootView.findViewById(R.id.tv2);
-        tv3 = (TextView) rootView.findViewById(R.id.tv3);
+      //  tv = (TextView) rootView.findViewById(R.id.tv);
+       // tv1 = (TextView) rootView.findViewById(R.id.tv1);
+      //  tv2 = (TextView) rootView.findViewById(R.id.tv2);
+      //  tv3 = (TextView) rootView.findViewById(R.id.tv3);
         location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
         location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
         // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
@@ -355,8 +355,8 @@ public class NSGTiledLayerOnMap extends Fragment  {
                             ETACalclator etaCalculator1=new ETACalclator();
                             double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
                             double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
-                            tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-                            tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
+                          //  tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+                          //  tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                 mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                                     @Override
@@ -761,10 +761,10 @@ public class NSGTiledLayerOnMap extends Fragment  {
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
         sendData(time.toString());
 
-        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-        tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
+      // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+       // tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
 
-        tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
+       // tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
@@ -1288,10 +1288,10 @@ public class NSGTiledLayerOnMap extends Fragment  {
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
         sendData(time.toString());
 
-        tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-        tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
+       // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
+      //  tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
 
-        tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
+       // tv3.setText(" ETA Crossed Alert : "+ etaCrossedFlag + "  ");
     }
     public void TextImplementationRouteDeviationDirectionText(String directionTextInDeviation,String stPoint,String endPoint){
         // Log.e("TAG", "  START POSITION " + stPoint);
