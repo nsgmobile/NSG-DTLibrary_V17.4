@@ -314,6 +314,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     StringBuilder routeAlert=new StringBuilder();
                     routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
                     sendData(routeAlert.toString(),1);
+                    Log.e("Route Alert Loaded","Route Alert Loaded " + routeAlert );
                     Log.e("Route Alert Loaded","Route Alert Loaded");
                     // GetRouteDetails(SourcePosition.toString(),DestinationPosition.toString());
                 }
