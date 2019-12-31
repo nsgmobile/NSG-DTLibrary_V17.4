@@ -29,7 +29,7 @@
                     android:id="@+id/change_map_options"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="100dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/circle_background_3"
@@ -45,7 +45,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
                 android:layout_marginBottom="5dp"
                 android:orientation="vertical">
                 <Button
@@ -67,6 +66,7 @@
                     android:id="@+id/location_tracking_stop"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:layout_toLeftOf="@+id/location_tracking_start"
                     android:gravity="center"
