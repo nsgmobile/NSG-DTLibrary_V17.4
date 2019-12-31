@@ -1250,7 +1250,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     private void drawMarkerWithCircle(LatLng gpsPosition, double radius){
-        CircleOptions circleOptions = new CircleOptions().center(gpsPosition).radius(radius).fillColor(Color.parseColor("#2271cce7")).strokeColor(Color.parseColor("#0x220000FF")).strokeWidth(3);
+        CircleOptions circleOptions = new CircleOptions().center(gpsPosition).radius(radius).fillColor(Color.parseColor("#2271cce7")).strokeColor(Color.parseColor("#2271cce7")).strokeWidth(3);
         mCircle = mMap.addCircle(circleOptions);
 
     }
