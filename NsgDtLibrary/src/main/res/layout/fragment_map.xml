@@ -22,7 +22,6 @@
                 android:id="@+id/lay3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:orientation="vertical">
                 <ImageButton
@@ -55,7 +54,7 @@
                     android:layout_alignParentRight="true"
                     android:textSize="15dp"
                     android:layout_marginLeft="30dp"
-                    android:layout_marginRight="50dp"
+                    android:layout_marginRight="100dp"
                     android:text="START"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#000000"
@@ -69,7 +68,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:gravity="center"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="100dp"
                     android:layout_marginRight="30dp"
                     android:textSize="15dp"
                     android:textColor="#FFFFFF"
