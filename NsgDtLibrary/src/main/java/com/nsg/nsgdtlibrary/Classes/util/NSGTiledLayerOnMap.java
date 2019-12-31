@@ -51,6 +51,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
@@ -1248,12 +1249,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             valueAnimator.start();
         }
     }
+    private void drawMarkerWithCircle(LatLng gpsPosition, double radius){
+        CircleOptions circleOptions = new CircleOptions().center(gpsPosition).radius(radius).fillColor(Color.parseColor("#2271cce7")).strokeColor(Color.parseColor("#0x220000FF")).strokeWidth(3);
+        mCircle = mMap.addCircle(circleOptions);
+
+    }
     public void AlertDestination(LatLng currentGpsPosition){
         int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
-        Log.e("LAST DISTANCE"," Destination Node @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
-            double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, DestinationNode.latitude, DestinationNode.longitude);
-            Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+distanceAtLast);
-              if (distanceAtLast <= 10.0) {
+        drawMarkerWithCircle(DestinationNode,10);
+        double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude,  mCircle.getCenter().longitude);
+        Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
+              if (distanceAtLast < mCircle.getRadius()) {
                     if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                       // TODO: Consider calling
                       //    ActivityCompat#requestPermissions
@@ -1264,7 +1270,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                       // for ActivityCompat#requestPermissions for more details.
                       return;
                   }
-
                 mMap.setMyLocationEnabled(false);
                 //Speech implementation
                 String data1=" Your Destination Reached ";
@@ -1274,7 +1279,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
                 StringBuilder destinationAlert=new StringBuilder("Destination Reached");
                 sendData(destinationAlert.toString(),4);
-                /*
+                Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
                 builder.setIcon(R.drawable.car_icon_32);
@@ -1287,7 +1293,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-                */
+
             }
     }
 
