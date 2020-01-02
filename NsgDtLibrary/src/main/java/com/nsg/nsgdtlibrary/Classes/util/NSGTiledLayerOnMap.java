@@ -782,20 +782,25 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         double resultNeedToTeavelTime=0.0;
         double EtaCrossedTime = 0.0;
         double EtaElapsed = 0.0;
+        double resultTravelledTime=0.0;
         String etaCrossedFlag = "NO";
+        if(vehicleSpeed==0.0){
+            vehicleSpeed=10;
+        }else {
 
-        double travelledDistance = showDistance(sourcePosition, currentGpsPosition);
-        String travelledDistanceInMTS = String.format("%.0f", travelledDistance);
-        ETACalclator etaCalculator = new ETACalclator();
-        double resultTravelledTime = etaCalculator.cal_time(travelledDistance, vehicleSpeed);
-        resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
+            double travelledDistance = showDistance(sourcePosition, currentGpsPosition);
+            String travelledDistanceInMTS = String.format("%.0f", travelledDistance);
+            ETACalclator etaCalculator = new ETACalclator();
+            resultTravelledTime = etaCalculator.cal_time(travelledDistance, vehicleSpeed);
+            resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
 
 
-        double needToTravelDistance = TotalDistance - travelledDistance;
-        String needToTravelDistanceInMTS = String.format("%.0f", needToTravelDistance);
-        ETACalclator etaCalculator2 = new ETACalclator();
-        resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, vehicleSpeed);
-        resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
+            double needToTravelDistance = TotalDistance - travelledDistance;
+            String needToTravelDistanceInMTS = String.format("%.0f", needToTravelDistance);
+            ETACalclator etaCalculator2 = new ETACalclator();
+            resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, vehicleSpeed);
+            resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
+        }
 
         // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
       //  tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
