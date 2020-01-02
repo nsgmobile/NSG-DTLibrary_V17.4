@@ -214,7 +214,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LatLng nPosition= null;
     public interface FragmentToActivity {
         String communicate(String comm);
-
         String communicate(String comm, int alertType);
     }
     private FragmentToActivity Callback;
@@ -1803,19 +1802,18 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     String[] data=csvLine.split("@");
                     try
                     {
-                        Toast.makeText(getContext(),data[0]+" "+data[1],Toast.LENGTH_SHORT).show();
-                        Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[0] + " " + data[1] +" " +  data[2] +" " +  data[3]+ " " + data[4]);
+                      //  Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[0] + " " + data[1] +" " +  data[2] +" " +  data[3]+ " " + data[4]);
                         String route=data[4].toString();
-                        Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[4]);
+                      //  Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[4]);
 
-                        Log.e("OUTPUT FILE"," QUERY "+route);
+                       // Log.e("OUTPUT FILE"," QUERY "+route);
                         StringBuilder query = new StringBuilder("INSERT INTO ");
                         query.append(RouteT.TABLE_NAME).append("(routeID,startNode,endNode,routeData) values (")
                                 .append("'").append(data[1] ).append("',")
                                 .append("'").append(data[2]).append("',")
                                 .append("'").append(data[3]).append("',")
                                 .append("'").append(route).append("')");
-                        Log.e("OUTPUT FILE"," QUERY "+query);
+                      //  Log.e("OUTPUT FILE"," QUERY "+query);
 
                         sqlHandler.executeQuery(query.toString());
                         sqlHandler.closeDataBaseConnection();
