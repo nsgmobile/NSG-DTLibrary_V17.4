@@ -287,7 +287,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
         if(stNode!=null && endNode!=null && routeData!=null){
             InsertAllRouteData(stNode,endNode,routeData);
-            getRouteAccordingToRouteID(routeIDName);
+            getRouteAccordingToRouteID(stNode,endNode);
         }
         if(RouteDataList!=null) {
             route = RouteDataList.get(0);
@@ -332,8 +332,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     //    ActivityCompat#requestPermissions
                     return;
                 }
-                getRouteAccordingToRouteID(routeIDName);
-
                 location_tracking_start.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -585,8 +583,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         Callback = null;
         super.onDetach();
     }
-    private  List<RouteT> getRouteAccordingToRouteID(String routeIDName) {
-        String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE routeID = "+"'"+routeIDName+"'";
+    private  List<RouteT> getRouteAccordingToRouteID(String stNode,String endNode) {
+        String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE startNode = "+"'"+stNode+"'"+" AND "+ "endNode= "+ "'"+stNode+"'";
+        Log.e("QUERY","QUERY"+ query);
         Cursor c1 = sqlHandler.selectQuery(query);
         RouteDataList = (List<RouteT>) SqlHandler.getDataRows(RouteT.MAPPING, RouteT.class, c1);
         sqlHandler.closeDataBaseConnection();
