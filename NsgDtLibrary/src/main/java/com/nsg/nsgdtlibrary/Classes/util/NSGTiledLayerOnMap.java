@@ -110,19 +110,14 @@ import static java.lang.Math.sin;
 
 public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private static final int SENSOR_DELAY_NORMAL =50;
+   // private static final int SENSOR_DELAY_NORMAL =50;
     boolean isTimerStarted=false;
     private ProgressDialog dialog;
     private TextToSpeech textToSpeech;
     LatLng SourcePosition, DestinationPosition,OldGPSPosition,PointBeforeRouteDeviation;
-    //LatLng convertedSrcPosition,convertedDestinationPoisition;
     double sourceLat, sourceLng, destLat, destLng;
-    LatLng dubai;
-    String SourcePoint;
-    String DestinationPoint,tokenResponse,etaResponse;
-    Marker markerSource, markerDestination,mPositionMarker;
-    Handler mHandler = new Handler();
-    private Polyline mPolyline;
+    Marker mPositionMarker;
+   // private Polyline mPolyline;
     private GoogleMap mMap;
     private SqlHandler sqlHandler;
     GoogleMap.CancelableCallback callback;
@@ -140,7 +135,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private List<RouteT> RouteDataList;
     private List PreviousGpsList;
     private Handler handler = new Handler();
-
     private int enteredMode;
     private Marker carMarker;
     private int routeDeviationDistance;
@@ -151,7 +145,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private Circle mCircle;
     private List<LatLng>lastGPSPosition;
     private LatLng nearestPositionPoint;
-    // BitmapDescriptor mMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.car_icon_32);
     Bitmap mMarkerIcon;
     int mIndexCurrentPoint=0;
     private List<LatLng> edgeDataPointsList ;
@@ -165,40 +158,20 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private Marker gpsMarker;
     private TextView tv,tv1,tv2,tv3,tv4,tv5;
     private String routeIDName;
-    LatLng centerFromPoint;
-    LatLng point;
-    private ImageButton etaListener;
-    private ImageButton location_tracking;
-    Marker fakeGpsMarker;
-    List<Marker> markerlist;
-    ArrayList<String> etaList;
-    private ArrayList lastDistancesList;
-    private double lastDistance;
-    // private String geometryText;
-    private LocationManager locationManager;
-    private Location lastLocation;
-    Bitmap tileBitmap;
-    // MultiMap multiMap = new MultiValueMap();
-    private ImageButton change_map_options;
-    String tokenNumber,updaterServiceResponse;
-    private long startTime,presentTime,previousTime,TimeDelay;
-    private  List<LatLng>listOfLatLng;
     HashMap<LatLng,String>edgeDataPointsListData;
+    private ImageButton change_map_options;
     private String geometryDirectionText="",key="",distanceKey="",geometryDirectionDistance="";
     HashMap<String,String>nearestValuesMap;
     private List<LatLng> OldNearestGpsList;
     private int locationFakeGpsListener=0;
     String GeometryDirectionText="";
-    ImageView water_ball;
     private double vehicleSpeed;
     private double maxSpeed=30;
     private boolean isMarkerRotating=false;
     private String BASE_MAP_URL_FORMAT;
     private LatLng SourceNode,DestinationNode;
     LatLng currentGpsPosition,RouteDeviatedSourcePosition;
-    float azimuthInRadians;
     float azimuthInDegress;
-    float degree,lastUpdate;
     Timer myTimer =new Timer();
     private String TotalDistance,stNode,endNode,routeDeviatedDT_URL="";
     double TotalDistanceInMTS;
@@ -212,10 +185,31 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private String routeData;
 
     //  private SensorManager mSensorManager;
-
-
-
-
+    //LatLng convertedSrcPosition,convertedDestinationPoisition;
+    // Bitmap tileBitmap;
+    // MultiMap multiMap = new MultiValueMap();
+    // private ImageButton etaListener;
+    // private ImageButton location_tracking;
+    // Marker fakeGpsMarker;
+    // List<Marker> markerlist;
+    //  ArrayList<String> etaList;
+    //  private ArrayList lastDistancesList;
+    //  private double lastDistance;
+    // private String geometryText;
+    //  String tokenNumber,updaterServiceResponse;
+    //  private long startTime,presentTime,previousTime,TimeDelay;
+    //  private  List<LatLng>listOfLatLng;
+    // private LocationManager locationManager;
+    //  private Location lastLocation;
+    // float azimuthInRadians;
+   // float degree,lastUpdate;
+    // LatLng centerFromPoint;
+    // LatLng point;
+    // BitmapDescriptor mMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.car_icon_32);
+    //LatLng dubai;
+    //String SourcePoint;
+    // String DestinationPoint,tokenResponse,etaResponse;
+    //  Handler mHandler = new Handler();
     public interface FragmentToActivity {
         String communicate(String comm);
         String communicate(String comm, int alertType);
