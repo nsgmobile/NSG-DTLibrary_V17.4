@@ -41,13 +41,13 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
-            // fragmentTransaction.add(R.id.map_container, new MainMapFragment(srcLatitude,srcLongitude,destLatitude,desLongitude,1,bufferSize));//getRoutes Direction
 
-            // fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(properties));//getRoutes Direction
+              fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey));//getRoutes Direction
 
-         //fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(NavigationProperties));//getRoutes Direction
-         fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL));//getRoutes Direction
-        }else if(charlsisNumber.equals("RD2")) {
+         
+
+
+         }else if(charlsisNumber.equals("RD2")) {
           //  Log.e("Route Details------", " Route Details------ " +" srcLatitude : "+ srcLatitude +"\n"+" srcLongitude : "+ srcLongitude +"\n"+" destLatitude : "+destLatitude+"\n"+" desLongitude : "+desLongitude+"\n");
          //   fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,routeData,2,bufferSize));//getRoutes Direction
         }

@@ -173,7 +173,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LatLng currentGpsPosition,RouteDeviatedSourcePosition;
     float azimuthInDegress;
     Timer myTimer =new Timer();
-    private String TotalDistance,stNode,endNode,routeDeviatedDT_URL="";
+    private String TotalDistance,stNode,endNode,routeDeviatedDT_URL="",AuthorisationKey;
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
@@ -218,7 +218,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private FragmentToActivity Callback;
     public NSGTiledLayerOnMap(){ }
     @SuppressLint("ValidFragment")
-    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData, int mode, int radius,String routeDeviatedDT_URL) {
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData, int mode, int radius,String routeDeviatedDT_URL,String AuthorisationKey) {
         enteredMode = mode;
         routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
@@ -228,6 +228,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.routeData=routeData;
         NSGTiledLayerOnMap.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
+        NSGTiledLayerOnMap.this.AuthorisationKey=AuthorisationKey;
+
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1196,7 +1198,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         JSONObject buidJsonObject1 = new JSONObject();
         buidJsonObject1.accumulate("username", "admin");
         buidJsonObject1.accumulate("password", "admin");
-        buidJsonObject1.accumulate("License", "b3TIz98wORn6daqmthiEu48TAW1ZEQjPuRLapxJPV6HJQiJtO9LsOErPexmDhbZtD76U2AbJ+jXarYr3gAqkkRiofLSN+321AlzVW1K3L8feXLYTRSP8NSgJ7v7460H1hxKIp+mbak6+Q6tNoWgKpA==");
+        buidJsonObject1.accumulate("License", AuthorisationKey);
 
         return buidJsonObject1;
     }
