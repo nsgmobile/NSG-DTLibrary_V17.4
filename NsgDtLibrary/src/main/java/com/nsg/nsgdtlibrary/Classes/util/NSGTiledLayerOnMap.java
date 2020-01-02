@@ -820,16 +820,16 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
 
-        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
-        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+       // Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+       // Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
 
         if (PrevousGpsPosition != null){
             double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
-            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
+           // Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+returnedDistance);
             float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
             //   Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
-                drawMarkerWithCircle(PrevousGpsPosition, 50);
+                drawMarkerWithCircle(PrevousGpsPosition, routeDeviationDistance);
                 double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
                 // Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtRouteDeviation);
                   if(distanceAtRouteDeviation> mCircle.getRadius()){
