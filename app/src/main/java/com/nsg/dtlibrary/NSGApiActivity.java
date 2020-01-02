@@ -42,16 +42,19 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
 
-              fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey));//getRoutes Direction
+              NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
+              fragmentTransaction.add(R.id.map_container, test);//getRoutes Direction
+              test.startNavigation();
+              test.stopNavigation();
 
-         
+
 
 
          }else if(charlsisNumber.equals("RD2")) {
-          //  Log.e("Route Details------", " Route Details------ " +" srcLatitude : "+ srcLatitude +"\n"+" srcLongitude : "+ srcLongitude +"\n"+" destLatitude : "+destLatitude+"\n"+" desLongitude : "+desLongitude+"\n");
-         //   fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,routeData,2,bufferSize));//getRoutes Direction
+
         }
         fragmentTransaction.commit();
+
     }
 
     @Override
