@@ -130,7 +130,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private List points;
     private List<LatLng> convertedPoints;
     private LatLng OldGps,nayaGps;
-    // LatLng currentGpsPosition,lastKnownLocation;
     StringBuilder sb = new StringBuilder();
     private List LocationPerpedicularPoints=new ArrayList();
     private ArrayList<LatLng> currentLocationList=new ArrayList<LatLng>();
@@ -141,8 +140,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private List<RouteT> RouteDataList;
     private List PreviousGpsList;
     private Handler handler = new Handler();
-    // private int index=0;
-    // private int next=0;
+
     private int enteredMode;
     private Marker carMarker;
     private int routeDeviationDistance;
@@ -203,7 +201,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     float azimuthInDegress;
     float degree,lastUpdate;
     Timer myTimer =new Timer();
-    private String TotalDistance;
+    private String TotalDistance,stNode,endNode;
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
@@ -212,6 +210,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private Button location_tracking_start,location_tracking_stop;
     StringBuilder time= new StringBuilder();
     LatLng nPosition= null;
+    private String routeData;
     public interface FragmentToActivity {
         String communicate(String comm);
         String communicate(String comm, int alertType);
@@ -219,13 +218,15 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private FragmentToActivity Callback;
     public NSGTiledLayerOnMap(){ }
     @SuppressLint("ValidFragment")
-    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT, String DBCSV_PATH, String jobId, String routeId, int mode, int radius ) {
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData, int mode, int radius) {
         enteredMode = mode;
         routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
-        NSGTiledLayerOnMap.this.DBCSV_PATH = DBCSV_PATH;
-        NSGTiledLayerOnMap.this.routeIDName=routeId;
-        NSGTiledLayerOnMap.this.jobId=jobId;
+        NSGTiledLayerOnMap.this.stNode=stNode;
+        NSGTiledLayerOnMap.this.endNode=endNode;
+        NSGTiledLayerOnMap.this.enteredMode=mode;
+        NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
+        NSGTiledLayerOnMap.this.routeData=routeData;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -281,10 +282,13 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         requestPermission();
         String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
         sqlHandler.executeQuery(delQuery);
-        InsertAllRouteData(DBCSV_PATH);
-        getRouteAccordingToRouteID(routeIDName);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+
+        if(stNode!=null && endNode!=null && routeData!=null){
+            InsertAllRouteData(stNode,endNode,routeData);
+            getRouteAccordingToRouteID(routeIDName);
+        }
         if(RouteDataList!=null) {
             route = RouteDataList.get(0);
         }
@@ -1704,6 +1708,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
+
     public int getLatLngPoints(){
 
         LatLngDataArray.add(new LatLng(24.978782,55.067291));
@@ -1786,6 +1791,22 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     List resultList=new ArrayList();
+    public void InsertAllRouteData(String stNode,String destNode,String routeData){
+
+
+        StringBuilder query = new StringBuilder("INSERT INTO ");
+        query.append(RouteT.TABLE_NAME).append("(startNode,endNode,routeData) values (")
+                .append("'").append(stNode).append("',")
+                .append("'").append(destNode).append("',")
+                .append("'").append(routeData).append("')");
+
+        sqlHandler.executeQuery(query.toString());
+        sqlHandler.closeDataBaseConnection();
+    }
+
+    /*
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    List resultList=new ArrayList();
     public void InsertAllRouteData(String DBCSV_PATH){
         File file = new File(DBCSV_PATH);
         CsvReader csvReader = new CsvReader();
@@ -1840,6 +1861,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
+    */
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION);
