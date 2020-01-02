@@ -582,7 +582,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     private  List<RouteT> getRouteAccordingToRouteID(String stNode,String endNode) {
         String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE startNode = "+"'"+stNode+"'"+" AND "+ "endNode= "+ "'"+endNode+"'";
-        Log.e("QUERY","QUERY"+ query);
+        //Log.e("QUERY","QUERY"+ query);
         Cursor c1 = sqlHandler.selectQuery(query);
         RouteDataList = (List<RouteT>) SqlHandler.getDataRows(RouteT.MAPPING, RouteT.class, c1);
         sqlHandler.closeDataBaseConnection();
@@ -787,14 +787,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         double travelledDistance = showDistance(sourcePosition, currentGpsPosition);
         String travelledDistanceInMTS = String.format("%.0f", travelledDistance);
         ETACalclator etaCalculator = new ETACalclator();
-        double resultTravelledTime = etaCalculator.cal_time(travelledDistance, 10);
+        double resultTravelledTime = etaCalculator.cal_time(travelledDistance, vehicleSpeed);
         resultTravelledTimeConverted = DecimalUtils.round(resultTravelledTime, 0);
 
 
         double needToTravelDistance = TotalDistance - travelledDistance;
         String needToTravelDistanceInMTS = String.format("%.0f", needToTravelDistance);
         ETACalclator etaCalculator2 = new ETACalclator();
-        resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, 10);
+        resultNeedToTeavelTime = etaCalculator2.cal_time(needToTravelDistance, vehicleSpeed);
         resultNeedToTeavelTimeConverted = DecimalUtils.round(resultNeedToTeavelTime, 0);
 
         // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
