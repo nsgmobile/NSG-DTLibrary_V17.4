@@ -193,15 +193,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private double vehicleSpeed;
     private double maxSpeed=30;
     private boolean isMarkerRotating=false;
-    private String BASE_MAP_URL_FORMAT,DBCSV_PATH,jobId;
+    private String BASE_MAP_URL_FORMAT;
     private LatLng SourceNode,DestinationNode;
-    private SensorManager mSensorManager;
     LatLng currentGpsPosition,RouteDeviatedSourcePosition;
     float azimuthInRadians;
     float azimuthInDegress;
     float degree,lastUpdate;
     Timer myTimer =new Timer();
-    private String TotalDistance,stNode,endNode;
+    private String TotalDistance,stNode,endNode,routeDeviatedDT_URL="";
     double TotalDistanceInMTS;
     private List<EdgeDataT> EdgeContainsDataList;
     private double resultNeedToTeavelTimeConverted;
@@ -211,6 +210,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     StringBuilder time= new StringBuilder();
     LatLng nPosition= null;
     private String routeData;
+
+    //  private SensorManager mSensorManager;
+
+
+
+
     public interface FragmentToActivity {
         String communicate(String comm);
         String communicate(String comm, int alertType);
@@ -218,7 +223,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private FragmentToActivity Callback;
     public NSGTiledLayerOnMap(){ }
     @SuppressLint("ValidFragment")
-    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData, int mode, int radius) {
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData, int mode, int radius,String routeDeviatedDT_URL) {
         enteredMode = mode;
         routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
@@ -227,6 +232,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         NSGTiledLayerOnMap.this.enteredMode=mode;
         NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.routeData=routeData;
+        NSGTiledLayerOnMap.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -288,7 +294,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         if(stNode!=null && endNode!=null && routeData!=null){
             InsertAllRouteData(stNode,endNode,routeData);
             getRouteAccordingToRouteID(stNode,endNode);
-            Log.e("RouteData"," RouteData "+ RouteDataList.size());
             if(RouteDataList!=null && RouteDataList.size()>0) {
                 route = RouteDataList.get(0);
             }
@@ -319,9 +324,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     StringBuilder routeAlert=new StringBuilder();
                     routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
                     sendData(routeAlert.toString(),1);
-                    Log.e("Route Alert Loaded","Route Alert Loaded " + routeAlert );
-                    Log.e("Route Alert Loaded","Route Alert Loaded");
-                    // GetRouteDetails(SourcePosition.toString(),DestinationPosition.toString());
                 }
 
                 // sendTokenRequest();
@@ -418,8 +420,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                         public void run() {
                                                             currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                                             Log.e("CurrentGpsPoint", " currentGpsPosition GpsPoint " + currentGpsPosition);
+                                                            vehicleSpeed=location.getSpeed();
                                                             LatLng OldNearestPosition = null;
-                                                          //  if(isRouteDeviated==false) {
+                                                            if(isRouteDeviated==false) {
                                                                 if (OldGPSPosition != null) {
                                                                     double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                     Log.e("distance", "distance" + distance);
@@ -472,9 +475,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                                     }
                                                                 }
 
-                                                         //  }else {
-                                                          //     MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                                         //  }
+                                                           }else {
+                                                               MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                           }
                                                         }
 
                                                     };
@@ -1050,9 +1053,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                 new StrictMode.ThreadPolicy.Builder().permitAll().build();
                         StrictMode.setThreadPolicy(policy);
                         try {
-                            String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
+                           // String httprequest = "http://202.53.11.74/dtnavigation/api/routing/routenavigate";
                             //  Log.e("HTTP REQUEST","HTTP REQUEST"+httprequest);
-                            String FeatureResponse = HttpPost(httprequest,deviationPoint,newDestinationPoint);
+                            String FeatureResponse = HttpPost(routeDeviatedDT_URL,deviationPoint,newDestinationPoint);
                             //  Log.e("HTTP REQUEST","HTTP REQUEST"+ FeatureResponse);
                             JSONObject jsonObject = null;
                             try {
