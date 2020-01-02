@@ -183,6 +183,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     StringBuilder time= new StringBuilder();
     LatLng nPosition= null;
     private String routeData;
+    NavigationProperties properties;
 
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;

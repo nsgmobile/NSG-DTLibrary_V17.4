@@ -6,10 +6,22 @@ public class NavigationProperties {
     private String SourcePosition;
     private String DestinationPosition;
     private String routeData;
-    private String entered_mode;
-    private String deviation_bufferSize;
+    private int entered_mode;
+    private int deviation_bufferSize;
     private String routeDeviated_DT_URL;
-    private String Authorisation_key="";
+    private String Authorisation_key;
+    public NavigationProperties(){ }
+    public NavigationProperties(String baseMap_Url_format, String SourcePosition,String DestinationPosition,String routeData,int entered_mode,int deviation_bufferSize, String routeDeviated_DT_URL,String Authorisation_key){
+            this.baseMap_Url_format=baseMap_Url_format;
+            this.SourcePosition=SourcePosition;
+            this.DestinationPosition=DestinationPosition;
+            this.routeData=routeData;
+            this.entered_mode=entered_mode;
+            this.deviation_bufferSize=deviation_bufferSize;
+            this.routeDeviated_DT_URL=routeDeviated_DT_URL;
+            this.Authorisation_key=Authorisation_key;
+
+    }
 
     public String getBaseMap_Url_format() {
         return baseMap_Url_format;
@@ -43,19 +55,19 @@ public class NavigationProperties {
         this.routeData = routeData;
     }
 
-    public String getEntered_mode() {
+    public int getEntered_mode() {
         return entered_mode;
     }
 
-    public void setEntered_mode(String entered_mode) {
+    public void setEntered_mode(int entered_mode) {
         this.entered_mode = entered_mode;
     }
 
-    public String getDeviation_bufferSize() {
+    public int getDeviation_bufferSize() {
         return deviation_bufferSize;
     }
 
-    public void setDeviation_bufferSize(String deviation_bufferSize) {
+    public void setDeviation_bufferSize(int deviation_bufferSize) {
         this.deviation_bufferSize = deviation_bufferSize;
     }
 

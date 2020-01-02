@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 //import com.nsg.nsgdtlibrary.Classes.OldCode.NSGIMainFragment;
 import com.nsg.nsgdtlibrary.Classes.util.NSGTiledLayerOnMap;
+import com.nsg.nsgdtlibrary.Classes.util.NavigationProperties;
 
 import java.io.File;
 
@@ -27,6 +28,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     private TextView tv;
     private String routeDeviatedDT_URL="http://202.53.11.74/dtnavigation/api/routing/routenavigate";
     String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "DubaiBasemap"+".mbtiles";
+    private String AuthorisationKey="b3TIz98wORn6daqmthiEu48TAW1ZEQjPuRLapxJPV6HJQiJtO9LsOErPexmDhbZtD76U2AbJ+jXarYr3gAqkkddT7FGFXYcczWMZiFyXvww2A1T1OocgvsaMYzr6Opq72aJoX8xlKYd+JD9dy0x31w==";
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,16 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
 
         Bundle NSGIBundle = getIntent().getExtras();
         charlsisNumber = NSGIBundle.getString("charlsisNumber");
+        NavigationProperties properties=new NavigationProperties(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
             // fragmentTransaction.add(R.id.map_container, new MainMapFragment(srcLatitude,srcLongitude,destLatitude,desLongitude,1,bufferSize));//getRoutes Direction
-            fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL));//getRoutes Direction
+
+            // fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(properties));//getRoutes Direction
+
+         //fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(NavigationProperties));//getRoutes Direction
+         fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL));//getRoutes Direction
         }else if(charlsisNumber.equals("RD2")) {
           //  Log.e("Route Details------", " Route Details------ " +" srcLatitude : "+ srcLatitude +"\n"+" srcLongitude : "+ srcLongitude +"\n"+" destLatitude : "+destLatitude+"\n"+" desLongitude : "+desLongitude+"\n");
          //   fragmentTransaction.add(R.id.map_container, new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,routeData,2,bufferSize));//getRoutes Direction
