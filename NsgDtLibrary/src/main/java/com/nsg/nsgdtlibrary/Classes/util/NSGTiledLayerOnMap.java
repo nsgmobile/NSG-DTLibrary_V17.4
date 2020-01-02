@@ -288,8 +288,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         if(stNode!=null && endNode!=null && routeData!=null){
             InsertAllRouteData(stNode,endNode,routeData);
             getRouteAccordingToRouteID(stNode,endNode);
-            Log.e("RouteData","QUERY"+ RouteDataList.size());
-            if(RouteDataList!=null) {
+            Log.e("RouteData"," RouteData "+ RouteDataList.size());
+            if(RouteDataList!=null && RouteDataList.size()>0) {
                 route = RouteDataList.get(0);
             }
         }
@@ -585,7 +585,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         super.onDetach();
     }
     private  List<RouteT> getRouteAccordingToRouteID(String stNode,String endNode) {
-        String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE startNode = "+"'"+stNode+"'"+" AND "+ "endNode= "+ "'"+stNode+"'";
+        String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE startNode = "+"'"+stNode+"'"+" AND "+ "endNode= "+ "'"+endNode+"'";
         Log.e("QUERY","QUERY"+ query);
         Cursor c1 = sqlHandler.selectQuery(query);
         RouteDataList = (List<RouteT>) SqlHandler.getDataRows(RouteT.MAPPING, RouteT.class, c1);
@@ -1793,13 +1793,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     List resultList=new ArrayList();
     public void InsertAllRouteData(String stNode,String destNode,String routeData){
 
-
         StringBuilder query = new StringBuilder("INSERT INTO ");
         query.append(RouteT.TABLE_NAME).append("(startNode,endNode,routeData) values (")
                 .append("'").append(stNode).append("',")
                 .append("'").append(destNode).append("',")
                 .append("'").append(routeData).append("')");
-
+        Log.e("query"," INSERTION query--"+ query);
         sqlHandler.executeQuery(query.toString());
         sqlHandler.closeDataBaseConnection();
     }
