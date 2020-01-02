@@ -235,6 +235,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     public int startNavigation(){
         try{
+
             if(mMap!=null) {
                 if (isTimerStarted = true) {
                     myTimer.schedule(new TimerTask() {
@@ -301,6 +302,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                             }
                                         }, 0);
                                         */
+
 
                             }
                         });
@@ -396,6 +398,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
                 }
             }
+
           return 1;
         } catch(Exception e){
             return 0;

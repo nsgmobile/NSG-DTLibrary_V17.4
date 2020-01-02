@@ -3,6 +3,8 @@ package com.nsg.dtlibrary;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -30,10 +32,13 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "DubaiBasemap"+".mbtiles";
     private String AuthorisationKey="b3TIz98wORn6daqmthiEu48TAW1ZEQjPuRLapxJPV6HJQiJtO9LsOErPexmDhbZtD76U2AbJ+jXarYr3gAqkkddT7FGFXYcczWMZiFyXvww2A1T1OocgvsaMYzr6Opq72aJoX8xlKYd+JD9dy0x31w==";
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
+    NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_map);
+        Button Start=(Button)findViewById(R.id.start);
+        Button Stop=(Button)findViewById(R.id.stop);
 
         Bundle NSGIBundle = getIntent().getExtras();
         charlsisNumber = NSGIBundle.getString("charlsisNumber");
@@ -41,11 +46,27 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
-
-              NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
               fragmentTransaction.add(R.id.map_container, test);//getRoutes Direction
               test.startNavigation();
-              test.stopNavigation();
+              Log.e("Started","Started "+test.startNavigation());
+                /*
+           Start.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   test.startNavigation();
+               }
+           });
+
+             Stop.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     test.stopNavigation();
+                 }
+             });
+             */
+
+
+
 
 
 
