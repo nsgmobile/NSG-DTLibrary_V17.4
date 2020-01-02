@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
@@ -25,12 +26,12 @@ public class JobDetails extends Activity {
    private int enteredMode=1;
    private int bufferSize=10;
    private String charlsisNumber;
-   private ImageButton draw_route;
+   private Button draw_route;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.job_test);
-        draw_route=(ImageButton)findViewById(R.id.route_test);
+        draw_route=(Button)findViewById(R.id.route_test);
         Spinner Spinner_Ch_Number = (Spinner)findViewById(R.id.Spinner_Ch_Number);
 
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(JobDetails.this,
@@ -50,7 +51,6 @@ public class JobDetails extends Activity {
             }
         });
 
-      //  FloatingActionButton fab = findViewById(R.id.fab);
         draw_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
