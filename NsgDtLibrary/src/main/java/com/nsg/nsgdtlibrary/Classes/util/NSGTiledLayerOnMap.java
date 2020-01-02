@@ -527,6 +527,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     }
                 });
+
             }
         });
         return rootView;
