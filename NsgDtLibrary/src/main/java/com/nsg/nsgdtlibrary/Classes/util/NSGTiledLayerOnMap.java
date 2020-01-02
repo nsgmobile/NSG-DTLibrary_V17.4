@@ -288,11 +288,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         if(stNode!=null && endNode!=null && routeData!=null){
             InsertAllRouteData(stNode,endNode,routeData);
             getRouteAccordingToRouteID(stNode,endNode);
+            Log.e("RouteData","QUERY"+ RouteDataList.size());
+            if(RouteDataList!=null) {
+                route = RouteDataList.get(0);
+            }
         }
-        if(RouteDataList!=null) {
-            route = RouteDataList.get(0);
-        }
-        final String routeData = route.getRouteData();
+        String routeDataFrmLocalDB = route.getRouteData();
         String sourceText=route.getStartNode();
         String[]  text =sourceText.split(" ");
         sourceLat= Double.parseDouble(text[1]);
