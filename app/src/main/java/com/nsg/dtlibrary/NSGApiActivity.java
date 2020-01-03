@@ -90,8 +90,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     }
     public void onResume() {
         super.onResume();
-        test.startNavigation();
-        test.stopNavigation();
+       // test.startNavigation();
+       // test.stopNavigation();
     }
 
 }
