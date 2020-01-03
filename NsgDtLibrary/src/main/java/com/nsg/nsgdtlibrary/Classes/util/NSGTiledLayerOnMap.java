@@ -222,14 +222,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
     @SuppressLint("ValidFragment")
-    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData, int mode, int radius,String routeDeviatedDT_URL,String AuthorisationKey) {
-        enteredMode = mode;
-        routeDeviationDistance=radius;
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,String routeDeviatedDT_URL,String AuthorisationKey) {
+        //enteredMode = mode;
+      //  routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
         NSGTiledLayerOnMap.this.stNode=stNode;
         NSGTiledLayerOnMap.this.endNode=endNode;
-        NSGTiledLayerOnMap.this.enteredMode=mode;
-        NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
+       // NSGTiledLayerOnMap.this.enteredMode=mode;
+       // NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
         NSGTiledLayerOnMap.this.routeData=routeData;
         NSGTiledLayerOnMap.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
         NSGTiledLayerOnMap.this.AuthorisationKey=AuthorisationKey;
@@ -415,46 +415,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 mMap.getUiSettings().setRotateGesturesEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 isNavigationStarted=true;
-                if (enteredMode == 1 && edgeDataList != null && edgeDataList.size() > 0) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                            @Override
-                            public void onMyLocationChange(Location location) {
-                                        /*
-                                        if (mPositionMarker != null) {
-                                            mPositionMarker.remove();
-                                        }
-                                        vehicleSpeed=location.getSpeed();
-                                        if( currentGpsPosition!=null && locationFakeGpsListener > 0) {
-                                            lastGPSPosition=new ArrayList<>();
-                                            lastGPSPosition.add(currentGpsPosition);
-                                            OldGPSPosition=lastGPSPosition.get(0);
-                                        }
-                                        getLatLngPoints();
-                                        currentGpsPosition = LatLngDataArray.get(locationFakeGpsListener);
-
-
-                                        if(isRouteDeviated==false) {
-                                            MoveWithGpsPointInBetWeenAllPoints(OldGPSPosition, currentGpsPosition);
-
-                                        }else{
-                                            MoveWithGpsPointInRouteDeviatedPoints( currentGpsPosition);
-                                        }
-
-
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                locationFakeGpsListener = locationFakeGpsListener + 1;
-                                            }
-                                        }, 0);
-                                        */
-
-
-                            }
-                        });
-                    }
-                } else if (enteredMode == 2) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -536,14 +496,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         });
                     }
 
-                } else if (enteredMode == 3) {
-                    Marker marker = mMap.addMarker(new MarkerOptions()
-                            .position(SourceNode)
-                            .title("currentLocation")
-                            .anchor(0.5f, 0.5f)
-                            .flat(true)
-                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent)));
-                }
+
             }
 
             return 1;
@@ -867,7 +820,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
             //   Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
             if(returnedDistance > markDistance) {
-                drawMarkerWithCircle(PrevousGpsPosition, routeDeviationDistance);
+                drawMarkerWithCircle(PrevousGpsPosition, 10);
                 double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
                 // Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtRouteDeviation);
                   if(distanceAtRouteDeviation> mCircle.getRadius()){
