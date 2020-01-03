@@ -1314,7 +1314,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                   }
 
                 //Speech implementation
+                  mMap.setMyLocationEnabled(false);
                 String data1=" Your Destination Reached ";
+
                 int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
                 if (speechStatus1 == TextToSpeech.ERROR) {
                     Log.e("TTS", "Error in converting Text to Speech!");
@@ -1322,6 +1324,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 StringBuilder destinationAlert=new StringBuilder("Destination Reached");
                 sendData(destinationAlert.toString(),4);
                 Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
+
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
