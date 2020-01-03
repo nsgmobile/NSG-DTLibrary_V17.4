@@ -2,6 +2,7 @@ package com.nsg.dtlibrary;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.sax.StartElementListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,9 +22,10 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnMap.FragmentToActivity {
+public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnMap.FragmentToActivity, View.OnClickListener {
     private int bufferSize=30;
     private String charlsisNumber;
+    private  Button Start,Stop;
     private String jobId="1",routeId,routeData="{\"$id\":\"1\",\"Message\":\"Sucess\",\"Status\":\"Success\",\"TotalDistance\":0.00884315523,\"Route\":[{\"$id\":\"2\",\"EdgeNo\":\"102\",\"GeometryText\":\"-\",\"Geometry\":{\"$id\":\"3\",\"type\":\"LineString\",\"coordinates\":[[78.571275,17.473804],[78.571132,17.473587],[78.570936,17.473375],[78.570724,17.473250],[78.570370,17.473004],[78.569989,17.472763],[78.569373,17.472311],[78.568690,17.471816],[78.568026,17.471415],[78.566716,17.470434],[78.565718,17.469347],[78.564651,17.468051]]}}]}";
     String SourcePosition="78.571275 17.473804";
     String DestinationPosition="78.564651 17.468051";
@@ -37,8 +39,10 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.review_map);
-        Button Start=(Button)findViewById(R.id.start);
-        Button Stop=(Button)findViewById(R.id.stop);
+        Start =(Button)findViewById(R.id.start);
+        Start.setOnClickListener(this);
+        Stop=(Button)findViewById(R.id.stop);
+        Stop.setOnClickListener(this);
 
         Bundle NSGIBundle = getIntent().getExtras();
         charlsisNumber = NSGIBundle.getString("charlsisNumber");
@@ -47,23 +51,6 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
               fragmentTransaction.add(R.id.map_container, test);
-
-               Start.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View v) {
-                       test.startNavigation();
-                       Log.e("Started","Started "+test.startNavigation());
-                   }
-               });
-
-              Stop.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View v) {
-                         test.stopNavigation();
-                         Log.e("Stopped","Stopped "+test.startNavigation());
-                     }
-                 });
-
 
          }else if(charlsisNumber.equals("RD2")) {
 
@@ -94,4 +81,14 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
        // test.stopNavigation();
     }
 
+    @Override
+    public void onClick(View v) {
+       if(v==Start){
+           test.startNavigation();
+           Log.e("Started","Started "+test.startNavigation());
+       }else if(v==Stop){
+           test.startNavigation();
+           Log.e("Stopped","Stopped "+test.stopNavigation());
+       }
+    }
 }
