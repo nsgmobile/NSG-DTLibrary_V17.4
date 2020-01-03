@@ -183,6 +183,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     StringBuilder time= new StringBuilder();
     LatLng nPosition= null;
     private String routeData;
+    public boolean isMapLoaded=false;
     NavigationProperties properties;
 
     //  private SensorManager mSensorManager;
@@ -234,9 +235,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
     public int startNavigation(){
-       // try{
+        try{
 
-            if(mMap!=null) {
+            if(mMap!=null  && isMapLoaded==true) {
                 if (isTimerStarted = true) {
                     myTimer.schedule(new TimerTask() {
                         @Override
@@ -400,9 +401,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             }
 
           return 1;
-      //  } catch(Exception e){
-      //      return 0;
-     //   }
+        } catch(Exception e){
+            return 0;
+        }
 
 
     }
@@ -546,6 +547,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     //    ActivityCompat#requestPermissions
                     return;
                 }
+                isMapLoaded=true;
                 /*
                 location_tracking_start.setOnClickListener(new View.OnClickListener() {
 
