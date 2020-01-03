@@ -568,11 +568,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             mPositionMarker.remove();
                         }
                         currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                        mMap.setMyLocationEnabled(false);
+
 
                     }
                 });
-
+                mMap.setMyLocationEnabled(false);
                 if (currentGpsPosition != null) {
 
 
