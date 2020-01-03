@@ -61,6 +61,7 @@
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_below="@+id/lay2"
+        android:background="#1D2C4D"
         android:layout_gravity="center_horizontal">
             <Button
                 android:id="@+id/start"
