@@ -50,21 +50,21 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
              // test.startNavigation();
             //
 
-           Start.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
-                   test.startNavigation();
-                   Log.e("Started","Started "+test.startNavigation());
-               }
-           });
+               Start.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       test.startNavigation();
+                       Log.e("Started","Started "+test.startNavigation());
+                   }
+               });
 
-             Stop.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                     test.stopNavigation();
-                     Log.e("Started","Started "+test.startNavigation());
-                 }
-             });
+              Stop.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View v) {
+                         test.stopNavigation();
+                         Log.e("Stopped","Stopped "+test.startNavigation());
+                  }
+                 });
 
 
          }else if(charlsisNumber.equals("RD2")) {
