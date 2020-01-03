@@ -279,8 +279,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
       //  tv2 = (TextView) rootView.findViewById(R.id.tv2);
       //  tv3 = (TextView) rootView.findViewById(R.id.tv3);
      //   location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
-        location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
-        location_tracking_stop.setVisibility(View.INVISIBLE);
+     //   location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
+      //  location_tracking_stop.setVisibility(View.INVISIBLE);
         // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
         // location_tracking.setOnClickListener(this);
        // mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
@@ -1322,15 +1322,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 StringBuilder destinationAlert=new StringBuilder("Destination Reached");
                 sendData(destinationAlert.toString(),4);
                 Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
-                  location_tracking_stop.setVisibility(View.VISIBLE);
-                  location_tracking_stop.setOnClickListener(new View.OnClickListener() {
-                      @Override
-                      public void onClick(View v) {
-                          mMap.setMyLocationEnabled(false);
-                      }
-                  });
 
-                /*
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
                 builder.setTitle("Alert");
                 builder.setIcon(R.drawable.car_icon_32);
@@ -1343,7 +1335,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-                */
+
 
             }
     }
