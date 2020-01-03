@@ -576,8 +576,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 });
                 */
                 mMap.setMyLocationEnabled(false);
-                if (currentGpsPosition != null) {
-                        String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
+             //   if (currentGpsPosition != null) {
+                        String NavigationAlert = " Navigation Stopped " ;
+                       // String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
                         sendData(NavigationAlert, 5);
                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
                         @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
@@ -595,7 +596,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         toast.setGravity(Gravity.TOP, 0, 200);
                         toast.setView(layout);
                         toast.show();
-                }
+               // }
                 // getActivity().onBackPressed();
             }
 
