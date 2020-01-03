@@ -337,6 +337,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
                 isMapLoaded=true;
 
+
             }
         });
         return rootView;
@@ -590,6 +591,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     toast.setGravity(Gravity.TOP, 0, 200);
                     toast.setView(layout);
                     toast.show();
+
                 }
                 // getActivity().onBackPressed();
             }
