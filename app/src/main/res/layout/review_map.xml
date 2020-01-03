@@ -12,37 +12,30 @@
         android:layout_height="wrap_content">
     </FrameLayout>
 
-
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_centerInParent="true"
         android:layout_below="@+id/map"
         android:orientation="vertical">
-        <LinearLayout
+        <Button
+            android:id="@+id/start"
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:text="Start"
             android:layout_height="50dp">
+        </Button>
 
-        </LinearLayout>
+        <Button
+            android:id="@+id/stop"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/start"
+            android:text="Stop"
+            android:layout_height="50dp">
+        </Button>
 
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/start"
-        android:layout_width="match_parent"
-        android:text="Start"
-        android:layout_height="50dp">
-    </Button>
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/stop"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/start"
-        android:text="Stop"
-        android:layout_height="50dp">
-    </Button>
 
 
 

@@ -40,6 +40,7 @@
                     android:textSize="15dp" />
 
             </RelativeLayout>
+            <!--
             <RelativeLayout
                 android:id="@+id/lay4"
                 android:layout_width="wrap_content"
@@ -81,7 +82,7 @@
                     android:padding="10dp" />
 
             </RelativeLayout>
-
+        -->
         </fragment>
     </LinearLayout>
 </LinearLayout>
