@@ -49,7 +49,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
 
         Bundle NSGIBundle = getIntent().getExtras();
         charlsisNumber = NSGIBundle.getString("charlsisNumber");
-        NavigationProperties properties=new NavigationProperties(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
