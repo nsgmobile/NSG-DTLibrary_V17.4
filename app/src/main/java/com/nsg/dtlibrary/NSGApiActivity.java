@@ -36,7 +36,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
   //  com.nsg.dtlibrary.NavigationProperties properties=new com.nsg.dtlibrary.NavigationProperties();
 
-    NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
+    NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,routeDeviatedDT_URL,AuthorisationKey);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
