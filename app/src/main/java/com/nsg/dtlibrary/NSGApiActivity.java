@@ -67,12 +67,6 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
              });
 
 
-
-
-
-
-
-
          }else if(charlsisNumber.equals("RD2")) {
 
         }
