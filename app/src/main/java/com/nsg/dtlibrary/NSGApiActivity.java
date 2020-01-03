@@ -34,6 +34,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     String BASE_MAP_URL_FORMAT = Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "DubaiBasemap"+".mbtiles";
     private String AuthorisationKey="b3TIz98wORn6daqmthiEu48TAW1ZEQjPuRLapxJPV6HJQiJtO9LsOErPexmDhbZtD76U2AbJ+jXarYr3gAqkkddT7FGFXYcczWMZiFyXvww2A1T1OocgvsaMYzr6Opq72aJoX8xlKYd+JD9dy0x31w==";
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
+  //  com.nsg.dtlibrary.NavigationProperties properties=new com.nsg.dtlibrary.NavigationProperties();
+
     NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +46,12 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         Stop=(Button)findViewById(R.id.stop);
         Stop.setOnClickListener(this);
 
+
         Bundle NSGIBundle = getIntent().getExtras();
         charlsisNumber = NSGIBundle.getString("charlsisNumber");
         NavigationProperties properties=new NavigationProperties(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,2,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
         FragmentManager fragmentManager = getSupportFragmentManager();
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
               fragmentTransaction.add(R.id.map_container, test);

@@ -1,11 +1,6 @@
-package com.nsg.nsgdtlibrary.Classes.util;
+package com.nsg.dtlibrary;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.io.Serializable;
-
-public class NavigationProperties implements Parcelable {
+public class NavigationProperties {
 
     private String baseMap_Url_format;
     private String SourcePosition;
@@ -16,7 +11,7 @@ public class NavigationProperties implements Parcelable {
     private String routeDeviated_DT_URL;
     private String Authorisation_key;
     public NavigationProperties(){ }
-    public NavigationProperties(String baseMap_Url_format, String SourcePosition,String DestinationPosition,String routeData,int entered_mode,int deviation_bufferSize, String routeDeviated_DT_URL,String Authorisation_key){
+    public NavigationProperties(String baseMap_Url_format, String SourcePosition, String DestinationPosition, String routeData, int entered_mode, int deviation_bufferSize, String routeDeviated_DT_URL, String Authorisation_key){
             this.baseMap_Url_format=baseMap_Url_format;
             this.SourcePosition=SourcePosition;
             this.DestinationPosition=DestinationPosition;
@@ -90,15 +85,5 @@ public class NavigationProperties implements Parcelable {
 
     public void setAuthorisation_key(String authorisation_key) {
         Authorisation_key = authorisation_key;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
     }
 }
