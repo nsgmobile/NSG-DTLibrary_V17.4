@@ -568,29 +568,33 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             mPositionMarker.remove();
                         }
                         currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                        mMap.setMyLocationEnabled(false);
 
                     }
                 });
-                if (currentGpsPosition != null) {
-                    mMap.setMyLocationEnabled(false);
-                    String NavigationAlert=" Navigation Stopped " + currentGpsPosition;
-                    sendData(NavigationAlert, 5);
-                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                    @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                    final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                    final ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-                    Toast toast = new Toast(getActivity().getApplicationContext());
-                    String stopText="Navigation Stopped";
-                    text.setText("" + stopText);
-                    if(stopText.startsWith("Navigation Stopped")){
-                        image.setImageResource(R.drawable.stop_image);
-                    }
 
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.setGravity(Gravity.TOP, 0, 200);
-                    toast.setView(layout);
-                    toast.show();
+                if (currentGpsPosition != null) {
+
+
+                        String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
+                        sendData(NavigationAlert, 5);
+                        LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                        @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                        final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                        final ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                        Toast toast = new Toast(getActivity().getApplicationContext());
+                        String stopText = "Navigation Stopped";
+                        text.setText("" + stopText);
+                        if (stopText.startsWith("Navigation Stopped")) {
+                            image.setImageResource(R.drawable.stop_image);
+                        }
+
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                        toast.setGravity(Gravity.TOP, 0, 200);
+                        toast.setView(layout);
+                        toast.show();
+
 
                 }
                 // getActivity().onBackPressed();
@@ -602,6 +606,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             return 0;
         }
 
+    }
+    public void onResume() {
+        super.onResume();
+        startNavigation();
+        stopNavigation();
     }
 
     @Override

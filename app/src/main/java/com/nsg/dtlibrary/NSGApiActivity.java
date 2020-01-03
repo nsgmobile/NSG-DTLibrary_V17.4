@@ -46,9 +46,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
-              fragmentTransaction.add(R.id.map_container, test);//getRoutes Direction
-             // test.startNavigation();
-            //
+              fragmentTransaction.add(R.id.map_container, test);
 
                Start.setOnClickListener(new View.OnClickListener() {
                    @Override
@@ -63,7 +61,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
                      public void onClick(View v) {
                          test.stopNavigation();
                          Log.e("Stopped","Stopped "+test.startNavigation());
-                  }
+                     }
                  });
 
 
@@ -92,6 +90,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     }
     public void onResume() {
         super.onResume();
+        test.startNavigation();
+        test.stopNavigation();
     }
 
 }
