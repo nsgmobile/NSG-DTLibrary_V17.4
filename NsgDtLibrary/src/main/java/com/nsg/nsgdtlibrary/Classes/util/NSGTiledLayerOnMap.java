@@ -1314,7 +1314,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                   }
 
                 //Speech implementation
-                  mMap.setMyLocationEnabled(false);
+                mMap.setMyLocationEnabled(false);
                 String data1=" Your Destination Reached ";
 
                 int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
