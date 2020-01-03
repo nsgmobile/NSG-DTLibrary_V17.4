@@ -79,7 +79,7 @@
                     android:text="STOP"
                     android:textColorHint="#000000"
                     android:layout_margin="5dp"
-                    android:background="#2D78F6"
+                    android:background="#F44336"
                     android:padding="10dp" />
 
             </RelativeLayout>
