@@ -234,7 +234,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
     public int startNavigation(){
-        try{
+       // try{
 
             if(mMap!=null) {
                 if (isTimerStarted = true) {
@@ -400,9 +400,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             }
 
           return 1;
-        } catch(Exception e){
-            return 0;
-        }
+      //  } catch(Exception e){
+      //      return 0;
+     //   }
 
 
     }
@@ -421,7 +421,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 });
                 if (currentGpsPosition != null) {
                     mMap.setMyLocationEnabled(false);
-                    sendData(currentGpsPosition.toString(), 5);
+                    String NavigationAlert=" Navigation Stopped " + currentGpsPosition;
+                    sendData(NavigationAlert, 5);
                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
                     @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                     final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -506,19 +507,21 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             getRouteAccordingToRouteID(stNode,endNode);
             if(RouteDataList!=null && RouteDataList.size()>0) {
                 route = RouteDataList.get(0);
+
+                String routeDataFrmLocalDB = route.getRouteData();
+                String sourceText=route.getStartNode();
+                String[]  text =sourceText.split(" ");
+                sourceLat= Double.parseDouble(text[1]);
+                sourceLng= Double.parseDouble(text[0]);
+                String destinationText=route.getEndNode();
+                String[]  text1 =destinationText.split(" ");
+                destLat= Double.parseDouble(text1[1]);
+                destLng= Double.parseDouble(text1[0]);
+                SourceNode=new LatLng(sourceLat,sourceLng);
+                DestinationNode=new LatLng(destLat,destLng);
             }
         }
-        String routeDataFrmLocalDB = route.getRouteData();
-        String sourceText=route.getStartNode();
-        String[]  text =sourceText.split(" ");
-        sourceLat= Double.parseDouble(text[1]);
-        sourceLng= Double.parseDouble(text[0]);
-        String destinationText=route.getEndNode();
-        String[]  text1 =destinationText.split(" ");
-        destLat= Double.parseDouble(text1[1]);
-        destLng= Double.parseDouble(text1[0]);
-        SourceNode=new LatLng(sourceLat,sourceLng);
-        DestinationNode=new LatLng(destLat,destLng);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment1 = activity   SupportMapFragment = fragment
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
