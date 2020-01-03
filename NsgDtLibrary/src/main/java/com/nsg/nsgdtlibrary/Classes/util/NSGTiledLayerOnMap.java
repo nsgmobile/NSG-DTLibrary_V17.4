@@ -234,6 +234,156 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         NSGTiledLayerOnMap.this.AuthorisationKey=AuthorisationKey;
 
     }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    int ttsLang = textToSpeech.setLanguage(Locale.US);
+                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("TTS", "The Language is not supported!");
+                    } else {
+                        Log.i("TTS", "Language Supported.");
+                    }
+                    Log.i("TTS", "Initialization success.");
+                } else {
+                    Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            sqlHandler = new SqlHandler(getContext());// Sqlite handler
+            Callback = (NSGTiledLayerOnMap.FragmentToActivity) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FragmentToActivity");
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gps_transperent_98);
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+      //  tv = (TextView) rootView.findViewById(R.id.tv);
+       // tv1 = (TextView) rootView.findViewById(R.id.tv1);
+      //  tv2 = (TextView) rootView.findViewById(R.id.tv2);
+      //  tv3 = (TextView) rootView.findViewById(R.id.tv3);
+     //   location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
+     //   location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
+        // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
+        // location_tracking.setOnClickListener(this);
+       // mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
+       // mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+       // mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        checkPermission();
+        requestPermission();
+        String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
+        sqlHandler.executeQuery(delQuery);
+        change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
+        change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+
+        if(stNode!=null && endNode!=null && routeData!=null){
+            InsertAllRouteData(stNode,endNode,routeData);
+            getRouteAccordingToRouteID(stNode,endNode);
+            if(RouteDataList!=null && RouteDataList.size()>0) {
+                route = RouteDataList.get(0);
+
+                String routeDataFrmLocalDB = route.getRouteData();
+                String sourceText=route.getStartNode();
+                String[]  text =sourceText.split(" ");
+                sourceLat= Double.parseDouble(text[1]);
+                sourceLng= Double.parseDouble(text[0]);
+                String destinationText=route.getEndNode();
+                String[]  text1 =destinationText.split(" ");
+                destLat= Double.parseDouble(text1[1]);
+                destLng= Double.parseDouble(text1[0]);
+                SourceNode=new LatLng(sourceLat,sourceLng);
+                DestinationNode=new LatLng(destLat,destLng);
+            }
+        }
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment1 = activity   SupportMapFragment = fragment
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googlemap) {
+                NSGTiledLayerOnMap.this.mMap = googlemap;
+                NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
+                TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
+                TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+                tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
+                tileOverlay.setVisible(true);
+                if(routeData!=null) {
+                    GetRouteFromDBPlotOnMap(routeData);
+                    StringBuilder routeAlert=new StringBuilder();
+                    routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
+                    sendData(routeAlert.toString(),1);
+                }
+                getAllEdgesData();
+                addMarkers();
+                getValidRouteData();
+                if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    return;
+                }
+                isMapLoaded=true;
+
+            }
+        });
+        return rootView;
+    }
+    @Override
+    public void onClick(View v) {
+       if(v==change_map_options){
+
+            PopupMenu popup = new PopupMenu(getContext(), change_map_options);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater()
+                    .inflate(R.menu.popup_menu, popup.getMenu());
+            //registering popup with OnMenuItemClickListener
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    int itemId = item.getItemId();
+                    if (itemId == R.id.slot1) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                            Toast.makeText(getContext(), "NORMAL MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    } else if (itemId == R.id.slot2) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                            Toast.makeText(getContext(), "SATELLITE MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    } else if (itemId == R.id.slot3) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                            Toast.makeText(getContext(), "TERRAIN MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }else if (itemId == R.id.slot4) {
+                        if(mMap!=null) {
+                            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                            Toast.makeText(getContext(), "HYBRID MAP ENABLED", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+                    }
+                    return true;
+                }
+            });
+            popup.show();
+        }
+    }
     public int startNavigation(){
         try{
 
@@ -400,7 +550,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
             }
 
-          return 1;
+            return 1;
         } catch(Exception e){
             return 0;
         }
@@ -446,156 +596,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int ttsLang = textToSpeech.setLanguage(Locale.US);
-                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
-                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "The Language is not supported!");
-                    } else {
-                        Log.i("TTS", "Language Supported.");
-                    }
-                    Log.i("TTS", "Initialization success.");
-                } else {
-                    Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            sqlHandler = new SqlHandler(getContext());// Sqlite handler
-            Callback = (NSGTiledLayerOnMap.FragmentToActivity) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement FragmentToActivity");
-        }
-    }
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gps_transperent_98);
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-      //  tv = (TextView) rootView.findViewById(R.id.tv);
-       // tv1 = (TextView) rootView.findViewById(R.id.tv1);
-      //  tv2 = (TextView) rootView.findViewById(R.id.tv2);
-      //  tv3 = (TextView) rootView.findViewById(R.id.tv3);
-     //   location_tracking_start=(Button)rootView.findViewById(R.id.location_tracking_start);
-     //   location_tracking_stop=(Button)rootView.findViewById(R.id.location_tracking_stop);
-        // location_tracking=(ImageButton)rootView.findViewById(R.id.location_tracking);
-        // location_tracking.setOnClickListener(this);
-       // mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
-       // mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-       // mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        checkPermission();
-        requestPermission();
-        String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
-        sqlHandler.executeQuery(delQuery);
-        change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-        change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
-
-        if(stNode!=null && endNode!=null && routeData!=null){
-            InsertAllRouteData(stNode,endNode,routeData);
-            getRouteAccordingToRouteID(stNode,endNode);
-            if(RouteDataList!=null && RouteDataList.size()>0) {
-                route = RouteDataList.get(0);
-
-                String routeDataFrmLocalDB = route.getRouteData();
-                String sourceText=route.getStartNode();
-                String[]  text =sourceText.split(" ");
-                sourceLat= Double.parseDouble(text[1]);
-                sourceLng= Double.parseDouble(text[0]);
-                String destinationText=route.getEndNode();
-                String[]  text1 =destinationText.split(" ");
-                destLat= Double.parseDouble(text1[1]);
-                destLng= Double.parseDouble(text1[0]);
-                SourceNode=new LatLng(sourceLat,sourceLng);
-                DestinationNode=new LatLng(destLat,destLng);
-            }
-        }
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.frg);  //use SuppoprtMapFragment for using in fragment instead of activity  MapFragment1 = activity   SupportMapFragment = fragment
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googlemap) {
-                NSGTiledLayerOnMap.this.mMap = googlemap;
-                NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
-                TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
-                TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
-                tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
-                tileOverlay.setVisible(true);
-                if(routeData!=null) {
-                    GetRouteFromDBPlotOnMap(routeData);
-                    StringBuilder routeAlert=new StringBuilder();
-                    routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
-                    sendData(routeAlert.toString(),1);
-                }
-                getAllEdgesData();
-                addMarkers();
-                getValidRouteData();
-                if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    return;
-                }
-                isMapLoaded=true;
-
-            }
-        });
-        return rootView;
-    }
-    @Override
-    public void onClick(View v) {
-       if(v==change_map_options){
-
-            PopupMenu popup = new PopupMenu(getContext(), change_map_options);
-            //Inflating the Popup using xml file
-            popup.getMenuInflater()
-                    .inflate(R.menu.popup_menu, popup.getMenu());
-            //registering popup with OnMenuItemClickListener
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                public boolean onMenuItemClick(MenuItem item) {
-                    int itemId = item.getItemId();
-                    if (itemId == R.id.slot1) {
-                        if(mMap!=null) {
-                            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                            Toast.makeText(getContext(), "NORMAL MAP ENABLED", Toast.LENGTH_SHORT).show();
-                        }
-                        return true;
-                    } else if (itemId == R.id.slot2) {
-                        if(mMap!=null) {
-                            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                            Toast.makeText(getContext(), "SATELLITE MAP ENABLED", Toast.LENGTH_SHORT).show();
-                        }
-                        return true;
-                    } else if (itemId == R.id.slot3) {
-                        if(mMap!=null) {
-                            mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                            Toast.makeText(getContext(), "TERRAIN MAP ENABLED", Toast.LENGTH_SHORT).show();
-                        }
-                        return true;
-                    }else if (itemId == R.id.slot4) {
-                        if(mMap!=null) {
-                            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                            Toast.makeText(getContext(), "HYBRID MAP ENABLED", Toast.LENGTH_SHORT).show();
-                        }
-                        return true;
-                    }
-                    return true;
-                }
-            });
-            popup.show();
-        }
-    }
     @Override
     public void onDetach() {
         Callback = null;
