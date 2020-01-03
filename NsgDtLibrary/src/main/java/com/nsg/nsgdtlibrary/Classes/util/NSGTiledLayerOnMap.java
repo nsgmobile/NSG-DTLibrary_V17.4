@@ -1638,7 +1638,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
         destinationMarker= mMap.addMarker(new MarkerOptions()
                 .position(DestinationNode)
-                .icon(bitmapDescriptorFromVector(getActivity(),R.drawable.destination_marker_white_text)));
+                .icon(bitmapDescriptorFromVector(getActivity(),R.drawable.destination_marker_whitetext_lightgreen)));
         CameraPosition googlePlex1 = CameraPosition.builder()
                 .target(DestinationNode)
                 .zoom(18)
