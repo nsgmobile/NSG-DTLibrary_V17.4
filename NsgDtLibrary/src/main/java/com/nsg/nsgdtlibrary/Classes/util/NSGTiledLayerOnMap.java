@@ -607,12 +607,13 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
+    /*
     public void onResume() {
         super.onResume();
         startNavigation();
         stopNavigation();
     }
-
+    */
     @Override
     public void onDetach() {
         Callback = null;
