@@ -577,8 +577,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
                     @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                     final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                    final ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
                     Toast toast = new Toast(getActivity().getApplicationContext());
-                    text.setText("Navigation Stopped");
+                    String stopText="Navigation Stopped";
+                    text.setText("" + stopText);
+                    if(stopText.startsWith("Navigation Stopped")){
+                        image.setImageResource(R.drawable.stop_image);
+                    }
+
                     toast.setDuration(Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                     toast.setGravity(Gravity.TOP, 0, 200);
