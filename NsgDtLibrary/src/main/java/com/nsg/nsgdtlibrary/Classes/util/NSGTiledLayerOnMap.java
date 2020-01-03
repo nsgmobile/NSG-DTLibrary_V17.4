@@ -184,6 +184,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LatLng nPosition= null;
     private String routeData;
     public boolean isMapLoaded=false;
+    public boolean isNavigationStarted=false;
     NavigationProperties properties;
 
     //  private SensorManager mSensorManager;
@@ -337,8 +338,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     return;
                 }
                 isMapLoaded=true;
-
-
             }
         });
         return rootView;
@@ -387,9 +386,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     public int startNavigation(){
+        nearestPointValuesList = new ArrayList<LatLng>();
+        nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
+        OldNearestGpsList = new ArrayList<>();
+        OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
         try{
-
-            if(mMap!=null  && isMapLoaded==true) {
+            if(mMap!=null  && isMapLoaded==true && isNavigationStarted==false) {
                 if (isTimerStarted = true) {
                     myTimer.schedule(new TimerTask() {
                         @Override
@@ -401,10 +403,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     }, 0, 10000);
                 }
-                nearestPointValuesList = new ArrayList<LatLng>();
-                nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
-                OldNearestGpsList = new ArrayList<>();
-                OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
                 mMap.setMyLocationEnabled(true);
                 mMap.setBuildingsEnabled(true);
                 mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -416,12 +414,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 mMap.getUiSettings().setTiltGesturesEnabled(true);
                 mMap.getUiSettings().setRotateGesturesEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                isNavigationStarted=true;
                 if (enteredMode == 1 && edgeDataList != null && edgeDataList.size() > 0) {
-                    // ETACalclator etaCalculator1=new ETACalclator();
-                    //  double resultTotalETA=etaCalculator1.cal_time(TotalDistanceInMTS, maxSpeed);
-                    // double resultTotalTimeConverted = DecimalUtils.round(resultTotalETA,0);
-                    //  tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
-                    //  tv2.setText("Time ETA  : "+ resultTotalTimeConverted +" SEC ");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                             @Override
@@ -561,7 +555,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     public int stopNavigation(){
         try{
-            if(mMap!=null) {
+            if(mMap!=null && isNavigationStarted==true) {
                 /*
                 mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                     @Override
@@ -576,7 +570,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 });
                 */
                 mMap.setMyLocationEnabled(false);
-                if (currentGpsPosition != null) {
+                isNavigationStarted=false;
+                if (currentGpsPosition != null ) {
                        // String NavigationAlert = " Navigation Stopped " ;
                         String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
                         sendData(NavigationAlert, 5);
@@ -590,7 +585,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         if (stopText.startsWith("Navigation Stopped")) {
                             image.setImageResource(R.drawable.stop_image);
                         }
-
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                         toast.setGravity(Gravity.TOP, 0, 200);
