@@ -402,35 +402,36 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     public int startNavigation(){
-        nearestPointValuesList = new ArrayList<LatLng>();
-        nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
-        OldNearestGpsList = new ArrayList<>();
-        OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
-        try{
-            if(mMap!=null  && isMapLoaded==true && isNavigationStarted==false) {
-                if (isTimerStarted = true) {
-                    myTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (currentGpsPosition != null && DestinationNode != null) {
-                                NavigationDirection(currentGpsPosition, DestinationNode);
+        if(SourceNode!=null && DestinationNode!=null) {
+            nearestPointValuesList = new ArrayList<LatLng>();
+            nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
+            OldNearestGpsList = new ArrayList<>();
+            OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
+            try {
+                if (mMap != null && isMapLoaded == true && isNavigationStarted == false) {
+                    if (isTimerStarted = true) {
+                        myTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (currentGpsPosition != null && DestinationNode != null) {
+                                    NavigationDirection(currentGpsPosition, DestinationNode);
+                                }
                             }
-                        }
 
-                    }, 0, 10000);
-                }
-                mMap.setMyLocationEnabled(true);
-                mMap.setBuildingsEnabled(true);
-                mMap.getUiSettings().setZoomControlsEnabled(true);
-                mMap.getUiSettings().setCompassEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mMap.getUiSettings().setMapToolbarEnabled(true);
-                mMap.getUiSettings().setZoomGesturesEnabled(true);
-                mMap.getUiSettings().setScrollGesturesEnabled(true);
-                mMap.getUiSettings().setTiltGesturesEnabled(true);
-                mMap.getUiSettings().setRotateGesturesEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                isNavigationStarted=true;
+                        }, 0, 10000);
+                    }
+                    mMap.setMyLocationEnabled(true);
+                    mMap.setBuildingsEnabled(true);
+                    mMap.getUiSettings().setZoomControlsEnabled(true);
+                    mMap.getUiSettings().setCompassEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    mMap.getUiSettings().setMapToolbarEnabled(true);
+                    mMap.getUiSettings().setZoomGesturesEnabled(true);
+                    mMap.getUiSettings().setScrollGesturesEnabled(true);
+                    mMap.getUiSettings().setTiltGesturesEnabled(true);
+                    mMap.getUiSettings().setRotateGesturesEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                    isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
@@ -513,18 +514,19 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     }
 
 
+                }
+
+                return 1;
+            } catch (Exception e) {
+                return 0;
             }
-
-            return 1;
-        } catch(Exception e){
-            return 0;
         }
-
-
+        return 0;
     }
     public int stopNavigation(){
         try{
-            if(mMap!=null && isNavigationStarted==true) {
+            if(SourceNode!=null && DestinationNode!=null) {
+                if (mMap != null && isNavigationStarted == true) {
                 /*
                 mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                     @Override
@@ -538,10 +540,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     }
                 });
                 */
-                mMap.setMyLocationEnabled(false);
-                isNavigationStarted=false;
-                if (currentGpsPosition != null ) {
-                       // String NavigationAlert = " Navigation Stopped " ;
+                    mMap.setMyLocationEnabled(false);
+                    isNavigationStarted = false;
+                    if (currentGpsPosition != null) {
+                        // String NavigationAlert = " Navigation Stopped " ;
                         String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
                         sendData(NavigationAlert, 5);
                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -559,10 +561,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         toast.setGravity(Gravity.TOP, 0, 200);
                         toast.setView(layout);
                         toast.show();
+                    }
+                    // getActivity().onBackPressed();
                 }
-                // getActivity().onBackPressed();
             }
-
 
             return 1;
         } catch(Exception e){
@@ -921,6 +923,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
+
         LatLng FirstCordinate = null,SecondCordinate=null;
         String st_vertex="",end_vertex="", directionTextRouteDeviation="";
         if(RouteDeviationConvertedPoints!=null) {
