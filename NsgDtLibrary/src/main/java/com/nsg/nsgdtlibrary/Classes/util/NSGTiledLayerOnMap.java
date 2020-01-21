@@ -222,6 +222,20 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
     @SuppressLint("ValidFragment")
+    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT) {
+        //enteredMode = mode;
+        //  routeDeviationDistance=radius;
+        NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
+        //NSGTiledLayerOnMap.this.stNode=stNode;
+       // NSGTiledLayerOnMap.this.endNode=endNode;
+        // NSGTiledLayerOnMap.this.enteredMode=mode;
+        // NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
+       // NSGTiledLayerOnMap.this.routeData=routeData;
+       // NSGTiledLayerOnMap.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
+       // NSGTiledLayerOnMap.this.AuthorisationKey=AuthorisationKey;
+
+    }
+    @SuppressLint("ValidFragment")
     public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,String routeDeviatedDT_URL,String AuthorisationKey) {
         //enteredMode = mode;
       //  routeDeviationDistance=radius;
@@ -1589,26 +1603,39 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
 
     public void addMarkers(){
-        sourceMarker = mMap.addMarker(new MarkerOptions()
-                .position(SourceNode)
-                .icon(bitmapDescriptorFromVector(getActivity(),R.drawable.source_marker_whitetext)));
-        CameraPosition googlePlex = CameraPosition.builder()
-                .target(SourceNode)
-                .zoom(18)
-                .tilt(45)
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+        if(SourceNode!=null && DestinationNode!=null) {
+            sourceMarker = mMap.addMarker(new MarkerOptions()
+                    .position(SourceNode)
+                    .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.source_marker_whitetext)));
+            CameraPosition googlePlex = CameraPosition.builder()
+                    .target(SourceNode)
+                    .zoom(18)
+                    .tilt(45)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
 
-        destinationMarker= mMap.addMarker(new MarkerOptions()
-                .position(DestinationNode)
-                .icon(bitmapDescriptorFromVector(getActivity(),R.drawable.destination_marker_whitetext_lightgreen)));
-        CameraPosition googlePlex1 = CameraPosition.builder()
-                .target(DestinationNode)
-                .zoom(18)
-                .tilt(45)
-                .build();
+            destinationMarker = mMap.addMarker(new MarkerOptions()
+                    .position(DestinationNode)
+                    .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.destination_marker_whitetext_lightgreen)));
+            CameraPosition googlePlex1 = CameraPosition.builder()
+                    .target(DestinationNode)
+                    .zoom(18)
+                    .tilt(45)
+                    .build();
 
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
+        }else{
+             mMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(24.984408, 55.072814)));
+                    //.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.source_marker_whitetext)));
+            CameraPosition googlePlex = CameraPosition.builder()
+                    .target(new LatLng(24.984408, 55.072814))
+                    .zoom(12)
+                    .tilt(45)
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
+
+        }
     }
     public void GetRouteFromDBPlotOnMap(String FeatureResponse){
         JSONObject jsonObject = null;
