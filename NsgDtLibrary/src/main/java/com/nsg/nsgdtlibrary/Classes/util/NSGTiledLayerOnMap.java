@@ -1627,12 +1627,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
         }else{
-             mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(24.984408, 55.072814)));
-                    //.icon(bitmapDescriptorFromVector(getActivity(), R.drawable.source_marker_whitetext)));
+           //  mMap.addMarker(new MarkerOptions()
+           //         .position(new LatLng(24.984408, 55.072814))
+            //        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.blue_circle)));
             CameraPosition googlePlex = CameraPosition.builder()
                     .target(new LatLng(24.984408, 55.072814))
-                    .zoom(12)
+                    .zoom(15)
                     .tilt(45)
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex), 1000, null);
