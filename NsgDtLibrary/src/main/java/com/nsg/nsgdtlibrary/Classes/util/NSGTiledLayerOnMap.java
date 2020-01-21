@@ -373,25 +373,25 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     if (itemId == R.id.slot1) {
                         if(mMap!=null) {
                             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                            Toast.makeText(getContext(), "NORMAL MAP ENABLED", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getContext(), "NORMAL MAP ENABLED", Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     } else if (itemId == R.id.slot2) {
                         if(mMap!=null) {
                             mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                            Toast.makeText(getContext(), "SATELLITE MAP ENABLED", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getContext(), "SATELLITE MAP ENABLED", Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     } else if (itemId == R.id.slot3) {
                         if(mMap!=null) {
                             mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                            Toast.makeText(getContext(), "TERRAIN MAP ENABLED", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getContext(), "TERRAIN MAP ENABLED", Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     }else if (itemId == R.id.slot4) {
                         if(mMap!=null) {
                             mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                            Toast.makeText(getContext(), "HYBRID MAP ENABLED", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(getContext(), "HYBRID MAP ENABLED", Toast.LENGTH_SHORT).show();
                         }
                         return true;
                     }
