@@ -331,27 +331,29 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googlemap) {
-                NSGTiledLayerOnMap.this.mMap = googlemap;
-                NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
-                TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
-                TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
-                tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
-                tileOverlay.setVisible(true);
-                if(routeData!=null) {
-                    GetRouteFromDBPlotOnMap(routeData);
-                    StringBuilder routeAlert=new StringBuilder();
-                    routeAlert.append("SourcePosition : "+SourceNode).append("Destination Node " + DestinationNode);
-                    sendData(routeAlert.toString(),1);
+                if (BASE_MAP_URL_FORMAT != null) {
+                    NSGTiledLayerOnMap.this.mMap = googlemap;
+                    NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
+                    TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
+                    TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+                    tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
+                    tileOverlay.setVisible(true);
+                    if (routeData != null) {
+                        GetRouteFromDBPlotOnMap(routeData);
+                        StringBuilder routeAlert = new StringBuilder();
+                        routeAlert.append("SourcePosition : " + SourceNode).append("Destination Node " + DestinationNode);
+                        sendData(routeAlert.toString(), 1);
+                    }
+                    getAllEdgesData();
+                    addMarkers();
+                    getValidRouteData();
+                    if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        return;
+                    }
+                    isMapLoaded = true;
                 }
-                getAllEdgesData();
-                addMarkers();
-                getValidRouteData();
-                if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    return;
-                }
-                isMapLoaded=true;
             }
         });
         return rootView;
