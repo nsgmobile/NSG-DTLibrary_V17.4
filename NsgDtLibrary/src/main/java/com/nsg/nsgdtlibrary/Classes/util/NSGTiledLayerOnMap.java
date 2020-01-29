@@ -818,7 +818,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
 
-        time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
+        time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append(currentGpsPosition).append(currentGpsPosition).append("\n");
         sendData(time.toString(),2);
 
       // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
