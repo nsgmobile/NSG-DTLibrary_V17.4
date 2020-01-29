@@ -817,7 +817,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             etaCrossedFlag = "NO";
         }
 
-
         time.append("Distance : ").append(TotalDistance +" Meters ").append("::").append("Total ETA : ").append(resultTotalETA +" SEC ").append("::").append(" Distance To Travel : ").append(resultNeedToTeavelTime +"Sec").append("::").append("Elapsed Time : ").append(EtaElapsed).append("::").append("currentGpsPosition : ").append(currentGpsPosition).append("\n");
         sendData(time.toString(),2);
 
