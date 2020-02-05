@@ -357,7 +357,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     isMapLoaded = true;
                     if(isMapLoaded==true){
                         String MapAlert="Map is Ready";
-                        sendData(MapAlert,1);
+                        sendData(MapAlert,6);
                     }
 
                 }
