@@ -355,6 +355,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         return;
                     }
                     isMapLoaded = true;
+                    if(isMapLoaded==true){
+                        String MapAlert="Map is Ready";
+                        sendData(MapAlert,1);
+                    }
+
                 }
             }
         });

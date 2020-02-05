@@ -74,6 +74,11 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     @Override
     public String communicate(String comm, int alertType) {
         Log.d("received", " Recieved From ETA Listener---"+ comm + "alert type "+ alertType);
+        if(alertType==1){
+            // if alert recieved you can start navigation here
+            test.startNavigation();
+            Log.e("Started","Started "+test.startNavigation());
+        }
 
        //  tv=(TextView)findViewById(R.id.tv);
        //  tv.setText(comm);
@@ -91,8 +96,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     @Override
     public void onClick(View v) {
        if(v==Start){
-           test.startNavigation();
-           Log.e("Started","Started "+test.startNavigation());
+           //test.startNavigation();
+          // Log.e("Started","Started "+test.startNavigation());
        }else if(v==Stop){
           // test.startNavigation();
           // Log.e("Stopped","Stopped "+test.stopNavigation());
