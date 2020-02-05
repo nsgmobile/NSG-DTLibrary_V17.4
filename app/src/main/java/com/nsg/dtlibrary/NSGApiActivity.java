@@ -56,7 +56,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
               fragmentTransaction.add(R.id.map_container, test);
-
+             // test.startNavigation();
+             Log.e("Started","Started "+test.startNavigation());
 
          }else if(charlsisNumber.equals("RD2")) {
 
@@ -93,8 +94,8 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
            test.startNavigation();
            Log.e("Started","Started "+test.startNavigation());
        }else if(v==Stop){
-           test.startNavigation();
-           Log.e("Stopped","Stopped "+test.stopNavigation());
+          // test.startNavigation();
+          // Log.e("Stopped","Stopped "+test.stopNavigation());
        }
     }
 }
