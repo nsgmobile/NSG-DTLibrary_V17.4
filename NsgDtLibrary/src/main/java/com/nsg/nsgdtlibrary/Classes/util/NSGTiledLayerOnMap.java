@@ -343,8 +343,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     if (routeData != null) {
                         GetRouteFromDBPlotOnMap(routeData);
                         StringBuilder routeAlert = new StringBuilder();
-                        routeAlert.append("SourcePosition : " + SourceNode).append("Destination Node " + DestinationNode);
-                        sendData(routeAlert.toString(), 1);
+                        routeAlert.append(MapEvents.ALERTVALUE_1).append("SourcePosition : " + SourceNode).append("Destination Node " + DestinationNode);
+                        sendData(routeAlert.toString(), MapEvents.ALERTTYPE_1);
                     }
                     getAllEdgesData();
                     addMarkers();
@@ -357,7 +357,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     isMapLoaded = true;
                     if(isMapLoaded==true){
                         String MapAlert="Map is Ready";
-                        sendData(MapAlert,6);
+                        sendData(MapEvents.ALERTVALUE_6,MapEvents.ALERTTYPE_6);
                     }
 
                 }
@@ -552,7 +552,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     if (currentGpsPosition != null) {
                         // String NavigationAlert = " Navigation Stopped " ;
                         String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
-                        sendData(NavigationAlert, 5);
+                        sendData(MapEvents.ALERTVALUE_5, MapEvents.ALERTTYPE_5);
                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
                         @SuppressLint("WrongViewCast") final View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                         final TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -824,7 +824,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
         time.append("Distance : ").append(TotalDistance +" Meters ").append("::").append("Total ETA : ").append(resultTotalETA +" SEC ").append("::").append(" Distance To Travel : ").append(resultNeedToTeavelTime +"Sec").append("::").append("Elapsed Time : ").append(EtaElapsed).append("::").append("currentGpsPosition : ").append(currentGpsPosition).append("\n");
-        sendData(time.toString(),2);
+        sendData(time.toString(),MapEvents.ALERTTYPE_2);
 
       // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
        // tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
@@ -888,7 +888,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     toast.show();
                                     StringBuilder routeDeviatedAlert = new StringBuilder();
                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                    sendData(routeDeviatedAlert.toString(), 3);
+                                    sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                     if (mPositionMarker != null) {
                                         mPositionMarker.remove();
                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
@@ -1299,7 +1299,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     Log.e("TTS", "Error in converting Text to Speech!");
                 }
                 StringBuilder destinationAlert=new StringBuilder("Destination Reached");
-                sendData(destinationAlert.toString(),4);
+                sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
                 Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
 
 
@@ -1374,7 +1374,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
-        sendData(time.toString(),2);
+        sendData(time.toString(),MapEvents.ALERTTYPE_2);
 
        // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
       //  tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");

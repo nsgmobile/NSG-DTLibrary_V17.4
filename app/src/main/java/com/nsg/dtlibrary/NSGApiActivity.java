@@ -74,7 +74,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     @Override
     public String communicate(String comm, int alertType) {
         Log.d("received", " Recieved From ETA Listener---"+ comm + "alert type "+ alertType);
-        if(alertType==6){
+        if(alertType==MapEvents.ALERTTYPE_6){
             // if alert recieved you can start navigation here
             test.startNavigation();
             Log.e("Started","Started "+test.startNavigation());
