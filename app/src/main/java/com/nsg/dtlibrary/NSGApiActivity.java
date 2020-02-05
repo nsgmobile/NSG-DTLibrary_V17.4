@@ -78,6 +78,16 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
             // if alert recieved you can start navigation here
             test.startNavigation();
             Log.e("Started","Started "+test.startNavigation());
+        }else if(alertType==MapEvents.ALERTTYPE_1){
+
+        }else if(alertType==MapEvents.ALERTTYPE_2){
+
+        }else if(alertType==MapEvents.ALERTTYPE_3){
+
+        }else if(alertType==MapEvents.ALERTTYPE_4){
+
+        }else if(alertType==MapEvents.ALERTTYPE_5){
+
         }
 
        //  tv=(TextView)findViewById(R.id.tv);
