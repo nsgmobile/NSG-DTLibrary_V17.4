@@ -253,23 +253,25 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if (status == TextToSpeech.SUCCESS) {
-                    int ttsLang = textToSpeech.setLanguage(Locale.US);
-                    if (ttsLang == TextToSpeech.LANG_MISSING_DATA
-                            || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "The Language is not supported!");
+        if (savedInstanceState == null) {
+            textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if (status == TextToSpeech.SUCCESS) {
+                        int ttsLang = textToSpeech.setLanguage(Locale.US);
+                        if (ttsLang == TextToSpeech.LANG_MISSING_DATA
+                                || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED) {
+                            Log.e("TTS", "The Language is not supported!");
+                        } else {
+                            Log.i("TTS", "Language Supported.");
+                        }
+                        Log.i("TTS", "Initialization success.");
                     } else {
-                        Log.i("TTS", "Language Supported.");
+                        Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
                     }
-                    Log.i("TTS", "Initialization success.");
-                } else {
-                    Toast.makeText(getContext(), "TTS Initialization failed!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+            });
+        }
     }
     @Override
     public void onAttach(Context context) {
@@ -572,13 +574,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
-    /*
-    public void onResume() {
-        super.onResume();
-        startNavigation();
-        stopNavigation();
+
+    public void onDestroy() {
+        super.onDestroy();
+        textToSpeech.shutdown();
     }
-    */
+
     @Override
     public void onDetach() {
         Callback = null;
