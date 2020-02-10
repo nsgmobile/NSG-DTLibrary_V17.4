@@ -25,6 +25,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:orientation="vertical">
+                <!--
                 <ImageButton
                     android:id="@+id/change_map_options"
                     android:layout_width="50dp"
@@ -38,6 +39,7 @@
                     android:src="@drawable/edit_map"
                     android:textColorHint="#000000"
                     android:textSize="15dp" />
+                    -->
 
             </RelativeLayout>
             <!--

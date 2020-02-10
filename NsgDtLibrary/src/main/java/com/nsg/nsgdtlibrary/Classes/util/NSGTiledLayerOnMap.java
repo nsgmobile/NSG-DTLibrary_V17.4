@@ -192,6 +192,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public boolean isNavigationStarted=false;
     NavigationProperties properties;
     LocationManager mLocationManager;
+    private boolean isGPSEnabled=false;
 
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;
@@ -313,8 +314,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         requestPermission();
         String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
         sqlHandler.executeQuery(delQuery);
-        change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-        change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+        //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
+        //change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
 
         if(stNode!=null && endNode!=null && routeData!=null){
             InsertAllRouteData(stNode,endNode,routeData);
@@ -362,15 +363,20 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         return;
                     }
                     isMapLoaded = true;
+
                     boolean GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     Log.e("Location Request","Location Listener -----"+ mLocationManager);
                     Log.e("Location Request","Location Listener -----"+ GpsStatus);
-                    if (GpsStatus == false) {
-                        //turnGPSOn();
-                        //turnGpsOn(getContext());
-                         Intent in = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                         startActivity(in);
-
+                    if( isGPSEnabled==false) {
+                        if (GpsStatus == false) {
+                               //turnGPSOn();
+                               //turnGpsOn(getContext());
+                               Intent in = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                               startActivity(in);
+                               isGPSEnabled=true;
+                            boolean  GpsStatusPresent = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                            Log.e("Location Request","Location Listener Present Status ----- "+ GpsStatusPresent);
+                        }
                     }
                     if(isMapLoaded==true ){
                         String MapAlert="Map is Ready";
@@ -385,7 +391,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
        if(v==change_map_options){
-
+        /*
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file
             popup.getMenuInflater()
@@ -423,7 +429,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
             });
             popup.show();
+             */
         }
+
     }
 
     private void turnGpsOn (Context context) {
@@ -466,12 +474,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     public int startNavigation() {
+        Log.e("Location Request","Location Listener isGPSEnabled ----- "+ isGPSEnabled);
+        if (SourceNode != null && DestinationNode != null && isGPSEnabled==true) {
 
-        if (SourceNode != null && DestinationNode != null) {
-          boolean  GpsStatusPresent = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-          Log.e("Location Request","Location Listener Present Status -----"+ GpsStatusPresent);
-          if(GpsStatusPresent==true){
-              Log.e("Location Request","Location Request"+locationAccepted);
+          //if(GpsStatusPresent==true){
+            //  Log.e("Location Request","Location Request"+locationAccepted);
 
               nearestPointValuesList = new ArrayList<LatLng>();
               nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
@@ -591,7 +598,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                   return 0;
               }
           }
-        }
+      //  }
         return 0;
     }
     public int stopNavigation(){
