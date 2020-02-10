@@ -7,5 +7,4 @@ public class MapEvents {
     public static final int ALERTTYPE_4 = 4;
     public static final int ALERTTYPE_5 = 5;
     public static final int ALERTTYPE_6 = 6;
-
 }
