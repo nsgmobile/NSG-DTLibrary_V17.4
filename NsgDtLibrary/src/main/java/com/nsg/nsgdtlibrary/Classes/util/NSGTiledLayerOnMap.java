@@ -367,6 +367,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     boolean GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     Log.e("Location Request","Location Listener -----"+ mLocationManager);
                     Log.e("Location Request","Location Listener -----"+ GpsStatus);
+
+                    if( isGPSEnabled==false) {
                         if (GpsStatus == false) {
                                //turnGPSOn();
                                //turnGpsOn(getContext());
@@ -376,7 +378,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             boolean  GpsStatusPresent = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                             Log.e("Location Request","Location Listener Present Status ----- "+ GpsStatusPresent);
                         }
-
+                    }
 
                     if(isMapLoaded==true ){
                         String MapAlert="Map is Ready";
@@ -475,7 +477,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     public int startNavigation() {
         Log.e("Location Request","Location Listener isGPSEnabled ----- "+ isGPSEnabled);
-        if (SourceNode != null && DestinationNode != null ) {
+        if (SourceNode != null && DestinationNode != null && isGPSEnabled==true) {
 
           //if(GpsStatusPresent==true){
             //  Log.e("Location Request","Location Request"+locationAccepted);
