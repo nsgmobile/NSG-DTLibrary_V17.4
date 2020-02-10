@@ -191,6 +191,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public boolean isMapLoaded=false;
     public boolean isNavigationStarted=false;
     NavigationProperties properties;
+    LocationManager mLocationManager;
 
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;
@@ -258,6 +259,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mLocationManager = (LocationManager)getActivity().getSystemService(LOCATION_SERVICE);
         if (savedInstanceState == null) {
             textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
                 @Override
@@ -360,6 +362,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         return;
                     }
                     isMapLoaded = true;
+                    boolean GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    Log.e("Location Request","Location Listener -----"+ mLocationManager);
+                    Log.e("Location Request","Location Listener -----"+ GpsStatus);
+                    if (GpsStatus == false) {
+                        turnGPSOn();
+                         GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        Log.e("Location Request","Location Listener Status -----"+ GpsStatus);
+                    }
                     if(isMapLoaded==true){
                         String MapAlert="Map is Ready";
                         sendData(MapEvents.ALERTVALUE_6,MapEvents.ALERTTYPE_6);
@@ -413,8 +423,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             popup.show();
         }
     }
-    public void turnGPSOn()
-    {
+    public void turnGPSOn() {
+
         Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
         intent.putExtra("enabled", true);
         this.getContext().sendBroadcast(intent);
@@ -426,13 +436,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
             poke.setData(Uri.parse("3"));
             this.getContext().sendBroadcast(poke);
-
-
         }
     }
     // automatic turn off the gps
-    public void turnGPSOff()
-    {
+    public void turnGPSOff() {
         String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
         if(provider.contains("gps")){ //if gps is enabled
             final Intent poke = new Intent();
@@ -443,11 +450,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     public int startNavigation() {
-       LocationManager mLocationManager = (LocationManager)getContext().getSystemService(LOCATION_SERVICE);
-        Log.e("Location Request","Location Listener -----"+mLocationManager);
 
         if (SourceNode != null && DestinationNode != null) {
-            {
+
                 Log.e("Location Request","Location Request"+locationAccepted);
 
                 nearestPointValuesList = new ArrayList<LatLng>();
@@ -567,7 +572,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 } catch (Exception e) {
                     return 0;
                 }
-            }
+
         }
         return 0;
     }

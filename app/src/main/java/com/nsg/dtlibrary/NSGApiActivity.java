@@ -66,7 +66,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
          if(charlsisNumber.equals("RD1")) {
               fragmentTransaction.add(R.id.map_container, test);
              // test.startNavigation();
-             Log.e("Started","Started "+test.startNavigation());
+            // Log.e("Started","Started "+test.startNavigation());
 
          }else if(charlsisNumber.equals("RD2")) {
 
