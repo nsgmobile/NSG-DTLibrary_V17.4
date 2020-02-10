@@ -65,9 +65,6 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
          if(charlsisNumber.equals("RD1")) {
               fragmentTransaction.add(R.id.map_container, test);
-             // test.startNavigation();
-            // Log.e("Started","Started "+test.startNavigation());
-
          }else if(charlsisNumber.equals("RD2")) {
 
         }
@@ -85,7 +82,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         Log.d("received", " Recieved From ETA Listener---"+ comm + "alert type "+ alertType);
         if(alertType==MapEvents.ALERTTYPE_6){
             // if alert recieved you can start navigation here
-           // test.startNavigation();
+            test.startNavigation();
             Log.e("Started","Started "+test.startNavigation());
         }else if(alertType==MapEvents.ALERTTYPE_1){
 
@@ -98,12 +95,6 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         }else if(alertType==MapEvents.ALERTTYPE_5){
 
         }
-
-       //  tv=(TextView)findViewById(R.id.tv);
-       //  tv.setText(comm);
-
-        //tv1=(TextView)findViewById(R.id.text1);
-      //  tv1.setText(comm);
         return comm;
     }
     public void onResume() {
