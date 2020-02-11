@@ -213,7 +213,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public boolean isNavigationStarted=false;
     NavigationProperties properties;
     LocationManager mLocationManager;
-    private boolean isGPSEnabled=false;
+    //private boolean isGPSEnabled=false;
 
     private static final String TAG = "NSGTiledLayerOnMap";
     private static final long INTERVAL = 1000 * 10;
