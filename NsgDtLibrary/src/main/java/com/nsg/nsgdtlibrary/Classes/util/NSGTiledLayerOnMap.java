@@ -49,7 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
+
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -146,21 +146,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
 
-    private FusedLocationProviderClient mFusedLocationClient;
-
-    private double wayLatitude = 0.0, wayLongitude = 0.0;
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-    private Button btnLocation;
-    private TextView txtLocation;
-    private Button btnContinueLocation;
-    private TextView txtContinueLocation;
-    private StringBuilder stringBuilder;
-    LatLng currentGPSPosition;
-
-    private boolean isContinue = false;
-    private boolean isGPS = false;
-
     private static final int PERMISSION_REQUEST_CODE = 200;
     boolean locationAccepted;
     // private static final int SENSOR_DELAY_NORMAL =50;
@@ -253,7 +238,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     GoogleApiClient mGoogleApiClient;
     Location mCurrentLocation;
     String mLastUpdateTime;
-
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;
     // Bitmap tileBitmap;
@@ -351,6 +335,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         if (!isGooglePlayServicesAvailable()) {
             //finish();
         }
+
         createLocationRequest();
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
@@ -359,47 +344,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 .build();
 
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10 * 1000); // 10 seconds
-        locationRequest.setFastestInterval(5 * 1000); // 5 seconds
-
-        new GpsUtils(getContext()).turnGPSOn(new GpsUtils.onGpsListener() {
-            @Override
-            public void gpsStatus(boolean isGPSEnable) {
-                // turn on GPS
-                isGPS = isGPSEnable;
-            }
-        });
-
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    if (location != null) {
-                        wayLatitude = location.getLatitude();
-                        wayLongitude = location.getLongitude();
-                        if (!isContinue) {
-                            txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                        } else {
-                            stringBuilder.append(wayLatitude);
-                            stringBuilder.append("-");
-                            stringBuilder.append(wayLongitude);
-                            stringBuilder.append("\n\n");
-                            //txtContinueLocation.setText(stringBuilder.toString());
-                        }
-                        if (!isContinue && mFusedLocationClient != null) {
-                            mFusedLocationClient.removeLocationUpdates(locationCallback);
-                        }
-                    }
-                }
-            }
-        };
     }
 
     @SuppressLint("RestrictedApi")
@@ -457,6 +401,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
+
+
     public int startNavigation() {
         if(isNavigationStarted==true){
             if (currentGpsPosition != null) {
@@ -771,9 +717,7 @@ public void findLocationNearest(LatLng currentGpsPosition){
                         sendData(MapEvents.ALERTVALUE_6, MapEvents.ALERTTYPE_6);
 
                     }
-                    isContinue = true;
-                    stringBuilder = new StringBuilder();
-                    getLocation();
+
 
 
                 }
@@ -827,86 +771,6 @@ public void findLocationNearest(LatLng currentGpsPosition){
         }
 
     }
-
-  
-    private void getLocation() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    AppConstants.LOCATION_REQUEST);
-
-        } else {
-            if (isContinue) {
-                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-            } else {
-                mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            wayLatitude = location.getLatitude();
-                            wayLongitude = location.getLongitude();
-                          //  txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                            currentGPSPosition=new LatLng(wayLatitude,wayLongitude);
-
-
-
-                            Log.d("TAG", "location DATA ........"+" WAYPOINTS--- : "+ wayLatitude+","+wayLongitude  );
-                        } else {
-                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                        }
-                    }
-                });
-            }
-        }
-    }
-/*
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onRequestPermissionsResult1(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1000: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    if (isContinue) {
-                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                    } else {
-                        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    wayLatitude = location.getLatitude();
-                                    wayLongitude = location.getLongitude();
-                                    txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                                } else {
-                                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
-        }
-    }
-
- */
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == AppConstants.GPS_REQUEST) {
-                isGPS = true; // flag maintain before get location
-            }
-        }
-    }
-
-
 
     public int stopNavigation(){
         try{
@@ -2189,36 +2053,9 @@ public void findLocationNearest(LatLng currentGpsPosition){
 
                     }
                 }
-                switch (requestCode) {
-                    case 1000: {
-                        // If request is cancelled, the result arrays are empty.
-                        if (grantResults.length > 0
-                                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                            if (isContinue) {
-                                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                            } else {
-                                mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        if (location != null) {
-                                            wayLatitude = location.getLatitude();
-                                            wayLongitude = location.getLongitude();
-                                            txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                                        } else {
-                                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                                        }
-                                    }
-                                });
-                            }
-                        } else {
-                            Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    }
-                }
 
-                break;
+               break;
         }
     }
 
