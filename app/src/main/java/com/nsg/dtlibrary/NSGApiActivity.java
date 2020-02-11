@@ -90,7 +90,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
         if(alertType==MapEvents.ALERTTYPE_6){
             // if alert recieved you can start navigation here
             test.startNavigation();
-            Log.e("Started","Started "+test.startNavigation());
+           // Log.e("Started","Started "+test.startNavigation());
         }else if(alertType==MapEvents.ALERTTYPE_1){
 
         }else if(alertType==MapEvents.ALERTTYPE_2){
@@ -106,14 +106,13 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     }
     public void onResume() {
         super.onResume();
-       // test.startNavigation();
-       // test.stopNavigation();
+
     }
 
     @Override
     public void onClick(View v) {
        if(v==Start){
-           test.startNavigation();
+         //  test.startNavigation();
           // Log.e("Started","Started "+test.startNavigation());
        }else if(v==Stop){
           // test.startNavigation();
