@@ -591,8 +591,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     public int startNavigation() {
-        Log.e("Location Request","Location Listener isGPSEnabled ----- "+ isGPSEnabled);
-        if (SourceNode != null && DestinationNode != null && isGPSEnabled==true) {
+       // Log.e("Location Request","Location Listener isGPSEnabled ----- "+ isGPSEnabled);
+        if (SourceNode != null && DestinationNode != null) {
 
           //if(GpsStatusPresent==true){
             //  Log.e("Location Request","Location Request"+locationAccepted);
@@ -615,7 +615,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                           }, 0, 10000);
                       }
                       isTimerStarted = true;
-                      updateUI();
+                      if (null != mCurrentLocation) {
+                          double lat = mCurrentLocation.getLatitude();
+                          double lng = mCurrentLocation.getLongitude();
+                          Log.d(TAG, "location DATA ........"+ lat +","+lng + "LAST UPDATE TIME "+ mLastUpdateTime );
+                          currentGpsPosition=new LatLng(lat,lng);
+                          Log.d(TAG, "Current GPS POSITION ---"+ currentGpsPosition + "LAST UPDATE TIME "+ mLastUpdateTime );
+
+                      } else {
+                          Log.d(TAG, "location is null ...............");
+                      }
+
 
 
                       //LocationActivity listener=new LocationActivity();
@@ -725,7 +735,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                   return 0;
               }
           }
-      //  }
         return 0;
     }
     public int stopNavigation(){
