@@ -146,6 +146,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private GoogleMap mMap;
     private SqlHandler sqlHandler;
     GoogleMap.CancelableCallback callback;
+
     private double TotalRouteDeviatedDistanceInMTS;
     private List points;
     private List<LatLng> convertedPoints;
@@ -214,7 +215,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LocationManager mLocationManager;
     private boolean isGPSEnabled=false;
 
-    private static final String TAG = "LocationActivity";
+    private static final String TAG = "NSGTiledLayerOnMap";
     private static final long INTERVAL = 1000 * 10;
     private static final long FASTEST_INTERVAL = 1000 * 5;
     //Button btnFusedLocation;
