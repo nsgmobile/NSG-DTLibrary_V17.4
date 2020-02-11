@@ -5,9 +5,11 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -44,6 +46,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -88,8 +93,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -99,11 +106,22 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.siegmar.fastcsv.reader.CsvReader;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -112,7 +130,9 @@ import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener {
+public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener,LocationListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener{
     private static final int PERMISSION_REQUEST_CODE = 200;
     boolean locationAccepted;
    // private static final int SENSOR_DELAY_NORMAL =50;
@@ -194,6 +214,16 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LocationManager mLocationManager;
     private boolean isGPSEnabled=false;
 
+    private static final String TAG = "LocationActivity";
+    private static final long INTERVAL = 1000 * 10;
+    private static final long FASTEST_INTERVAL = 1000 * 5;
+    //Button btnFusedLocation;
+
+    LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;
+    Location mCurrentLocation;
+    String mLastUpdateTime;
+
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;
     // Bitmap tileBitmap;
@@ -228,6 +258,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public NSGTiledLayerOnMap(){
 
     }
+
     @SuppressLint("ValidFragment")
     public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT) {
         //enteredMode = mode;
@@ -279,6 +310,87 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     }
                 }
             });
+        }
+
+        Log.d(TAG, "onCreate ...............................");
+        if (!isGooglePlayServicesAvailable()) {
+            //finish();
+        }
+        createLocationRequest();
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+    @SuppressLint("RestrictedApi")
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
+        startLocationUpdates();
+
+    }
+    protected void startLocationUpdates() {
+        PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+        Log.d(TAG, "Location update started ..............: ");
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "Connection failed: " + connectionResult.toString());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "Firing onLocationChanged..............................................");
+        mCurrentLocation = location;
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        updateUI();
+
+    }
+    private void updateUI() {
+        Log.d(TAG, "UI update initiated .............");
+        if (null != mCurrentLocation) {
+            double lat = mCurrentLocation.getLatitude();
+            double lng = mCurrentLocation.getLongitude();
+            Log.d(TAG, "location DATA ........"+ lat +","+lng + "LAST UPDATE TIME "+ mLastUpdateTime );
+            currentGpsPosition=new LatLng(lat,lng);
+            Log.d(TAG, "Current GPS POSITION ---"+ currentGpsPosition + "LAST UPDATE TIME "+ mLastUpdateTime );
+            /*
+            tvLocation.setText("At Time: " + mLastUpdateTime + "\n" +
+                    "Latitude: " + lat + "\n" +
+                    "Longitude: " + lng + "\n" +
+                    "Accuracy: " + mCurrentLocation.getAccuracy() + "\n" +
+                    "Provider: " + mCurrentLocation.getProvider());
+
+             */
+
+        } else {
+            Log.d(TAG, "location is null ...............");
+        }
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 0).show();
+            return false;
         }
     }
     @Override
@@ -363,7 +475,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         return;
                     }
                     isMapLoaded = true;
-
+                    /*
                     boolean GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     Log.e("Location Request","Location Listener -----"+ mLocationManager);
                     Log.e("Location Request","Location Listener -----"+ GpsStatus);
@@ -379,6 +491,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             Log.e("Location Request","Location Listener Present Status ----- "+ GpsStatusPresent);
                         }
                     }
+
+                     */
 
                     if(isMapLoaded==true ){
                         String MapAlert="Map is Ready";
@@ -499,6 +613,13 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                           }, 0, 10000);
                       }
+                      isTimerStarted = true;
+                      updateUI();
+
+
+                      //LocationActivity listener=new LocationActivity();
+                     // listener.startLocationUpdates();
+                      /*
                       mMap.setMyLocationEnabled(true);
                       mMap.setBuildingsEnabled(true);
                       mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -512,7 +633,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                       mMap.getUiSettings().setMyLocationButtonEnabled(true);
                       isNavigationStarted = true;
                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                          isTimerStarted = true;
+
+
                           mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                               @Override
                               public void onMyLocationChange(final Location location) {
@@ -590,7 +712,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                               }
 
                           });
+
                       }
+                       */
 
 
                   }
@@ -1811,75 +1935,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
     }
-
-    public int getLatLngPoints(){
-
-        LatLngDataArray.add(new LatLng(24.978782,55.067291));
-        LatLngDataArray.add(new LatLng(24.978792,55.067279));
-        LatLngDataArray.add(new LatLng(24.978762,55.067241));
-        LatLngDataArray.add(new LatLng(24.978765,55.067237));
-        LatLngDataArray.add(new LatLng(24.978755,55.067218));
-        LatLngDataArray.add(new LatLng(24.978449,55.067310));
-        LatLngDataArray.add(new LatLng(24.978656,55.066997));
-        LatLngDataArray.add(new LatLng(24.978408,55.066897));
-        LatLngDataArray.add(new LatLng(24.978349, 55.066801));
-        LatLngDataArray.add(new LatLng(24.978025,55.066462));
-        LatLngDataArray.add(new LatLng(24.977993,55.066226));
-
-        LatLngDataArray.add(new LatLng( 24.977771, 55.066040));
-        LatLngDataArray.add(new LatLng( 24.977636, 55.065907));
-
-
-        LatLngDataArray.add(new LatLng(24.977358,55.065692));
-
-
-        LatLngDataArray.add(new LatLng(24.977132,55.065436));
-        LatLngDataArray.add(new LatLng(24.977126,55.065249));
-        LatLngDataArray.add(new LatLng(24.977164,55.065171));
-        LatLngDataArray.add(new LatLng(24.977257,55.064874));
-        LatLngDataArray.add(new LatLng(24.977631,55.06466));
-        LatLngDataArray.add(new LatLng(24.977690, 55.064490));
-        LatLngDataArray.add(new LatLng(24.977881, 55.064262));
-        LatLngDataArray.add(new LatLng( 24.977960, 55.064183));
-        LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
-        LatLngDataArray.add(new LatLng(24.978086, 55.064233));
-        LatLngDataArray.add(new LatLng(24.978098, 55.064253));
-        LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
-        //Route Deviation points starts from here ----
-        LatLngDataArray.add(new LatLng( 24.978179,55.064389)); //Route deviation point
-        LatLngDataArray.add(new LatLng(24.978547,55.064227));
-        LatLngDataArray.add(new LatLng( 24.978617,55.064152));
-        LatLngDataArray.add(new LatLng( 24.978720,55.064048));
-        LatLngDataArray.add(new LatLng(24.978816,55.063959 ));
-        LatLngDataArray.add(new LatLng(24.978879,55.063874 ));
-        LatLngDataArray.add(new LatLng(24.978968,55.063839 ));
-        LatLngDataArray.add(new LatLng( 24.979060,55.063933));//
-        LatLngDataArray.add(new LatLng( 24.979202,55.064101));
-        LatLngDataArray.add(new LatLng(24.979288,55.064200 ));
-        LatLngDataArray.add(new LatLng( 24.979387,55.064313));
-        LatLngDataArray.add(new LatLng( 24.979527,55.064469));
-        LatLngDataArray.add(new LatLng( 24.979651,55.064618));
-        LatLngDataArray.add(new LatLng( 24.979770,55.064747));
-        LatLngDataArray.add(new LatLng( 24.979840,55.064828));
-        LatLngDataArray.add(new LatLng(24.979861,55.064973));
-        LatLngDataArray.add(new LatLng( 24.979760,55.065077));
-        LatLngDataArray.add(new LatLng( 24.979559,55.065288));
-        LatLngDataArray.add(new LatLng( 24.979448,55.065401));
-        LatLngDataArray.add(new LatLng( 24.979342,55.065516));
-        //Route Deviation points are uoto here---
-        LatLngDataArray.add(new LatLng(24.979304, 55.065536));
-        LatLngDataArray.add(new LatLng(24.979261, 55.065570));
-        LatLngDataArray.add(new LatLng(24.979722, 55.066073));
-        LatLngDataArray.add(new LatLng(24.979961, 55.066314));
-        LatLngDataArray.add(new LatLng(24.980189, 55.066572));
-        LatLngDataArray.add(new LatLng(24.980335, 55.066770));
-        LatLngDataArray.add(new LatLng(24.980174, 55.066937));
-        LatLngDataArray.add(new LatLng(24.979878,55.067205));  //Destinationm point
-        return LatLngDataArray.size();
-
-    }
-
-
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
         vectorDrawable.setBounds(10, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
@@ -1906,64 +1961,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         sqlHandler.closeDataBaseConnection();
     }
 
-    /*
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    List resultList=new ArrayList();
-    public void InsertAllRouteData(String DBCSV_PATH){
-        File file = new File(DBCSV_PATH);
-        CsvReader csvReader = new CsvReader();
-        csvReader.setContainsHeader(true);
-        Log.e("OUTPUT FILE","OUTPUT FILE"+file);
-        if (file.exists())
-        {
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new FileReader(file));
-                String csvLine;
-                while ((csvLine = br.readLine()) != null)
-                {
-                    String[] data=csvLine.split("@");
-                    try
-                    {
-                      //  Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[0] + " " + data[1] +" " +  data[2] +" " +  data[3]+ " " + data[4]);
-                        String route=data[4].toString();
-                      //  Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[4]);
-
-                       // Log.e("OUTPUT FILE"," QUERY "+route);
-                        StringBuilder query = new StringBuilder("INSERT INTO ");
-                        query.append(RouteT.TABLE_NAME).append("(routeID,startNode,endNode,routeData) values (")
-                                .append("'").append(data[1] ).append("',")
-                                .append("'").append(data[2]).append("',")
-                                .append("'").append(data[3]).append("',")
-                                .append("'").append(route).append("')");
-                      //  Log.e("OUTPUT FILE"," QUERY "+query);
-
-                        sqlHandler.executeQuery(query.toString());
-                        sqlHandler.closeDataBaseConnection();
-
-
-                    }
-                    catch (Exception e)
-                    {
-                        Log.e("Problem",e.toString());
-                    }
-                }
-
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        else
-        {
-            Toast.makeText(getContext(),"file not exists",Toast.LENGTH_SHORT).show();
-        }
-
-    }
-    */
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION);
@@ -1977,7 +1974,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
 
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
@@ -2231,6 +2227,43 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 .bearing(bearing).tilt(65.5f).zoom(20)
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart fired ..............");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop fired ..............");
+        mGoogleApiClient.disconnect();
+        Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
+    }
+
+
+
+    public void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(
+                mGoogleApiClient, this);
+        Log.d(TAG, "Location update stopped .......................");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected()) {
+            startLocationUpdates();
+            Log.d(TAG, "Location update resumed .....................");
+        }
     }
 
 }
