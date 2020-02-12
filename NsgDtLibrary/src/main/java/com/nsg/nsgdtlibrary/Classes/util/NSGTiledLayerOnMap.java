@@ -51,6 +51,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -227,6 +228,23 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LocationManager mLocationManager;
     private boolean isGPSEnabled=false;
 
+
+    //Fused Location Client api
+    private FusedLocationProviderClient mFusedLocationClient;
+    private double wayLatitude = 0.0, wayLongitude = 0.0;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    private Button btnLocation;
+    private TextView txtLocation;
+    private Button btnContinueLocation;
+    private TextView txtContinueLocation;
+    private StringBuilder stringBuilder;
+    LatLng currentGPSPosition;
+    private boolean isContinue=false ;
+    private boolean isGPS = false;
+    String s1,s2;
+
+
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;
     // Bitmap tileBitmap;
@@ -313,6 +331,58 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
             });
         }
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10 * 1000); // 10 seconds
+        locationRequest.setFastestInterval(5 * 1000); // 5 seconds
+
+        new GpsUtils(getContext()).turnGPSOn(new GpsUtils.onGpsListener() {
+            @Override
+            public void gpsStatus(boolean isGPSEnable) {
+                // turn on GPS
+                isGPS = isGPSEnable;
+            }
+        });
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        wayLatitude = location.getLatitude();
+                        wayLongitude = location.getLongitude();
+                        if (!isContinue) {
+                           // txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+                            Log.v("APP DATA", "APP DATA DATA ........ IF " );
+                        } else {
+                            stringBuilder.append(wayLatitude);
+                            stringBuilder.append("-");
+                            stringBuilder.append(wayLongitude);
+                            stringBuilder.append("\n\n");
+                           // txtContinueLocation.setText(stringBuilder.toString());
+                            Log.v("APP DATA", "location DATA ........ELSE  " );
+                            currentGPSPosition=new LatLng(wayLatitude,wayLongitude);
+                            Log.v("APP DATA", "currentGPSPosition DATA ........ELSE  "+currentGPSPosition );
+
+                            s1= String.valueOf(wayLatitude);
+                            s2= String.valueOf(wayLongitude);
+                            Log.v("APP DATA","lat"+s1+"long"+s2);
+                        }
+                        if (!isContinue && mFusedLocationClient != null) {
+                            mFusedLocationClient.removeLocationUpdates(locationCallback);
+                        }
+                    }
+                }
+            }
+        };
+
+
     }
     @Override
     public void onAttach(Context context) {
@@ -397,19 +467,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     }
                     isMapLoaded = true;
 
-                    boolean GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                    Log.e("Location Request","Location Listener -----"+ mLocationManager);
-                    Log.e("Location Request","Location Listener -----"+ GpsStatus);
-                    if (GpsStatus == false) {
-                        //turnGPSOn();
-                        //turnGpsOn(getContext());
-                        Intent in = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(in);
-                        isGPSEnabled=true;
-                        boolean  GpsStatusPresent = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                        Log.e("Location Request","Location Listener Present Status ----- "+ GpsStatusPresent);
-                    }
-
+                    isContinue = true;
+                    stringBuilder = new StringBuilder();
+                    currentGPSPosition=getLocation();
+                    Log.d("TAG", "location DATA  FROM MAIN VIEW........"+"CURRENT GPS POSITION : "+ currentGPSPosition );
+                    Log.d("APP DATA",  "LATITUDE--->"+s1+"LONGITUDE--->"+s2 );
 
                     if(isMapLoaded==true ){
                         String MapAlert="Map is Ready";
@@ -467,45 +529,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
-    private void turnGpsOn (Context context) {
-        String beforeEnable = Settings.Secure.getString (context.getContentResolver(),
-                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        String newSet = String.format ("%s,%s",
-                beforeEnable,
-                LocationManager.GPS_PROVIDER);
-        try {
-            Settings.Secure.putString (context.getContentResolver(),
-                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED,
-                    newSet);
-        } catch(Exception e) {}
-    }
-
-    public void turnGPSOn() {
-
-        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
-        intent.putExtra("enabled", true);
-        this.getContext().sendBroadcast(intent);
-
-        String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        if(!provider.contains("gps")){ //if gps is disabled
-            final Intent poke = new Intent();
-            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-            poke.setData(Uri.parse("3"));
-            this.getContext().sendBroadcast(poke);
-        }
-    }
-    // automatic turn off the gps
-    public void turnGPSOff() {
-        String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        if(provider.contains("gps")){ //if gps is enabled
-            final Intent poke = new Intent();
-            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-            poke.setData(Uri.parse("3"));
-            this.getContext().sendBroadcast(poke);
-        }
-    }
     public int startNavigation() {
         Log.e("Location Request","Location Listener isGPSEnabled ----- "+ isGPSEnabled);
         if (SourceNode != null && DestinationNode != null ) {
@@ -544,6 +567,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
+                        isContinue = true;
+                        stringBuilder = new StringBuilder();
+                        currentGPSPosition=getLocation();
+                        Log.d("TAG", "location DATA ........ FROM START NAVIGATION VIEW "+"CURRENT GPS POSITION : "+ currentGPSPosition );
+                        Log.d("APP DATA",  "LATITUDE--->"+s1+"LONGITUDE--->"+s2 );
+                        Log.e("APP DATA ", "START NAVIGATION----" + currentGpsPosition);
+
+                       /*
                         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
                             @Override
                             public void onMyLocationChange(final Location location) {
@@ -621,6 +652,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                             }
 
                         });
+                        */
                     }
                 }
 
@@ -1931,10 +1963,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
+            case PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0) {
 
                     locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -1942,7 +1976,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     if (locationAccepted && storageAccepted) {
                         // Toast.makeText(this, "Permission Granted,.", Toast.LENGTH_LONG).show();
-                    }else {
+                    } else {
                         // Toast.makeText(this, "Permission Denied, You cannot access location data and camera.", Snackbar.LENGTH_LONG).show();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1967,7 +2001,93 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     }
                 }
+            }break;
+            case 1000: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    if (isContinue) {
+                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                    } else {
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    wayLatitude = location.getLatitude();
+                                    wayLongitude = location.getLongitude();
+                                    Log.v("APP DATA","LAT VALUE"+wayLatitude);
+                                    Log.v("APP DATA","LAT VALUE"+wayLongitude);
+                                    //txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+
+
+                                } else {
+                                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
                 break;
+            }
+        }
+    }
+    private LatLng getLocation() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    AppConstants.LOCATION_REQUEST);
+
+        } else {
+            if (isContinue) {
+                Log.v("APP DATA","checking IF ic continue "+isContinue);
+                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                Log.v("APP DATA","checking IF ");
+
+
+            } else {
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        Log.v("APP DATA","LOCATION NULL");
+                        Log.v("APP DATA","checking else ic continue "+isContinue);
+                        if (location != null) {
+                            Log.v("jyothi","checking else ");
+                            wayLatitude = location.getLatitude();
+                            wayLongitude = location.getLongitude();
+                            //just for trail
+                            String S= String.valueOf(location.getLatitude());
+                            Log.v("APP DATA",""+S);
+                            Log.e("latitude FROM SERVICE",location.getLatitude()+"");
+                            Log.e("longitude FROM SERVICE",location.getLongitude()+"");
+
+                            //txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+                            s1= String.valueOf(wayLatitude);
+                            s2= String.valueOf(wayLongitude);
+
+
+                           // currentGPSPosition=new LatLng(wayLatitude,wayLongitude);
+
+
+                            Log.d("TAG", "location DATA ........"+"CURRENT GPS POSITION : "+ wayLatitude+","+wayLongitude  );
+                        } else {
+                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                        }
+                    }
+                });
+            }
+        }
+        return currentGPSPosition;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == AppConstants.GPS_REQUEST) {
+                isGPS = true; // flag maintain before get location
+            }
         }
     }
 
