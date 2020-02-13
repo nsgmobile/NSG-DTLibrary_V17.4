@@ -641,13 +641,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
                     if (mFusedLocationClient != null) {
-                            mFusedLocationClient = null;
-                     //   mFusedLocationClient.removeLocationUpdates(locationCallback);
+                           // mFusedLocationClient = null;
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
                         Log.e("STOP NAVIGATION", "STOP NAVIGATION");
                     }
-
-
-
                     if (currentGpsPosition != null) {
                         // String NavigationAlert = " Navigation Stopped " ;
                         String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
