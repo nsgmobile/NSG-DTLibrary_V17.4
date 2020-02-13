@@ -508,6 +508,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
             try {
                 if (mMap != null && isMapLoaded == true && isNavigationStarted == false) {
+                    if (isTimerStarted = true) {
+                        myTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (currentGpsPosition != null && DestinationNode != null) {
+                                    NavigationDirection(currentGpsPosition, DestinationNode);
+                                }
+                            }
+
+                        }, 0, 10000);
+                    }
                     mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -524,7 +535,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         isTimerStarted = true;
                         //need to start timer here
                         // and then we can start navigation inside
-                        if (isTimerStarted = true) {
+                       // if (isTimerStarted = true) {
                             Handler handler = new Handler();
                             int delay = 1000 * 5; //milliseconds
 
@@ -533,15 +544,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                                     // need to verify here alsoDirction text
 
-                                        myTimer.schedule(new TimerTask() {
-                                            @Override
-                                            public void run() {
-                                                if (currentGpsPosition != null && DestinationNode != null) {
-                                                    NavigationDirection(currentGpsPosition, DestinationNode);
-                                                }
-                                            }
 
-                                        }, 0, 10000);
 
                                     //Direction text end
 
@@ -616,7 +619,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     handler.postDelayed(this, delay);
                                 }
                             }, delay);
-                        }
+                      //  }
 
                     }
                 }
