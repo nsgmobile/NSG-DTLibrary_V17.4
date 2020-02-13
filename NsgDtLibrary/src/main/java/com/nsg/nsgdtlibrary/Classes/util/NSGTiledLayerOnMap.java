@@ -492,11 +492,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         Handler handler = new Handler();
                         int delay = 1000 * 5; //milliseconds
                       //  if(islocationControlEnabled==true){
-
-
                             handler.postDelayed(new Runnable() {
                                 public void run() {
-
                                     //START LOCATIONS HERE
                                     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
 
