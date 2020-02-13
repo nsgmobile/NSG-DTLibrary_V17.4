@@ -620,11 +620,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                             }
 
                                                         }else if(islocationControlEnabled==true){
-                                                            Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
 
                                                             animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
-                                                            islocationControlEnabled=false;
-                                                            Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
+
                                                         }
 
 
