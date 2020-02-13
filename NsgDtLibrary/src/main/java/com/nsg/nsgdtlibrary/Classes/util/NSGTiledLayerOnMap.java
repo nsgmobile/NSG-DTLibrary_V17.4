@@ -487,11 +487,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
-                        islocationControlEnabled=true;
+                       //islocationControlEnabled=true;
 
                         Handler handler = new Handler();
                         int delay = 1000 * 5; //milliseconds
-                        if(islocationControlEnabled==true){
+                      //  if(islocationControlEnabled==true){
 
 
 
@@ -618,7 +618,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     handler.postDelayed(this, delay);
                                 }
                             }, delay);
-                        }
+                       // }
 
                     }
                 }
@@ -634,9 +634,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public int stopNavigation(){
         try{
             if(SourceNode!=null && DestinationNode!=null) {
-                if (mMap != null && isNavigationStarted == true && islocationControlEnabled==true) {
+                if (mMap != null && isNavigationStarted == true ) {
                     isNavigationStarted = false;
-                    islocationControlEnabled=false;
 
                    // if (mFusedLocationClient != null)
                        // locationRequest.
