@@ -508,6 +508,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
 
     public int startNavigation() {
+        islocationControlEnabled=false;
+        Log.v("APP DATA ", "islocationControlEnabled START BUTTON GPS POSITION ----" + OldGPSPosition);
         if (SourceNode != null && DestinationNode != null ) {
 
             nearestPointValuesList = new ArrayList<LatLng>();
@@ -621,6 +623,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                             Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
 
                                                             animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                            islocationControlEnabled=false;
+                                                            Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
                                                         }
 
 
@@ -655,7 +659,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 if (mMap != null && isNavigationStarted == true && islocationControlEnabled==true ) {
                     isNavigationStarted = false;
                     islocationControlEnabled=false;
-                    Log.e("STOP NAVIGATION", "STOP NAVIGATION");
+                    Log.e("STOP NAVIGATION", "STOP NAVIGATION INNER VALUE --"+ islocationControlEnabled);
 
 
                     if (mFusedLocationClient != null) {
@@ -685,7 +689,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     }
                     // getActivity().onBackPressed();
                     islocationControlEnabled=false;
-                    Log.e("STOP NAVIGATION", " islocationControlEnabled STOP NAVIGATION FLAG "+ islocationControlEnabled);
+                    Log.e("STOP NAVIGATION", " islocationControlEnabled STOP NAVIGATION FLAG END VALUE "+ islocationControlEnabled);
                 }
             }
 
