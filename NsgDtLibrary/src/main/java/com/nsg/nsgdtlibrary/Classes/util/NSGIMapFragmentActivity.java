@@ -1,17 +1,12 @@
 package com.nsg.nsgdtlibrary.Classes.util;
-
 import android.Manifest;
-import android.Manifest.permission;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,7 +17,6 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.hardware.SensorManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -49,17 +43,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -78,12 +64,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.SphericalUtil;
-import com.nsg.nsgdtlibrary.Classes.activities.AppConstants;
 import com.nsg.nsgdtlibrary.Classes.activities.ExpandedMBTilesTileProvider;
-import com.nsg.nsgdtlibrary.Classes.activities.GPSTracker;
-import com.nsg.nsgdtlibrary.Classes.activities.GpsUtils;
 import com.nsg.nsgdtlibrary.Classes.database.db.SqlHandler;
 import com.nsg.nsgdtlibrary.Classes.database.dto.EdgeDataT;
 import com.nsg.nsgdtlibrary.Classes.database.dto.GeometryT;
@@ -105,10 +87,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -118,35 +98,20 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import de.siegmar.fastcsv.reader.CsvReader;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
-//import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
-//import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-//import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-//import static android.content.Context.LOCATION_SERVICE;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.content.Context.LOCATION_SERVICE;
-import static androidx.core.content.PermissionChecker.checkSelfPermission;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
-public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener {
+public class NSGIMapFragmentActivity extends Fragment implements View.OnClickListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
     boolean locationAccepted;
     // private static final int SENSOR_DELAY_NORMAL =50;
@@ -228,23 +193,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     LocationManager mLocationManager;
     private boolean isGPSEnabled=false;
 
-
-    //Fused Location Client api
-    private FusedLocationProviderClient mFusedLocationClient;
-    private double wayLatitude = 0.0, wayLongitude = 0.0;
-    private LocationRequest locationRequest;
-    private LocationCallback locationCallback;
-    private Button btnLocation;
-    private TextView txtLocation;
-    private Button btnContinueLocation;
-    private TextView txtContinueLocation;
-    private StringBuilder stringBuilder;
-    LatLng currentGPSPosition;
-    private boolean isContinue=true ;
-    private boolean isGPS = false;
-    String s1,s2;
-
-
     //  private SensorManager mSensorManager;
     //LatLng convertedSrcPosition,convertedDestinationPoisition;
     // Bitmap tileBitmap;
@@ -276,14 +224,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         String communicate(String comm, int alertType);
     }
     private FragmentToActivity Callback;
-    public NSGTiledLayerOnMap(){
+    public NSGIMapFragmentActivity(){
 
     }
     @SuppressLint("ValidFragment")
-    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT) {
+    public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT) {
         //enteredMode = mode;
         //  routeDeviationDistance=radius;
-        NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
+        NSGIMapFragmentActivity.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
         //NSGTiledLayerOnMap.this.stNode=stNode;
         // NSGTiledLayerOnMap.this.endNode=endNode;
         // NSGTiledLayerOnMap.this.enteredMode=mode;
@@ -294,17 +242,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
     @SuppressLint("ValidFragment")
-    public NSGTiledLayerOnMap(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,String routeDeviatedDT_URL,String AuthorisationKey) {
+    public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,String routeDeviatedDT_URL,String AuthorisationKey) {
         //enteredMode = mode;
         //  routeDeviationDistance=radius;
-        NSGTiledLayerOnMap.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
-        NSGTiledLayerOnMap.this.stNode=stNode;
-        NSGTiledLayerOnMap.this.endNode=endNode;
+        NSGIMapFragmentActivity.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
+        NSGIMapFragmentActivity.this.stNode=stNode;
+        NSGIMapFragmentActivity.this.endNode=endNode;
         // NSGTiledLayerOnMap.this.enteredMode=mode;
         // NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
-        NSGTiledLayerOnMap.this.routeData=routeData;
-        NSGTiledLayerOnMap.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
-        NSGTiledLayerOnMap.this.AuthorisationKey=AuthorisationKey;
+        NSGIMapFragmentActivity.this.routeData=routeData;
+        NSGIMapFragmentActivity.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
+        NSGIMapFragmentActivity.this.AuthorisationKey=AuthorisationKey;
 
     }
     @Override
@@ -331,63 +279,13 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
             });
         }
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(10 * 1000); // 10 seconds
-        locationRequest.setFastestInterval(5 * 1000); // 5 seconds
-
-        new GpsUtils(getContext()).turnGPSOn(new GpsUtils.onGpsListener() {
-            @Override
-            public void gpsStatus(boolean isGPSEnable) {
-                // turn on GPS
-                isGPS = isGPSEnable;
-            }
-        });
-
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    if (location != null) {
-                        wayLatitude = location.getLatitude();
-                        wayLongitude = location.getLongitude();
-                        if (!isContinue) {
-                            txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                          //  Log.v("APP DATA", "APP DATA DATA ........ IF " );
-                        } else {
-                            stringBuilder.append(wayLatitude);
-                            stringBuilder.append("-");
-                            stringBuilder.append(wayLongitude);
-                            stringBuilder.append("\n\n");
-                           // txtContinueLocation.setText(stringBuilder.toString());
-                           // Log.v("APP DATA", "location DATA ........ELSE  " );
-                            currentGPSPosition=new LatLng(wayLatitude,wayLongitude);
-                           // Log.v("APP DATA", "currentGPSPosition DATA ........ELSE  "+currentGPSPosition );
-
-                          //  s1= String.valueOf(wayLatitude);
-                          //  s2= String.valueOf(wayLongitude);
-                          //  Log.v("APP DATA","lat"+s1+"long"+s2);
-                        }
-
-                    }
-                }
-            }
-        };
-
-
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
             sqlHandler = new SqlHandler(getContext());// Sqlite handler
-            Callback = (NSGTiledLayerOnMap.FragmentToActivity) context;
+            Callback = (NSGIMapFragmentActivity.FragmentToActivity) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement FragmentToActivity");
@@ -443,8 +341,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             @Override
             public void onMapReady(GoogleMap googlemap) {
                 if (BASE_MAP_URL_FORMAT != null) {
-                    NSGTiledLayerOnMap.this.mMap = googlemap;
-                    NSGTiledLayerOnMap.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
+                    NSGIMapFragmentActivity.this.mMap = googlemap;
+                    NSGIMapFragmentActivity.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
                     TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
                     TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
                     tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
@@ -465,10 +363,18 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     }
                     isMapLoaded = true;
 
-                    isContinue = true;
-                    stringBuilder = new StringBuilder();
-                    currentGPSPosition=getLocation();
-                    Log.d("TAG", "location DATA  FROM MAIN VIEW........"+"CURRENT GPS POSITION : "+ currentGPSPosition );
+                    boolean GpsStatus = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    Log.e("Location Request","Location Listener -----"+ mLocationManager);
+                    Log.e("Location Request","Location Listener -----"+ GpsStatus);
+                    if (GpsStatus == false) {
+                        //turnGPSOn();
+                        //turnGpsOn(getContext());
+                        Intent in = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(in);
+                        isGPSEnabled=true;
+                        boolean  GpsStatusPresent = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                        Log.e("Location Request","Location Listener Present Status ----- "+ GpsStatusPresent);
+                    }
 
 
                     if(isMapLoaded==true ){
@@ -527,8 +433,51 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
+    private void turnGpsOn (Context context) {
+        String beforeEnable = Settings.Secure.getString (context.getContentResolver(),
+                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        String newSet = String.format ("%s,%s",
+                beforeEnable,
+                LocationManager.GPS_PROVIDER);
+        try {
+            Settings.Secure.putString (context.getContentResolver(),
+                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED,
+                    newSet);
+        } catch(Exception e) {}
+    }
+
+    public void turnGPSOn() {
+
+        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+        intent.putExtra("enabled", true);
+        this.getContext().sendBroadcast(intent);
+
+        String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if(!provider.contains("gps")){ //if gps is disabled
+            final Intent poke = new Intent();
+            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+            poke.setData(Uri.parse("3"));
+            this.getContext().sendBroadcast(poke);
+        }
+    }
+    // automatic turn off the gps
+    public void turnGPSOff() {
+        String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if(provider.contains("gps")){ //if gps is enabled
+            final Intent poke = new Intent();
+            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+            poke.setData(Uri.parse("3"));
+            this.getContext().sendBroadcast(poke);
+        }
+    }
     public int startNavigation() {
+        Log.e("Location Request","Location Listener isGPSEnabled ----- "+ isGPSEnabled);
         if (SourceNode != null && DestinationNode != null ) {
+
+            //if(GpsStatusPresent==true){
+            //  Log.e("Location Request","Location Request"+locationAccepted);
 
             nearestPointValuesList = new ArrayList<LatLng>();
             nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
@@ -536,6 +485,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
             try {
                 if (mMap != null && isMapLoaded == true && isNavigationStarted == false) {
+                    if (isTimerStarted = true) {
+                        myTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (currentGpsPosition != null && DestinationNode != null) {
+                                    NavigationDirection(currentGpsPosition, DestinationNode);
+                                }
+                            }
+
+                        }, 0, 10000);
+                    }
                     mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -550,103 +510,86 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
-                        //need to start timer here
-                        // and then we can start navigation inside
-                        if (isTimerStarted = true) {
-                            Handler handler = new Handler();
-                            int delay = 1000 * 5; //milliseconds
+                        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                            @Override
+                            public void onMyLocationChange(final Location location) {
+                                if (currentGpsPosition != null) {
+                                    OldGPSPosition = currentGpsPosition;
+                                }
+                                Runnable runnable = new Runnable() {
+                                    public void run() {
+                                        currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                        Log.e("CurrentGpsPoint", " currentGpsPosition GpsPoint " + currentGpsPosition);
+                                        vehicleSpeed = location.getSpeed();
+                                        LatLng OldNearestPosition = null;
+                                        if (isRouteDeviated == false) {
+                                            if (OldGPSPosition != null) {
+                                                double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+                                                Log.e("distance", "distance" + distance);
+                                                if (distance > 10) {
 
-                            handler.postDelayed(new Runnable() {
-                                public void run() {
-
-                                    // need to verify here alsoDirction text
-                                        /*
-                                        myTimer.schedule(new TimerTask() {
-                                            @Override
-                                            public void run() {
-                                                if (currentGpsPosition != null && DestinationNode != null) {
-
-                                                }
-                                            }
-
-                                        }, 0, 10000);
-                                        */
-                                    //Direction text end
-
-                                    if (currentGpsPosition != null) {
-                                        OldGPSPosition = currentGpsPosition;
-                                        Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
-                                    }
-                                    isContinue = true;
-                                    stringBuilder = new StringBuilder();
-                                    currentGpsPosition = getLocation();
-                                    Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
-                                    // Navigation code starts from here
-                                    LatLng OldNearestPosition = null;
-                                    if (isRouteDeviated == false) {
-                                        if (OldGPSPosition != null) {
-                                            double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                                            Log.e("distance", "distance" + distance);
-                                            if (distance > 40) {
-
-                                            } else {
-                                                OldNearestPosition = nPosition;
-                                                Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
-                                                nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
-                                                Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                                                if (mPositionMarker == null) {
-                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                            .position(SourceNode)
-                                                            .title("Nearest GpsPoint")
-                                                            .anchor(0.5f, 0.5f)
-                                                            .flat(true)
-                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                 } else {
-                                                    Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
-                                                    if (OldNearestPosition != null) {
-                                                        Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
-                                                        Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
-                                                        animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
-                                                        float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
-                                                        Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                                        int height = getView().getMeasuredHeight();
-                                                        Projection p = mMap.getProjection();
-                                                        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                                                        Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                                                        Point offset = new Point(center.x, (center.y + (height / 4)));
-                                                        LatLng centerLoc = p.fromScreenLocation(center);
-                                                        LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                                                        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                                                        LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
-                                                        caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                        verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
-                                                        NavigationDirection(currentGpsPosition, DestinationNode);
-                                                        AlertDestination(currentGpsPosition);
-                                                        if (bearing > 0.0) {
-                                                            CameraPosition currentPlace = new CameraPosition.Builder()
-                                                                    .target(shadowTgt)
-                                                                    .bearing(bearing).tilt(65.5f).zoom(18)
-                                                                    .build();
-                                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                                        } else {
+                                                    OldNearestPosition = nPosition;
+                                                    Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
+                                                    nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
+                                                    Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
+                                                    if (mPositionMarker == null) {
+                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                .position(SourceNode)
+                                                                .title("Nearest GpsPoint")
+                                                                .anchor(0.5f, 0.5f)
+                                                                .flat(true)
+                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    } else {
+                                                        Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
+                                                        if (OldNearestPosition != null) {
+                                                            animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
+                                                            float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
+                                                            Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
+                                                            int height = getView().getMeasuredHeight();
+                                                            Projection p = mMap.getProjection();
+                                                            Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                                                            Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                                                            Point offset = new Point(center.x, (center.y + (height / 4)));
+                                                            LatLng centerLoc = p.fromScreenLocation(center);
+                                                            LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                                                            double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                                                            LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
+                                                            caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
+                                                            verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
+
+                                                            AlertDestination(currentGpsPosition);
+                                                            if (bearing > 0.0) {
+                                                                CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                        .target(shadowTgt)
+                                                                        .bearing(bearing).tilt(65.5f).zoom(18)
+                                                                        .build();
+                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                            } else {
+
+                                                            }
 
                                                         }
-
                                                     }
+
                                                 }
                                             }
+
                                         } else {
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }
-
                                     }
-                                    //Navigation code ends here
-                                    handler.postDelayed(this, delay);
-                                }
-                            }, delay);
-                        }
 
+                                };
+
+                                Handler handler1 = new Handler();
+                                handler1.postDelayed(runnable, 0);
+                            }
+
+                        });
                     }
+
+
                 }
 
                 return 1;
@@ -661,11 +604,18 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         try{
             if(SourceNode!=null && DestinationNode!=null) {
                 if (mMap != null && isNavigationStarted == true) {
-
-
-                    if (mFusedLocationClient != null) {
-                        mFusedLocationClient.removeLocationUpdates(locationCallback);
+                /*
+                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                    @Override
+                    public void onMyLocationChange(final Location location) {
+                        if (mPositionMarker != null) {
+                            mPositionMarker.remove();
+                        }
+                        currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
                     }
+                });
+                */
+                    mMap.setMyLocationEnabled(false);
                     isNavigationStarted = false;
                     if (currentGpsPosition != null) {
                         // String NavigationAlert = " Navigation Stopped " ;
@@ -867,7 +817,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         } else {
             if(geometryTextimpValue!=null && geometryTextimpValue.isEmpty()){
                 String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
-                Log.e("GROMETRY TEXT","GEOMETRY DIRECTION TEXT ----- "+data);
                 //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
                 int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
                 if (speechStatus == TextToSpeech.ERROR) {
@@ -1858,6 +1807,72 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
+    public int getLatLngPoints(){
+
+        LatLngDataArray.add(new LatLng(24.978782,55.067291));
+        LatLngDataArray.add(new LatLng(24.978792,55.067279));
+        LatLngDataArray.add(new LatLng(24.978762,55.067241));
+        LatLngDataArray.add(new LatLng(24.978765,55.067237));
+        LatLngDataArray.add(new LatLng(24.978755,55.067218));
+        LatLngDataArray.add(new LatLng(24.978449,55.067310));
+        LatLngDataArray.add(new LatLng(24.978656,55.066997));
+        LatLngDataArray.add(new LatLng(24.978408,55.066897));
+        LatLngDataArray.add(new LatLng(24.978349, 55.066801));
+        LatLngDataArray.add(new LatLng(24.978025,55.066462));
+        LatLngDataArray.add(new LatLng(24.977993,55.066226));
+
+        LatLngDataArray.add(new LatLng( 24.977771, 55.066040));
+        LatLngDataArray.add(new LatLng( 24.977636, 55.065907));
+
+
+        LatLngDataArray.add(new LatLng(24.977358,55.065692));
+
+
+        LatLngDataArray.add(new LatLng(24.977132,55.065436));
+        LatLngDataArray.add(new LatLng(24.977126,55.065249));
+        LatLngDataArray.add(new LatLng(24.977164,55.065171));
+        LatLngDataArray.add(new LatLng(24.977257,55.064874));
+        LatLngDataArray.add(new LatLng(24.977631,55.06466));
+        LatLngDataArray.add(new LatLng(24.977690, 55.064490));
+        LatLngDataArray.add(new LatLng(24.977881, 55.064262));
+        LatLngDataArray.add(new LatLng( 24.977960, 55.064183));
+        LatLngDataArray.add(new LatLng(  24.978012, 55.064151));
+        LatLngDataArray.add(new LatLng(24.978086, 55.064233));
+        LatLngDataArray.add(new LatLng(24.978098, 55.064253));
+        LatLngDataArray.add(new LatLng( 24.978167, 55.064331));
+        //Route Deviation points starts from here ----
+        LatLngDataArray.add(new LatLng( 24.978179,55.064389)); //Route deviation point
+        LatLngDataArray.add(new LatLng(24.978547,55.064227));
+        LatLngDataArray.add(new LatLng( 24.978617,55.064152));
+        LatLngDataArray.add(new LatLng( 24.978720,55.064048));
+        LatLngDataArray.add(new LatLng(24.978816,55.063959 ));
+        LatLngDataArray.add(new LatLng(24.978879,55.063874 ));
+        LatLngDataArray.add(new LatLng(24.978968,55.063839 ));
+        LatLngDataArray.add(new LatLng( 24.979060,55.063933));//
+        LatLngDataArray.add(new LatLng( 24.979202,55.064101));
+        LatLngDataArray.add(new LatLng(24.979288,55.064200 ));
+        LatLngDataArray.add(new LatLng( 24.979387,55.064313));
+        LatLngDataArray.add(new LatLng( 24.979527,55.064469));
+        LatLngDataArray.add(new LatLng( 24.979651,55.064618));
+        LatLngDataArray.add(new LatLng( 24.979770,55.064747));
+        LatLngDataArray.add(new LatLng( 24.979840,55.064828));
+        LatLngDataArray.add(new LatLng(24.979861,55.064973));
+        LatLngDataArray.add(new LatLng( 24.979760,55.065077));
+        LatLngDataArray.add(new LatLng( 24.979559,55.065288));
+        LatLngDataArray.add(new LatLng( 24.979448,55.065401));
+        LatLngDataArray.add(new LatLng( 24.979342,55.065516));
+        //Route Deviation points are uoto here---
+        LatLngDataArray.add(new LatLng(24.979304, 55.065536));
+        LatLngDataArray.add(new LatLng(24.979261, 55.065570));
+        LatLngDataArray.add(new LatLng(24.979722, 55.066073));
+        LatLngDataArray.add(new LatLng(24.979961, 55.066314));
+        LatLngDataArray.add(new LatLng(24.980189, 55.066572));
+        LatLngDataArray.add(new LatLng(24.980335, 55.066770));
+        LatLngDataArray.add(new LatLng(24.980174, 55.066937));
+        LatLngDataArray.add(new LatLng(24.979878,55.067205));  //Destinationm point
+        return LatLngDataArray.size();
+
+    }
 
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
@@ -1886,6 +1901,56 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         sqlHandler.closeDataBaseConnection();
     }
 
+    /*
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    List resultList=new ArrayList();
+    public void InsertAllRouteData(String DBCSV_PATH){
+        File file = new File(DBCSV_PATH);
+        CsvReader csvReader = new CsvReader();
+        csvReader.setContainsHeader(true);
+        Log.e("OUTPUT FILE","OUTPUT FILE"+file);
+        if (file.exists())
+        {
+            BufferedReader br = null;
+            try {
+                br = new BufferedReader(new FileReader(file));
+                String csvLine;
+                while ((csvLine = br.readLine()) != null)
+                {
+                    String[] data=csvLine.split("@");
+                    try
+                    {
+                      //  Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[0] + " " + data[1] +" " +  data[2] +" " +  data[3]+ " " + data[4]);
+                        String route=data[4].toString();
+                      //  Log.e("OUTPUT FILE","OUTPUT FILE --- DATA :  " + data[4]);
+                       // Log.e("OUTPUT FILE"," QUERY "+route);
+                        StringBuilder query = new StringBuilder("INSERT INTO ");
+                        query.append(RouteT.TABLE_NAME).append("(routeID,startNode,endNode,routeData) values (")
+                                .append("'").append(data[1] ).append("',")
+                                .append("'").append(data[2]).append("',")
+                                .append("'").append(data[3]).append("',")
+                                .append("'").append(route).append("')");
+                      //  Log.e("OUTPUT FILE"," QUERY "+query);
+                        sqlHandler.executeQuery(query.toString());
+                        sqlHandler.closeDataBaseConnection();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.e("Problem",e.toString());
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            Toast.makeText(getContext(),"file not exists",Toast.LENGTH_SHORT).show();
+        }
+    }
+    */
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION);
@@ -1900,12 +1965,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     }
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE: {
+            case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0) {
 
                     locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
@@ -1913,7 +1976,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     if (locationAccepted && storageAccepted) {
                         // Toast.makeText(this, "Permission Granted,.", Toast.LENGTH_LONG).show();
-                    } else {
+                    }else {
                         // Toast.makeText(this, "Permission Denied, You cannot access location data and camera.", Snackbar.LENGTH_LONG).show();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -1938,85 +2001,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     }
                 }
-            }break;
-            case 1000: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    if (isContinue) {
-                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                    } else {
-                        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    wayLatitude = location.getLatitude();
-                                    wayLongitude = location.getLongitude();
-                                   // Log.v("APP DATA","LAT VALUE"+wayLatitude);
-                                   // Log.v("APP DATA","LAT VALUE"+wayLongitude);
-                                    //txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-
-
-                                } else {
-                                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-                }
                 break;
-            }
-        }
-    }
-    private LatLng getLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    AppConstants.LOCATION_REQUEST);
-
-        } else {
-            if (isContinue) {
-               // Log.v("APP DATA","checking IF ic continue "+isContinue);
-                mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-               // Log.v("APP DATA","checking IF ");
-
-
-            } else {
-                mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                      //  Log.v("APP DATA","LOCATION NULL");
-                     //   Log.v("APP DATA","checking else ic continue "+isContinue);
-                        if (location != null) {
-                            wayLatitude = location.getLatitude();
-                            wayLongitude = location.getLongitude();
-                            //just for trail
-                            String S= String.valueOf(location.getLatitude());
-                           // Log.v("APP DATA",""+S);
-                           // Log.e("latitude FROM SERVICE",location.getLatitude()+"");
-                          //  Log.e("longitude FROM SERVICE",location.getLongitude()+"");
-                            //txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-
-                            Log.d("TAG", "location DATA ........"+"CURRENT GPS POSITION : "+ wayLatitude+","+wayLongitude  );
-                        } else {
-                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                        }
-                    }
-                });
-            }
-        }
-        return currentGPSPosition;
-    }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == AppConstants.GPS_REQUEST) {
-                isGPS = true; // flag maintain before get location
-            }
         }
     }
 
@@ -2236,3 +2221,188 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
+      /*
+                      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+
+
+                          mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                              @Override
+                              public void onMyLocationChange(final Location location) {
+                                  if (currentGpsPosition != null) {
+                                      OldGPSPosition = currentGpsPosition;
+                                  }
+                                  Runnable runnable = new Runnable() {
+                                      public void run() {
+                                          currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                          Log.e("CurrentGpsPoint", " currentGpsPosition GpsPoint " + currentGpsPosition);
+                                          vehicleSpeed = location.getSpeed();
+                                          LatLng OldNearestPosition = null;
+                                          if (isRouteDeviated == false) {
+                                              if (OldGPSPosition != null) {
+                                                  double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+                                                  Log.e("distance", "distance" + distance);
+                                                  if (distance > 10) {
+
+                                                  } else {
+                                                      OldNearestPosition = nPosition;
+                                                      Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
+                                                      nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
+                                                      Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
+                                                      if (mPositionMarker == null) {
+                                                          mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                  .position(SourceNode)
+                                                                  .title("Nearest GpsPoint")
+                                                                  .anchor(0.5f, 0.5f)
+                                                                  .flat(true)
+                                                                  .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                      } else {
+                                                          Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
+                                                          if (OldNearestPosition != null) {
+                                                              animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
+                                                              float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
+                                                              Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
+                                                              int height = getView().getMeasuredHeight();
+                                                              Projection p = mMap.getProjection();
+                                                              Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                                                              Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                                                              Point offset = new Point(center.x, (center.y + (height / 4)));
+                                                              LatLng centerLoc = p.fromScreenLocation(center);
+                                                              LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                                                              double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                                                              LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
+                                                              caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
+                                                              verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
+
+                                                              AlertDestination(currentGpsPosition);
+                                                              if (bearing > 0.0) {
+                                                                  CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                          .target(shadowTgt)
+                                                                          .bearing(bearing).tilt(65.5f).zoom(18)
+                                                                          .build();
+                                                                  mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                              } else {
+
+                                                              }
+
+                                                          }
+                                                      }
+
+                                                  }
+                                              }
+
+                                          } else {
+                                              MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                          }
+                                      }
+
+                                  };
+
+                                  Handler handler1 = new Handler();
+                                  handler1.postDelayed(runnable, 0);
+                              }
+
+                          });
+
+                      }
+                       */
+
+/*
+  private void turnGpsOn(Context context) {
+        String beforeEnable = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        String newSet = String.format("%s,%s",
+                beforeEnable,
+                LocationManager.GPS_PROVIDER);
+        try {
+            Settings.Secure.putString(context.getContentResolver(),
+                    Settings.Secure.LOCATION_PROVIDERS_ALLOWED,
+                    newSet);
+        } catch (Exception e) {
+        }
+    }
+
+    public void turnGPSOn() {
+
+        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
+        intent.putExtra("enabled", true);
+        this.getContext().sendBroadcast(intent);
+
+        String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if (!provider.contains("gps")) { //if gps is disabled
+            final Intent poke = new Intent();
+            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+            poke.setData(Uri.parse("3"));
+            this.getContext().sendBroadcast(poke);
+        }
+    }
+
+    // automatic turn off the gps
+    public void turnGPSOff() {
+        String provider = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        if (provider.contains("gps")) { //if gps is enabled
+            final Intent poke = new Intent();
+            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
+            poke.setData(Uri.parse("3"));
+            this.getContext().sendBroadcast(poke);
+        }
+    }
+ */
