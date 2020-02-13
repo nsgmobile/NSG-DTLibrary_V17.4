@@ -148,7 +148,7 @@ import static java.lang.Math.sin;
 
 public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener {
     private static final int PERMISSION_REQUEST_CODE = 200;
-    boolean locationAccepted;
+    boolean locationAccepted,islocationControlEnabled=false;
     // private static final int SENSOR_DELAY_NORMAL =50;
     boolean isTimerStarted=false;
     private ProgressDialog dialog;
@@ -533,21 +533,15 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
+                        islocationControlEnabled=true;
                         //need to start timer here
                         // and then we can start navigation inside
                        // if (isTimerStarted = true) {
                             Handler handler = new Handler();
                             int delay = 1000 * 5; //milliseconds
-
+                        if(islocationControlEnabled==true){
                             handler.postDelayed(new Runnable() {
                                 public void run() {
-
-                                    // need to verify here alsoDirction text
-
-
-
-                                    //Direction text end
-
                                     if (currentGpsPosition != null) {
                                         OldGPSPosition = currentGpsPosition;
                                         Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
@@ -613,13 +607,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                         } else {
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }
-
                                     }
                                     //Navigation code ends here
                                     handler.postDelayed(this, delay);
                                 }
                             }, delay);
-                      //  }
+                        }
 
                     }
                 }
@@ -635,8 +628,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public int stopNavigation(){
         try{
             if(SourceNode!=null && DestinationNode!=null) {
-                if (mMap != null && isNavigationStarted == true) {
+                if (mMap != null && isNavigationStarted == true && islocationControlEnabled==true) {
                     isNavigationStarted = false;
+                    islocationControlEnabled=false;
 
                     if (mFusedLocationClient != null)
                         mFusedLocationClient.removeLocationUpdates(locationCallback);
