@@ -321,7 +321,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if(islocationControlEnabled==false) {
+               // if(islocationControlEnabled==false) {
                     if (locationResult == null) {
                         return;
                     }
@@ -353,9 +353,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                         }
                     }
-                }else{
+             //   }else{
 
-                }
+             //   }
             }
         };
 
