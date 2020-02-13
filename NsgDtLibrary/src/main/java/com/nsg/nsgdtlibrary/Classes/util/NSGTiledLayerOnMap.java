@@ -202,8 +202,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private String geometryDirectionText="",key="",distanceKey="",geometryDirectionDistance="";
     HashMap<String,String>nearestValuesMap;
     private List<LatLng> OldNearestGpsList;
-    private int locationFakeGpsListener=0;
-    String GeometryDirectionText="";
+  //  private int locationFakeGpsListener=0;
+  //  String GeometryDirectionText="";
     private double vehicleSpeed;
     private double maxSpeed=30;
     private boolean isMarkerRotating=false;
@@ -218,7 +218,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private double resultNeedToTeavelTimeConverted;
     RouteT route;
     boolean isRouteDeviated=false;
-    private Button location_tracking_start,location_tracking_stop;
+   // private Button location_tracking_start,location_tracking_stop;
     StringBuilder time= new StringBuilder();
     LatLng nPosition= null;
     private String routeData;
@@ -226,8 +226,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public boolean isNavigationStarted=false;
     NavigationProperties properties;
     LocationManager mLocationManager;
-    private boolean isGPSEnabled=false;
-
+  //  private boolean isGPSEnabled=false;
 
     //Fused Location Client api
     private FusedLocationProviderClient mFusedLocationClient;
@@ -244,33 +243,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private boolean isGPS = false;
     String s1,s2;
 
-
-    //  private SensorManager mSensorManager;
-    //LatLng convertedSrcPosition,convertedDestinationPoisition;
-    // Bitmap tileBitmap;
-    // MultiMap multiMap = new MultiValueMap();
-    // private ImageButton etaListener;
-    // private ImageButton location_tracking;
-    // Marker fakeGpsMarker;
-    // List<Marker> markerlist;
-    //  ArrayList<String> etaList;
-    //  private ArrayList lastDistancesList;
-    //  private double lastDistance;
-    // private String geometryText;
-    //  String tokenNumber,updaterServiceResponse;
-    //  private long startTime,presentTime,previousTime,TimeDelay;
-    //  private  List<LatLng>listOfLatLng;
-    // private LocationManager locationManager;
-    //  private Location lastLocation;
-    // float azimuthInRadians;
-    // float degree,lastUpdate;
-    // LatLng centerFromPoint;
-    // LatLng point;
-    // BitmapDescriptor mMarkerIcon = BitmapDescriptorFactory.fromResource(R.drawable.car_icon_32);
-    //LatLng dubai;
-    //String SourcePoint;
-    // String DestinationPoint,tokenResponse,etaResponse;
-    //  Handler mHandler = new Handler();
     public interface FragmentToActivity {
         String communicate(String comm);
         String communicate(String comm, int alertType);
@@ -337,7 +309,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10 * 1000); // 10 seconds
-        locationRequest.setFastestInterval(5 * 1000); // 5 seconds
+       // locationRequest.setFastestInterval(5 * 1000); // 5 seconds
 
         new GpsUtils(getContext()).turnGPSOn(new GpsUtils.onGpsListener() {
             @Override
@@ -661,12 +633,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         try{
             if(SourceNode!=null && DestinationNode!=null) {
                 if (mMap != null && isNavigationStarted == true) {
-
-
-                    if (mFusedLocationClient != null) {
-                        mFusedLocationClient.removeLocationUpdates(locationCallback);
-                    }
                     isNavigationStarted = false;
+
+                    if (mFusedLocationClient != null)
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
+
                     if (currentGpsPosition != null) {
                         // String NavigationAlert = " Navigation Stopped " ;
                         String NavigationAlert = " Navigation Stopped " + currentGpsPosition;
@@ -865,7 +836,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         if (geometryTextimpValue.equals("-")) {
 
         } else {
-            if(geometryTextimpValue!=null && geometryTextimpValue.isEmpty()){
+            if(geometryTextimpValue!=null && !geometryTextimpValue.isEmpty()){
                 String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
                 Log.e("GROMETRY TEXT","GEOMETRY DIRECTION TEXT ----- "+data);
                 //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
@@ -884,17 +855,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 } else if (geometryTextimpValue.contains("Take Left")) {
                     image.setImageResource(R.drawable.direction_left);
                 }
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
+               // new Handler(Looper.getMainLooper()).post(new Runnable() {
+               //     @Override
+               //     public void run() {
                         Toast toast = new Toast(getActivity().getApplicationContext());
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
                         toast.setGravity(Gravity.TOP, 0, 150);
                         toast.setView(layout);
                         toast.show();
-                    }
-                });
+               //     }
+               // });
             }
         }
 
@@ -2234,5 +2205,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 .build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
     }
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mFusedLocationClient != null) {
+            mFusedLocationClient.removeLocationUpdates(locationCallback);
+        }
+    }
 }
