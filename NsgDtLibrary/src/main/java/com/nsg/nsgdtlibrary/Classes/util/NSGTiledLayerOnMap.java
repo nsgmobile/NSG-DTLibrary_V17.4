@@ -514,37 +514,39 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     locationCallback = new LocationCallback() {
                                         @Override
                                         public void onLocationResult(LocationResult locationResult) {
-                                            if (locationResult == null) {
-                                                return;
-                                            }
-                                            for (Location location : locationResult.getLocations()) {
-                                                if (location != null) {
-                                                    // if(islocationControlEnabled==false) {
-                                                    wayLatitude = location.getLatitude();
-                                                    wayLongitude = location.getLongitude();
-                                                    if (!isContinue) {
-                                                        txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                                                        //  Log.v("APP DATA", "APP DATA DATA ........ IF " );
-                                                    } else {
-                                                        stringBuilder.append(wayLatitude);
-                                                        stringBuilder.append("-");
-                                                        stringBuilder.append(wayLongitude);
-                                                        stringBuilder.append("\n\n");
-                                                        // txtContinueLocation.setText(stringBuilder.toString());
-                                                        // Log.v("APP DATA", "location DATA ........ELSE  " );
-                                                        currentGPSPosition = new LatLng(wayLatitude, wayLongitude);
-                                                        // Log.v("APP DATA", "currentGPSPosition DATA ........ELSE  "+currentGPSPosition );
+                                             if(islocationControlEnabled==false) {
+                                                 if (locationResult == null) {
+                                                     return;
+                                                 }
+                                                 for (Location location : locationResult.getLocations()) {
+                                                     if (location != null) {
 
-                                                        //  s1= String.valueOf(wayLatitude);
-                                                        //  s2= String.valueOf(wayLongitude);
-                                                        //  Log.v("APP DATA","lat"+s1+"long"+s2);
-                                                    }
-                                                    // }else{
+                                                         wayLatitude = location.getLatitude();
+                                                         wayLongitude = location.getLongitude();
+                                                         if (!isContinue) {
+                                                             txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+                                                             //  Log.v("APP DATA", "APP DATA DATA ........ IF " );
+                                                         } else {
+                                                             stringBuilder.append(wayLatitude);
+                                                             stringBuilder.append("-");
+                                                             stringBuilder.append(wayLongitude);
+                                                             stringBuilder.append("\n\n");
+                                                             // txtContinueLocation.setText(stringBuilder.toString());
+                                                             // Log.v("APP DATA", "location DATA ........ELSE  " );
+                                                             currentGPSPosition = new LatLng(wayLatitude, wayLongitude);
+                                                             // Log.v("APP DATA", "currentGPSPosition DATA ........ELSE  "+currentGPSPosition );
 
-                                                    // }
+                                                             //  s1= String.valueOf(wayLatitude);
+                                                             //  s2= String.valueOf(wayLongitude);
+                                                             //  Log.v("APP DATA","lat"+s1+"long"+s2);
+                                                         }
+                                                         // }else{
 
-                                                }
-                                            }
+                                                         // }
+
+                                                     }
+                                                 }
+                                             }
                                         }
                                     };
                                     //END LOCATION OBJECT
