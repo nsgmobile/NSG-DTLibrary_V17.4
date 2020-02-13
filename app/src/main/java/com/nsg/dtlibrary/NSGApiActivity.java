@@ -148,7 +148,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
           // Log.e("Started","Started "+test.startNavigation());
        }else if(v==Stop){
            test.stopNavigation();
-          // Log.e("Stopped","Stopped "+test.stopNavigation());
+           Log.e("Stopped","Stopped "+test.stopNavigation());
        }
     }
 }
