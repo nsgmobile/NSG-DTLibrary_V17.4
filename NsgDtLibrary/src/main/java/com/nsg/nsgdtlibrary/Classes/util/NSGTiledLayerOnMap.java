@@ -662,6 +662,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             if(SourceNode!=null && DestinationNode!=null) {
                 if (mMap != null && isNavigationStarted == true) {
 
+
                     if (mFusedLocationClient != null) {
                         mFusedLocationClient.removeLocationUpdates(locationCallback);
                     }
@@ -1951,7 +1952,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE: {
