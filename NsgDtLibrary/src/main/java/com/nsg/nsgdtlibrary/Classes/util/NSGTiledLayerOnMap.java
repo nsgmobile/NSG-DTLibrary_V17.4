@@ -532,17 +532,17 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                 public void run() {
 
                                     // need to verify here alsoDirction text
-                                        /*
+
                                         myTimer.schedule(new TimerTask() {
                                             @Override
                                             public void run() {
                                                 if (currentGpsPosition != null && DestinationNode != null) {
-
+                                                    NavigationDirection(currentGpsPosition, DestinationNode);
                                                 }
                                             }
 
                                         }, 0, 10000);
-                                        */
+
                                     //Direction text end
 
                                     if (currentGpsPosition != null) {
@@ -592,7 +592,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                         LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                         caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
                                                         verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
-                                                        NavigationDirection(currentGpsPosition, DestinationNode);
+
                                                         AlertDestination(currentGpsPosition);
                                                         if (bearing > 0.0) {
                                                             CameraPosition currentPlace = new CameraPosition.Builder()
