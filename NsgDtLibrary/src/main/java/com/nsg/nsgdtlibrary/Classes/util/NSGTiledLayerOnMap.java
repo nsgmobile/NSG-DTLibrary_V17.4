@@ -549,9 +549,6 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     };
                                     //END LOCATION OBJECT
 
-
-
-
                                     if (currentGpsPosition != null) {
                                         OldGPSPosition = currentGpsPosition;
                                         Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
@@ -644,8 +641,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
                     if (mFusedLocationClient != null) {
-                        // locationRequest.
-                        mFusedLocationClient.removeLocationUpdates(locationCallback);
+                            mFusedLocationClient = null;
+                     //   mFusedLocationClient.removeLocationUpdates(locationCallback);
                         Log.e("STOP NAVIGATION", "STOP NAVIGATION");
                     }
 
@@ -687,7 +684,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         if(textToSpeech!=null) {
             textToSpeech.shutdown();
         }
+        if(mFusedLocationClient!=null) {
+            mFusedLocationClient = null;
+        }
     }
+
 
     @Override
     public void onDetach() {
@@ -2223,4 +2224,5 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         super.onPause();
 
     }
+
 }
