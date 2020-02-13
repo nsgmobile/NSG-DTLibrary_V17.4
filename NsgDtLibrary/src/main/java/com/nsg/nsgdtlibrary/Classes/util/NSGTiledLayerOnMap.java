@@ -546,10 +546,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                         Handler handler = new Handler();
                         int delay = 1000 * 5; //milliseconds
-                       if(islocationControlEnabled==false){
                             handler.postDelayed(new Runnable() {
                                 public void run() {
-                                    islocationControlEnabled = true;
                                     //START LOCATIONS HERE
 
                                     //END LOCATION OBJECT
@@ -587,7 +585,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                     if (OldNearestPosition != null) {
                                                         Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
                                                         Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
-                                                        animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                        if(islocationControlEnabled==false) {
+                                                            animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                        }else{
+                                                            animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                        }
                                                         float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                         Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
                                                         int height = getView().getMeasuredHeight();
@@ -624,7 +626,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                     handler.postDelayed(this, delay);
                                 }
                             }, delay);
-                       }
+                    // }
 
                     }
                 }
@@ -639,6 +641,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     public int stopNavigation(){
         try{
+            islocationControlEnabled = true;
             if(SourceNode!=null && DestinationNode!=null) {
                 if (mMap != null && isNavigationStarted == true && islocationControlEnabled==true ) {
                     isNavigationStarted = false;
@@ -788,12 +791,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             double distanceOfCurrentPosition=showDistance(st_Point_vertex_main,currentGpsPosition);
             EdgeDistancesList.add(distanceOfCurrentPosition);
             EdgeDistancesMap.put(String.valueOf(distanceOfCurrentPosition).trim(),String.valueOf(pointDataText));
-
             Collections.sort(EdgeDistancesList);
         }
 
         GetSortetPoint(EdgeDistancesMap,EdgeDistancesList, currentGpsPosition );
-
         return shortestDistancePoint;
 
     }
@@ -2050,6 +2051,60 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     marker.setAnchor(0.5f, 0.5f);
                     marker.setFlat(true);
                 }
+                if (t < 1.0) {
+                    handler.postDelayed(this, 16);
+                } else {
+                    float beginAngle = (float)(90 * getAngle(beginLatLng, endLatLng) / Math.PI);
+                    float endAngle = (float)(90 * getAngle(currentGpsPosition, endLatLng) / Math.PI);
+                    computeRotation(10,beginAngle,endAngle);
+                }
+            }
+        });
+    }
+    private void animateCarMoveNotUpdateMarker(final Marker marker, final LatLng beginLatLng, final LatLng endLatLng, final long duration) {
+        final Handler handler = new Handler();
+        final long startTime = SystemClock.uptimeMillis();
+        final Interpolator interpolator = new LinearInterpolator();
+        // set car bearing for current part of path
+        float angleDeg = (float)(180 * getAngle(beginLatLng, endLatLng) / Math.PI);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angleDeg);
+        // marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(mMarkerIcon, 0, 0,mMarkerIcon.getWidth(), mMarkerIcon.getHeight(), matrix, true)));
+        //marker.setIcon(BitmapDescriptorFactory.fromBitmap(Bitmap.createBitmap(mMarkerIcon, 0, 0, centerX,centerY, matrix, true)));
+        handler.post(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+            @Override
+            public void run() {
+                // calculate phase of animation
+                long elapsed = SystemClock.uptimeMillis() - startTime;
+                float t = interpolator.getInterpolation((float) elapsed / duration);
+                // calculate new position for marker
+                double lat = (endLatLng.latitude - beginLatLng.latitude) * t + beginLatLng.latitude;
+                double lngDelta = endLatLng.longitude - beginLatLng.longitude;
+                if (Math.abs(lngDelta) > 180) {
+                    lngDelta -= Math.signum(lngDelta) * 360;
+                }
+                Location location= new Location(LocationManager.GPS_PROVIDER);
+                location.setLatitude(endLatLng.latitude);
+                location.setLongitude(endLatLng.longitude);
+                float bearingMap= location.getBearing();
+                //  float bearingMap= mMap.getCameraPosition().bearing;
+                float bearing = (float) bearingBetweenLocations(beginLatLng,endLatLng);
+                float angle = -azimuthInDegress+bearing;
+                float rotation = -azimuthInDegress * 360 / (2 * 3.14159f) ;
+                double lng = lngDelta * t + beginLatLng.longitude;
+                /*
+                if(bearing>0.0) {
+                    marker.setPosition(new LatLng(lat, lng));
+                    marker.setAnchor(0.5f, 0.5f);
+                    marker.setFlat(true);
+                    marker.setRotation(bearing);
+                }else{
+                    marker.setPosition(new LatLng(lat, lng));
+                    marker.setAnchor(0.5f, 0.5f);
+                    marker.setFlat(true);
+                }
+                 */
                 if (t < 1.0) {
                     handler.postDelayed(this, 16);
                 } else {
