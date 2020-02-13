@@ -359,24 +359,22 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         wayLongitude = location.getLongitude();
                         if (!isContinue) {
                             txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                            Log.v("APP DATA", "APP DATA DATA ........ IF " );
+                          //  Log.v("APP DATA", "APP DATA DATA ........ IF " );
                         } else {
                             stringBuilder.append(wayLatitude);
                             stringBuilder.append("-");
                             stringBuilder.append(wayLongitude);
                             stringBuilder.append("\n\n");
                            // txtContinueLocation.setText(stringBuilder.toString());
-                            Log.v("APP DATA", "location DATA ........ELSE  " );
+                           // Log.v("APP DATA", "location DATA ........ELSE  " );
                             currentGPSPosition=new LatLng(wayLatitude,wayLongitude);
-                            Log.v("APP DATA", "currentGPSPosition DATA ........ELSE  "+currentGPSPosition );
+                           // Log.v("APP DATA", "currentGPSPosition DATA ........ELSE  "+currentGPSPosition );
 
-                            s1= String.valueOf(wayLatitude);
-                            s2= String.valueOf(wayLongitude);
-                            Log.v("APP DATA","lat"+s1+"long"+s2);
+                          //  s1= String.valueOf(wayLatitude);
+                          //  s2= String.valueOf(wayLongitude);
+                          //  Log.v("APP DATA","lat"+s1+"long"+s2);
                         }
-                        if (!isContinue && mFusedLocationClient != null) {
-                            mFusedLocationClient.removeLocationUpdates(locationCallback);
-                        }
+
                     }
                 }
             }
@@ -532,26 +530,12 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     public int startNavigation() {
         if (SourceNode != null && DestinationNode != null ) {
 
-            //if(GpsStatusPresent==true){
-            //  Log.e("Location Request","Location Request"+locationAccepted);
-
             nearestPointValuesList = new ArrayList<LatLng>();
             nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
             OldNearestGpsList = new ArrayList<>();
             OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
             try {
                 if (mMap != null && isMapLoaded == true && isNavigationStarted == false) {
-                    if (isTimerStarted = true) {
-                        myTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if (currentGpsPosition != null && DestinationNode != null) {
-                                    NavigationDirection(currentGpsPosition, DestinationNode);
-                                }
-                            }
-
-                        }, 0, 10000);
-                    }
                     mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -566,98 +550,101 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
+                        //need to start timer here
+                        // and then we can start navigation inside
+                        if (isTimerStarted = true) {
+                            Handler handler = new Handler();
+                            int delay = 1000 * 5; //milliseconds
 
-                        Handler handler = new Handler();
-                        int delay = 1000*5; //milliseconds
+                            handler.postDelayed(new Runnable() {
+                                public void run() {
 
-
-                        handler.postDelayed(new Runnable(){
-                            public void run(){
-                                if (currentGpsPosition != null) {
-                                    OldGPSPosition = currentGpsPosition;
-                                }
-                                isContinue = true;
-                                stringBuilder = new StringBuilder();
-                                currentGpsPosition=getLocation();
-                                  Log.e("APP DATA ", "START NAVIGATION----" + currentGpsPosition);
-                               ////////////// START Navigation Main Implementation
-                                // vehicleSpeed = currentGpsPosition.getSpeed();
-                                LatLng OldNearestPosition = null;
-                                if (isRouteDeviated == false) {
-                                    if (OldGPSPosition != null) {
-                                        double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                                        Log.e("distance", "distance" + distance);
-                                        if (distance > 10) {
-
-                                        } else {
-                                            OldNearestPosition = nPosition;
-                                            Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
-                                            nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
-                                            Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                                            if (mPositionMarker == null) {
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(SourceNode)
-                                                        .title("Nearest GpsPoint")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                            } else {
-                                                Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
-                                                if (OldNearestPosition != null) {
-                                                    animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
-                                                    float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
-                                                    Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                                    int height = getView().getMeasuredHeight();
-                                                    Projection p = mMap.getProjection();
-                                                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                                                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                                                    Point offset = new Point(center.x, (center.y + (height / 4)));
-                                                    LatLng centerLoc = p.fromScreenLocation(center);
-                                                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                                                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                                                    LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
-                                                    caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                    verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
-
-                                                    AlertDestination(currentGpsPosition);
-                                                    if (bearing > 0.0) {
-                                                        CameraPosition currentPlace = new CameraPosition.Builder()
-                                                                .target(shadowTgt)
-                                                                .bearing(bearing).tilt(65.5f).zoom(18)
-                                                                .build();
-                                                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                                    } else {
-
-                                                    }
+                                    // need to verify here alsoDirction text
+                                        /*
+                                        myTimer.schedule(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                if (currentGpsPosition != null && DestinationNode != null) {
 
                                                 }
                                             }
 
-                                        }
+                                        }, 0, 10000);
+                                        */
+                                    //Direction text end
+
+                                    if (currentGpsPosition != null) {
+                                        OldGPSPosition = currentGpsPosition;
+                                        Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
                                     }
+                                    isContinue = true;
+                                    stringBuilder = new StringBuilder();
+                                    currentGpsPosition = getLocation();
+                                    Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
+                                    // Navigation code starts from here
+                                    LatLng OldNearestPosition = null;
+                                    if (isRouteDeviated == false) {
+                                        if (OldGPSPosition != null) {
+                                            double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+                                            Log.e("distance", "distance" + distance);
+                                            if (distance > 40) {
 
-                                } else {
-                                    MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                            } else {
+                                                OldNearestPosition = nPosition;
+                                                Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
+                                                nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
+                                                Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
+                                                if (mPositionMarker == null) {
+                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                            .position(SourceNode)
+                                                            .title("Nearest GpsPoint")
+                                                            .anchor(0.5f, 0.5f)
+                                                            .flat(true)
+                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                } else {
+                                                    Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
+                                                    if (OldNearestPosition != null) {
+                                                        Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
+                                                        Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
+                                                        animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                        float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
+                                                        Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
+                                                        int height = getView().getMeasuredHeight();
+                                                        Projection p = mMap.getProjection();
+                                                        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                                                        Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                                                        Point offset = new Point(center.x, (center.y + (height / 4)));
+                                                        LatLng centerLoc = p.fromScreenLocation(center);
+                                                        LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                                                        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                                                        LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
+                                                        caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
+                                                        verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
+                                                        NavigationDirection(currentGpsPosition, DestinationNode);
+                                                        AlertDestination(currentGpsPosition);
+                                                        if (bearing > 0.0) {
+                                                            CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                    .target(shadowTgt)
+                                                                    .bearing(bearing).tilt(65.5f).zoom(18)
+                                                                    .build();
+                                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                        } else {
+
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                        }
+
+                                    }
+                                    //Navigation code ends here
+                                    handler.postDelayed(this, delay);
                                 }
-                                //////////////// END OF NAVIGATION implementation
-
-
-
-                                handler.postDelayed(this, delay);
-                            }
-                        }, delay);
-
-
-                      //  mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                       //     @Override
-                       //    public void onMyLocationChange(final Location location) {
-
-
-                             //   Handler handler1 = new Handler();
-                             //   handler1.postDelayed(runnable, 0);
-                          //  }
-
-                       // });
+                            }, delay);
+                        }
 
                     }
                 }
@@ -670,91 +657,14 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         //  }
         return 0;
     }
-    public void ImplementMovement(LatLng currentGpsPosition){
-        Runnable runnable = new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-            public void run() {
-                // currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.e("CurrentGpsPoint", " currentGpsPosition GpsPoint " + currentGpsPosition);
-                //  vehicleSpeed = location.getSpeed();
-                LatLng OldNearestPosition = null;
-                if (isRouteDeviated == false) {
-                    if (OldGPSPosition != null) {
-                        double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                        Log.e("distance", "distance" + distance);
-                        if (distance > 10) {
-
-                        } else {
-                            OldNearestPosition = nPosition;
-                            Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
-                            nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
-                            Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                            if (mPositionMarker == null) {
-                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                        .position(SourceNode)
-                                        .title("Nearest GpsPoint")
-                                        .anchor(0.5f, 0.5f)
-                                        .flat(true)
-                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                            } else {
-                                Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
-                                if (OldNearestPosition != null) {
-                                    animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1500);
-                                    float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
-                                    Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                    int height = getView().getMeasuredHeight();
-                                    Projection p = mMap.getProjection();
-                                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                                    Point offset = new Point(center.x, (center.y + (height / 4)));
-                                    LatLng centerLoc = p.fromScreenLocation(center);
-                                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                                    LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
-                                    caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                    verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
-
-                                    AlertDestination(currentGpsPosition);
-                                    if (bearing > 0.0) {
-                                        CameraPosition currentPlace = new CameraPosition.Builder()
-                                                .target(shadowTgt)
-                                                .bearing(bearing).tilt(65.5f).zoom(18)
-                                                .build();
-                                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                    } else {
-
-                                    }
-
-                                }
-                            }
-
-                        }
-                    }
-
-                } else {
-                    MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                }
-            }
-
-        };
-
-    }
     public int stopNavigation(){
         try{
             if(SourceNode!=null && DestinationNode!=null) {
                 if (mMap != null && isNavigationStarted == true) {
-                /*
-                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                    @Override
-                    public void onMyLocationChange(final Location location) {
-                        if (mPositionMarker != null) {
-                            mPositionMarker.remove();
-                        }
-                        currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    if (mFusedLocationClient != null) {
+                        mFusedLocationClient.removeLocationUpdates(locationCallback);
                     }
-                });
-                */
-                    mMap.setMyLocationEnabled(false);
                     isNavigationStarted = false;
                     if (currentGpsPosition != null) {
                         // String NavigationAlert = " Navigation Stopped " ;
@@ -956,6 +866,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         } else {
             if(geometryTextimpValue!=null && geometryTextimpValue.isEmpty()){
                 String data = geometryTextimpValue + " " + Distance_To_travelIn_Vertex_Convetred + "Meters";
+                Log.e("GROMETRY TEXT","GEOMETRY DIRECTION TEXT ----- "+data);
                 //String data=" in "+ DitrectionDistance +" Meters "+ directionTextFinal;
                 int speechStatus = textToSpeech.speak(data, TextToSpeech.QUEUE_FLUSH, null);
                 if (speechStatus == TextToSpeech.ERROR) {
@@ -2091,8 +2002,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                 if (location != null) {
                                     wayLatitude = location.getLatitude();
                                     wayLongitude = location.getLongitude();
-                                    Log.v("APP DATA","LAT VALUE"+wayLatitude);
-                                    Log.v("APP DATA","LAT VALUE"+wayLongitude);
+                                   // Log.v("APP DATA","LAT VALUE"+wayLatitude);
+                                   // Log.v("APP DATA","LAT VALUE"+wayLongitude);
                                     //txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
 
 
@@ -2110,41 +2021,33 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     private LatLng getLocation() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     AppConstants.LOCATION_REQUEST);
 
         } else {
             if (isContinue) {
-                Log.v("APP DATA","checking IF ic continue "+isContinue);
+               // Log.v("APP DATA","checking IF ic continue "+isContinue);
                 mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-                Log.v("APP DATA","checking IF ");
+               // Log.v("APP DATA","checking IF ");
 
 
             } else {
                 mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        Log.v("APP DATA","LOCATION NULL");
-                        Log.v("APP DATA","checking else ic continue "+isContinue);
+                      //  Log.v("APP DATA","LOCATION NULL");
+                     //   Log.v("APP DATA","checking else ic continue "+isContinue);
                         if (location != null) {
-                            Log.v("jyothi","checking else ");
                             wayLatitude = location.getLatitude();
                             wayLongitude = location.getLongitude();
                             //just for trail
                             String S= String.valueOf(location.getLatitude());
-                            Log.v("APP DATA",""+S);
-                            Log.e("latitude FROM SERVICE",location.getLatitude()+"");
-                            Log.e("longitude FROM SERVICE",location.getLongitude()+"");
-
+                           // Log.v("APP DATA",""+S);
+                           // Log.e("latitude FROM SERVICE",location.getLatitude()+"");
+                          //  Log.e("longitude FROM SERVICE",location.getLongitude()+"");
                             //txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
-                            s1= String.valueOf(wayLatitude);
-                            s2= String.valueOf(wayLongitude);
-
-
-                           // currentGPSPosition=new LatLng(wayLatitude,wayLongitude);
-
 
                             Log.d("TAG", "location DATA ........"+"CURRENT GPS POSITION : "+ wayLatitude+","+wayLongitude  );
                         } else {
