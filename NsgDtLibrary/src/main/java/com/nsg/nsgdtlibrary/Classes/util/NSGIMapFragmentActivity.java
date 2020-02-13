@@ -486,15 +486,7 @@ public class NSGIMapFragmentActivity extends Fragment implements View.OnClickLis
             try {
                 if (mMap != null && isMapLoaded == true && isNavigationStarted == false) {
                     if (isTimerStarted = true) {
-                        myTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if (currentGpsPosition != null && DestinationNode != null) {
-                                    NavigationDirection(currentGpsPosition, DestinationNode);
-                                }
-                            }
 
-                        }, 0, 10000);
                     }
                     mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
@@ -516,6 +508,15 @@ public class NSGIMapFragmentActivity extends Fragment implements View.OnClickLis
                                 if (currentGpsPosition != null) {
                                     OldGPSPosition = currentGpsPosition;
                                 }
+                                myTimer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        if (currentGpsPosition != null && DestinationNode != null) {
+
+                                        }
+                                    }
+
+                                }, 0, 10000);
                                 Runnable runnable = new Runnable() {
                                     public void run() {
                                         currentGpsPosition = new LatLng(location.getLatitude(), location.getLongitude());
@@ -557,14 +558,14 @@ public class NSGIMapFragmentActivity extends Fragment implements View.OnClickLis
                                                             LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                             caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
                                                             verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, 40, null);
-
+                                                            NavigationDirection(currentGpsPosition, DestinationNode);
                                                             AlertDestination(currentGpsPosition);
                                                             if (bearing > 0.0) {
                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                         .target(shadowTgt)
                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                         .build();
-                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1500, null);
                                                             } else {
 
                                                             }
