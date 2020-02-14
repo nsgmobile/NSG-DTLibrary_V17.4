@@ -1562,8 +1562,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     private void sendData(String comm,int AlertType) {
         //comm=time.toString();
-        Log.e("SendData","SendData ------- "+ comm +"AlertType"+ AlertType);
-        Callback.communicate(comm,AlertType);
+        if(comm!=null) {
+            Log.e("SendData", "SendData ------- " + comm + "AlertType" + AlertType);
+            Callback.communicate(comm, AlertType);
+        }
 
     }
     private interface LatLngInterpolator {
