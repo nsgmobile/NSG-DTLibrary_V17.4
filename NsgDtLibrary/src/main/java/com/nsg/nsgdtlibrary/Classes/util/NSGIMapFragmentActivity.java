@@ -391,7 +391,7 @@ import static java.lang.Math.sin;
             // mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             // mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
             checkPermission();
-           requestPermission();
+            requestPermission();
             String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
             sqlHandler.executeQuery(delQuery);
             //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
@@ -595,7 +595,11 @@ import static java.lang.Math.sin;
                                                             animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
                                                             float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                             Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                                            int height = getView().getMeasuredHeight();
+                                                            int height=0;
+                                                            if(getView()!=null ) {
+                                                                 height = getView().getMeasuredHeight();
+                                                            }
+
                                                             Projection p = mMap.getProjection();
                                                             Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
                                                             Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
@@ -2015,17 +2019,23 @@ import static java.lang.Math.sin;
 
         private LatLng getLocation() {
             /*
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                        AppConstants.LOCATION_REQUEST);
+            if (ActivityCompat.checkSelfPermission(getContext(),
+            android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(getContext(),
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+         requestPermissions(getActivity(),
+                new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_LOCATION);
 
              */
 
            // } else {
                 if (isContinue) {
                     // Log.v("APP DATA","checking IF ic continue "+isContinue);
-                    mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                   if( mFusedLocationClient!=null && locationRequest!=null && locationCallback!=null) {
+                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                    }
                     // Log.v("APP DATA","checking IF ");
 
 
