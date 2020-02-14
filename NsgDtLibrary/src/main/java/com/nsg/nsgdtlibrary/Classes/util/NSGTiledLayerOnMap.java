@@ -889,6 +889,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 } else if (geometryTextimpValue.contains("Take Left")) {
                     image.setImageResource(R.drawable.direction_left);
                 }
+                if(getActivity().getApplicationContext()!=null)
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                    @Override
                     public void run() {
