@@ -1427,9 +1427,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             if (speechStatus1 == TextToSpeech.ERROR) {
                 Log.e("TTS", "Error in converting Text to Speech!");
             }
-            StringBuilder destinationAlert=new StringBuilder("Destination Reached");
-            sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
-            Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
+           // StringBuilder destinationAlert=new StringBuilder("Destination Reached");
 
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
@@ -1439,7 +1437,11 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                     .setCancelable(false)
                     .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
+                            Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
+
                             getActivity().onBackPressed();
+
                         }
                     });
             AlertDialog alert = builder.create();
