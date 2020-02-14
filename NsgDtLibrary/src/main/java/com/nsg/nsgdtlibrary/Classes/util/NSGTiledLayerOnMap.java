@@ -951,7 +951,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
         time.append("Distance : ").append(TotalDistance +" Meters ").append("::").append("Total ETA : ").append(resultTotalETA +" SEC ").append("::").append(" Distance To Travel : ").append(resultNeedToTeavelTime +"Sec").append("::").append("Elapsed Time : ").append(EtaElapsed).append("::").append("currentGpsPosition : ").append(currentGpsPosition).append("\n");
-        sendData(time.toString(),MapEvents.ALERTTYPE_2);
+        if(time!=null) {
+            sendData(time.toString(), MapEvents.ALERTTYPE_2);
+        }
 
         // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
         // tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
@@ -1982,7 +1984,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         });
                     }
                 } else {
-                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
