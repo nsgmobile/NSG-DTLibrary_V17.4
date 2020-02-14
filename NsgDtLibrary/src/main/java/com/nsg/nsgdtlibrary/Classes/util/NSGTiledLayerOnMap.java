@@ -951,7 +951,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
 
         time.append("Distance : ").append(TotalDistance +" Meters ").append("::").append("Total ETA : ").append(resultTotalETA +" SEC ").append("::").append(" Distance To Travel : ").append(resultNeedToTeavelTime +"Sec").append("::").append("Elapsed Time : ").append(EtaElapsed).append("::").append("currentGpsPosition : ").append(currentGpsPosition).append("\n");
-        if(time!=null) {
+        if(time.toString()!=null) {
             sendData(time.toString(), MapEvents.ALERTTYPE_2);
         }
 
