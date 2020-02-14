@@ -1910,7 +1910,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
             case PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0) {
 
-                    locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean  locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
                     if (locationAccepted && storageAccepted) {
@@ -1974,8 +1974,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         }
     }
     private LatLng getLocation() {
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     AppConstants.LOCATION_REQUEST);
 
