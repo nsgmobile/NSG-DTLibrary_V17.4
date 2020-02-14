@@ -551,7 +551,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                         isTimerStarted = true;
 
                         Handler handler = new Handler();
-                        int delay = 1000 * 5; //milliseconds
+                        int delay = 1000 * 3; //milliseconds
                             handler.postDelayed(new Runnable() {
                                 public void run() {
                                     //START LOCATIONS HERE
@@ -1890,7 +1890,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
     private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION);
+       // int result = ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION);
         int result1 = ContextCompat.checkSelfPermission(getContext(), READ_EXTERNAL_STORAGE);
 
         return true;
@@ -1898,7 +1898,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
     private void requestPermission() {
 
-        ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        ActivityCompat.requestPermissions(getActivity(), new String[]{ READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
 
     }
 
@@ -1908,12 +1908,20 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                     Toast.makeText(getContext(), "Permission Granted,.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "Permission Granted,.", Toast.LENGTH_LONG).show();
+                }
+                /*
                 if (grantResults.length > 0) {
 
-                    boolean  locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                  //  boolean  locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean storageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
 
-                    if (locationAccepted && storageAccepted) {
+                    if (storageAccepted) {
                         // Toast.makeText(this, "Permission Granted,.", Toast.LENGTH_LONG).show();
                     } else {
                         // Toast.makeText(this, "Permission Denied, You cannot access location data and camera.", Snackbar.LENGTH_LONG).show();
@@ -1940,6 +1948,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
                     }
                 }
+                */
             }break;
             case 1000: {
                 // If request is cancelled, the result arrays are empty.
@@ -1976,7 +1985,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private LatLng getLocation() {
         if(getContext()!=null)
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     AppConstants.LOCATION_REQUEST);
 
