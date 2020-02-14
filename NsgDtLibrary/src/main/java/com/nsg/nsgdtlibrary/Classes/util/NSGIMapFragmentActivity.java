@@ -597,7 +597,7 @@ import static java.lang.Math.sin;
                                                             Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
                                                             int height=0;
                                                             if(getView()!=null ) {
-                                                                 height = getView().getMeasuredHeight();
+                                                             height = getView().getMeasuredHeight();
                                                             }
 
                                                             Projection p = mMap.getProjection();
@@ -950,7 +950,9 @@ import static java.lang.Math.sin;
             }
 
             time.append("Distance : ").append(TotalDistance +" Meters ").append("::").append("Total ETA : ").append(resultTotalETA +" SEC ").append("::").append(" Distance To Travel : ").append(resultNeedToTeavelTime +"Sec").append("::").append("Elapsed Time : ").append(EtaElapsed).append("::").append("currentGpsPosition : ").append(currentGpsPosition).append("\n");
-            sendData(time.toString(),MapEvents.ALERTTYPE_2);
+           if(time.toString()!=null) {
+               sendData(time.toString(), MapEvents.ALERTTYPE_2);
+           }
 
             // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
             // tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
@@ -1424,9 +1426,6 @@ import static java.lang.Math.sin;
                 if (speechStatus1 == TextToSpeech.ERROR) {
                     Log.e("TTS", "Error in converting Text to Speech!");
                 }
-                StringBuilder destinationAlert=new StringBuilder("Destination Reached");
-                sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
-                Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
 
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
@@ -1436,6 +1435,10 @@ import static java.lang.Math.sin;
                         .setCancelable(false)
                         .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                StringBuilder destinationAlert=new StringBuilder("Destination Reached");
+                                sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
+                                Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
+
                                 getActivity().onBackPressed();
                             }
                         });
@@ -1561,8 +1564,12 @@ import static java.lang.Math.sin;
         }
         private void sendData(String comm,int AlertType) {
             //comm=time.toString();
-            Log.e("SendData","SendData ------- "+ comm +"AlertType"+ AlertType);
-            Callback.communicate(comm,AlertType);
+            if(comm!=null) {
+                Log.e("SendData", "SendData ------- " + comm + "AlertType" + AlertType);
+                Callback.communicate(comm, AlertType);
+            }else{
+
+            }
 
         }
         private interface LatLngInterpolator {
