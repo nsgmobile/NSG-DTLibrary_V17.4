@@ -243,7 +243,7 @@ import static java.lang.Math.sin;
         String s1,s2;
 
         public interface FragmentToActivity {
-            String communicate(String comm);
+           // String communicate(String comm);
             String communicate(String comm, int alertType);
         }
         private FragmentToActivity Callback;
