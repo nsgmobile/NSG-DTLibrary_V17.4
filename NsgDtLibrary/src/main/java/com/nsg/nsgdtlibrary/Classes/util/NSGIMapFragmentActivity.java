@@ -390,8 +390,8 @@ import static java.lang.Math.sin;
             // mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
             // mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             // mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-            checkPermission();
-            requestPermission();
+           // checkPermission();
+          // requestPermission();
             String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
             sqlHandler.executeQuery(delQuery);
             //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
@@ -1901,7 +1901,7 @@ import static java.lang.Math.sin;
 
         }
 
-
+/*
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1972,6 +1972,45 @@ import static java.lang.Math.sin;
                 }
             }
         }
+                */
+        @SuppressLint("MissingPermission")
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            switch (requestCode) {
+                case 1000: {
+                    // If request is cancelled, the result arrays are empty.
+                    if (grantResults.length > 0
+                            && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                        if (isContinue) {
+                            mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                        } else {
+                            mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        wayLatitude = location.getLatitude();
+                                        wayLongitude = location.getLongitude();
+                                        Log.v("APP DATA","LAT VALUE"+wayLatitude);
+                                        Log.v("APP DATA","LAT VALUE"+wayLongitude);
+                                        txtLocation.setText(String.format(Locale.US, "%s - %s", wayLatitude, wayLongitude));
+
+
+                                    } else {
+                                        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                }
+            }
+        }
+
         private LatLng getLocation() {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
