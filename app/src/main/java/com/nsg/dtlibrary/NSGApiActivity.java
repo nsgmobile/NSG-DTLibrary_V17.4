@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnMap.FragmentToActivity, View.OnClickListener {
+public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentActivity.FragmentToActivity, View.OnClickListener {
     private int bufferSize=30;
     private String charlsisNumber;
     private  Button Start,Stop;
@@ -84,7 +84,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGTiledLayerOnM
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
   //  com.nsg.dtlibrary.NavigationProperties properties=new com.nsg.dtlibrary.NavigationProperties();
 
-    NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,routeDeviatedDT_URL,AuthorisationKey);
+    NSGIMapFragmentActivity test = new NSGIMapFragmentActivity(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,routeDeviatedDT_URL,AuthorisationKey);
   // NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
