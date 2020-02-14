@@ -596,7 +596,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                                                             animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
                                                             float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                             Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                                            int height = getView().getMeasuredHeight();
+                                                            int height = 0;
+                                                            if (getView() != null){
+                                                                height = getView().getMeasuredHeight();
+                                                             }
                                                             Projection p = mMap.getProjection();
                                                             Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
                                                             Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
