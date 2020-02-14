@@ -1503,7 +1503,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
 
 
         time.append("Distance").append(TotalDistance +" Meters ").append("\n").append("Total ETA ").append(resultTotalETA +" SEC ").append("\n").append(" Distance To Travel").append(resultNeedToTeavelTime +"Sec").append("Elapsed Time").append(EtaElapsed).append("\n");
-        sendData(time.toString(),MapEvents.ALERTTYPE_2);
+       if(time!=null) {
+           sendData(time.toString(), MapEvents.ALERTTYPE_2);
+       }
 
         // tv.setText("Total Time: "+ resultTotalTimeConverted +" SEC" );
         //  tv1.setText("Time  Traveled: "+ resultTravelledTimeConverted +" SEC ");
@@ -1564,8 +1566,8 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     }
     private void sendData(String comm,int AlertType) {
         //comm=time.toString();
-        if(comm!=null) {
-            Log.e("SendData", "SendData ------- " + comm + "AlertType" + AlertType);
+       if(comm!=null) {
+           // Log.e("SendData", "SendData ------- " + comm + "AlertType" + AlertType);
             Callback.communicate(comm, AlertType);
         }
 
