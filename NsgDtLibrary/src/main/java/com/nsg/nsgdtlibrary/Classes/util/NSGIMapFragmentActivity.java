@@ -390,8 +390,8 @@ import static java.lang.Math.sin;
             // mSensorManager = (SensorManager)getContext().getSystemService(SENSOR_SERVICE);
             // mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             // mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-           // checkPermission();
-          // requestPermission();
+            checkPermission();
+           requestPermission();
             String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
             sqlHandler.executeQuery(delQuery);
             //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
@@ -1901,7 +1901,7 @@ import static java.lang.Math.sin;
 
         }
 
-/*
+
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1972,7 +1972,8 @@ import static java.lang.Math.sin;
                 }
             }
         }
-                */
+        /*
+
         @SuppressLint("MissingPermission")
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -2010,14 +2011,18 @@ import static java.lang.Math.sin;
                 }
             }
         }
+        */
 
         private LatLng getLocation() {
+            /*
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                         AppConstants.LOCATION_REQUEST);
 
-            } else {
+             */
+
+           // } else {
                 if (isContinue) {
                     // Log.v("APP DATA","checking IF ic continue "+isContinue);
                     mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
@@ -2047,7 +2052,7 @@ import static java.lang.Math.sin;
                         }
                     });
                 }
-            }
+          //  }
             return currentGPSPosition;
         }
         @Override
