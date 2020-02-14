@@ -714,8 +714,8 @@ import static java.lang.Math.sin;
 
         @Override
         public void onDetach() {
-            Callback = null;
             super.onDetach();
+            // Callback = null;
         }
         private  List<RouteT> getRouteAccordingToRouteID(String stNode,String endNode) {
             String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE startNode = "+"'"+stNode+"'"+" AND "+ "endNode= "+ "'"+endNode+"'";
