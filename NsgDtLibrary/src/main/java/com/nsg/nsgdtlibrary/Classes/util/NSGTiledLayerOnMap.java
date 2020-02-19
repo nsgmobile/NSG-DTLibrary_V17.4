@@ -147,6 +147,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener {
+    private boolean isAlertShown=false;
     private static final int PERMISSION_REQUEST_CODE = 200;
     boolean locationAccepted,islocationControlEnabled=false;
     // private static final int SENSOR_DELAY_NORMAL =50;
@@ -1422,36 +1423,19 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
+            if (getActivity() != null) {
+                if (isAlertShown == false) {
+                    String data1 = " Your Destination Reached ";
+                    int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
+                    if (speechStatus1 == TextToSpeech.ERROR) {
+                        Log.e("TTS", "Error in converting Text to Speech!");
+                    }
+                    sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
+                    isAlertShown = true;
+                } else {
 
-            //Speech implementation
-            mMap.setMyLocationEnabled(false);
-            String data1=" Your Destination Reached ";
-
-            int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
-            if (speechStatus1 == TextToSpeech.ERROR) {
-                Log.e("TTS", "Error in converting Text to Speech!");
+                }
             }
-           // StringBuilder destinationAlert=new StringBuilder("Destination Reached");
-
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
-            builder.setTitle("Alert");
-            builder.setIcon(R.drawable.car_icon_32);
-            builder.setMessage("Destination Reached")
-                    .setCancelable(false)
-                    .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
-                            Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
-
-                            getActivity().onBackPressed();
-
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-
-
         }
     }
 
