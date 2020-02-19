@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
  * Created by sailaja.ch NSGI on 27/09/2019
  */
 public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentActivity.FragmentToActivity, View.OnClickListener {
-    private int bufferSize=10;
+    private int bufferSize=15;
     private String charlsisNumber;
     private  Button Start,Stop;
     private String jobId="1",routeId;
