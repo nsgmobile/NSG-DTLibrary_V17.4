@@ -502,7 +502,7 @@ import static java.lang.Math.sin;
                     LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, location.getBearing());
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(shadowTgt));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                     /*
                     CameraPosition currentPlace = new CameraPosition.Builder()
                             .target(shadowTgt)
