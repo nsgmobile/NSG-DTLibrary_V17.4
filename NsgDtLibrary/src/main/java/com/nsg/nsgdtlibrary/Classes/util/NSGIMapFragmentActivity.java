@@ -988,12 +988,10 @@ import static java.lang.Math.sin;
 
          if (PrevousGpsPosition != null){
 
-
-             float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
-             //  Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
              /*
-             GetNearestPointOnRoadFromGPS in this method PrevousGpsPosition is not using here we are sending it for
-             handling parameter exception only ,we are not using it
+             GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
+              we are sending it for
+             handling parameter exception only ---
               */
              LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
              double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
@@ -1002,6 +1000,8 @@ import static java.lang.Math.sin;
             // double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
             // Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
              //Log.e("Route Deviation","CIRCLE RADIUS----"+  mCircle.getRadius());
+             //  float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
+             //  Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
 
              if(returnedDistance>routeDeviationDistance){
                  String cgpsLat = String.valueOf(currentGpsPosition.latitude);
