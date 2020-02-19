@@ -1167,29 +1167,35 @@ import static java.lang.Math.sin;
                              .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
                              .flat(true));
                  } else {
+                     //start/stop navigation here
+                     if(islocationControlEnabled==false) {
+                         animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
+                         int height = 0;
+                         if (getView() != null) {
+                             height = getView().getMeasuredHeight();
+                         }
+                         Projection p = mMap.getProjection();
+                         Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                         Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                         Point offset = new Point(center.x, (center.y + (height / 4)));
+                         LatLng centerLoc = p.fromScreenLocation(center);
+                         LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                         double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                         LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
+                         CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
+                         AlertDestination(currentGpsPosition);
+                         if (bearing > 0.0) {
+                             CameraPosition currentPlace = new CameraPosition.Builder()
+                                     .target(shadowTgt)
+                                     .bearing(bearing).tilt(65.5f).zoom(18)
+                                     .build();
+                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                         } else {
 
-                     animateCarMove(mPositionMarker, OldGpsRouteDeviation , nearestPositionPoint, 1000);
-                     int height=0;
-                     if(getView()!=null ) {
-                         height = getView().getMeasuredHeight();
-                     }
-                     Projection p = mMap.getProjection();
-                     Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                     Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                     Point offset = new Point(center.x, (center.y + (height / 4)));
-                     LatLng centerLoc = p.fromScreenLocation(center);
-                     LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                     double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                     LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
-                     caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                     AlertDestination(currentGpsPosition);
-                     if (bearing > 0.0) {
-                         CameraPosition currentPlace = new CameraPosition.Builder()
-                                 .target(shadowTgt)
-                                 .bearing(bearing).tilt(65.5f).zoom(18)
-                                 .build();
-                         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                     } else {
+                         }
+                     }else if(islocationControlEnabled==true){
+
+                         animateCarMoveNotUpdateMarker(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
 
                      }
 
@@ -1201,7 +1207,7 @@ import static java.lang.Math.sin;
                  nearestPointValuesList.add(DestinationPosition);
              }
               */
-             AlertDestination(currentGpsPosition);
+            // AlertDestination(currentGpsPosition);
          }
      }
 
