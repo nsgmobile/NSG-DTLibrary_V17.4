@@ -198,7 +198,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     private TextView tv,tv1,tv2,tv3,tv4,tv5;
     private String routeIDName;
     HashMap<LatLng,String>edgeDataPointsListData;
-    private ImageButton change_map_options;
+    private ImageButton change_map_options,re_center;
     private String geometryDirectionText="",key="",distanceKey="",geometryDirectionDistance="";
     HashMap<String,String>nearestValuesMap;
     private List<LatLng> OldNearestGpsList;
@@ -395,8 +395,10 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
         requestPermission();
         String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
         sqlHandler.executeQuery(delQuery);
-        //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-        //change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+        change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
+        change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+        re_center = (ImageButton)rootView.findViewById(R.id.re_center);
+        re_center.setOnClickListener(NSGTiledLayerOnMap.this);
 
         if(stNode!=null && endNode!=null && routeData!=null){
             InsertAllRouteData(stNode,endNode,routeData);
@@ -464,7 +466,7 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         if(v==change_map_options){
-        /*
+
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file
             popup.getMenuInflater()
@@ -502,7 +504,9 @@ public class NSGTiledLayerOnMap extends Fragment implements View.OnClickListener
                 }
             });
             popup.show();
-             */
+
+        }else if(v==re_center){
+
         }
 
     }
