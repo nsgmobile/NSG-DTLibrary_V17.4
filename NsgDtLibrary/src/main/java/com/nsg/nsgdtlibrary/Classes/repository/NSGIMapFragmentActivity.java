@@ -1016,10 +1016,10 @@ import static java.lang.Math.sin;
                         Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
                         //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
                         //  DestinationPosition = new LatLng(destLat, destLng);
-                        dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                        dialog.setMessage("Fetching new Route");
-                        dialog.setMax(100);
-                        dialog.show();
+                       // dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                       // dialog.setMessage("Fetching new Route");
+                       // dialog.setMax(100);
+                       // dialog.show();
 
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -1303,14 +1303,14 @@ import static java.lang.Math.sin;
                             }catch (Exception ex){
 
                             }
-                            dialog.dismiss();
+                           // dialog.dismiss();
                         }
                     }
                 });
             }catch(Exception e){
                 e.printStackTrace();
             }
-            dialog.dismiss();
+           // dialog.dismiss();
         }
         private String HttpPost(String myUrl,String latLng1,String latLng2) throws IOException, JSONException {
             StringBuilder sb = new StringBuilder();
@@ -1795,6 +1795,7 @@ import static java.lang.Math.sin;
                 destinationMarker = mMap.addMarker(new MarkerOptions()
                         .position(DestinationNode)
                         .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.destination_marker_whitetext_lightgreen)));
+               /*
                 CameraPosition googlePlex1 = CameraPosition.builder()
                         .target(DestinationNode)
                         .zoom(18)
@@ -1802,6 +1803,8 @@ import static java.lang.Math.sin;
                         .build();
 
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
+                
+                */
             }else{
                 //  mMap.addMarker(new MarkerOptions()
                 //         .position(new LatLng(24.984408, 55.072814))
