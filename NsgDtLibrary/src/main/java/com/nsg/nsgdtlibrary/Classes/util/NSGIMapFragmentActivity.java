@@ -1620,13 +1620,18 @@ import static java.lang.Math.sin;
                     } else if (directionTextInDeviation.contains("Take Left")) {
                         image.setImageResource(R.drawable.direction_left);
                     }
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = new Toast(getActivity().getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                            toast.setGravity(Gravity.TOP, 0, 130);
+                            toast.setView(layout);
+                            toast.show();
+                        }
+                    });
 
-                    Toast toast = new Toast(getActivity().getApplicationContext());
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                    toast.setGravity(Gravity.TOP, 0, 180);
-                    toast.setView(layout);
-                    toast.show();
                 }
 
             }
