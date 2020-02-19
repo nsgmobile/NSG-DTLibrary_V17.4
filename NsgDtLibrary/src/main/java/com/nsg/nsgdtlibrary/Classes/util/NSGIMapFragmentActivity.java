@@ -226,6 +226,7 @@ import static java.lang.Math.sin;
         public boolean isNavigationStarted=false;
         NavigationProperties properties;
         LocationManager mLocationManager;
+        private String directionTextRouteDeviation,st_vertex,end_vertex;
         //  private boolean isGPSEnabled=false;
 
         //Fused Location Client api
@@ -538,7 +539,13 @@ import static java.lang.Math.sin;
                                 public void run() {
                                     if (currentGpsPosition != null && DestinationNode != null) {
                                         if(islocationControlEnabled==false) {
-                                            NavigationDirection(currentGpsPosition, DestinationNode);
+                                            if (isRouteDeviated == false) {
+                                                NavigationDirection(currentGpsPosition, DestinationNode);
+                                            }else{
+                                                TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation,st_vertex,end_vertex);
+
+                                            }
+
                                         }else{
 
                                         }
@@ -1095,7 +1102,6 @@ import static java.lang.Math.sin;
      public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
          LatLng FirstCordinate = null,SecondCordinate=null;
          LatLng  OldGpsRouteDeviation=null;
-         String st_vertex="",end_vertex="", directionTextRouteDeviation="";
          if(RouteDeviationConvertedPoints!=null) {
              Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
              Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
@@ -1197,7 +1203,6 @@ import static java.lang.Math.sin;
                          double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                          LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                          CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
-                         TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation,st_vertex,end_vertex);
                          AlertDestination(currentGpsPosition);
                          if (bearing > 0.0) {
                              CameraPosition currentPlace = new CameraPosition.Builder()
