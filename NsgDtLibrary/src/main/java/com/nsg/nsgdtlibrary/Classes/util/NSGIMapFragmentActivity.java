@@ -1794,6 +1794,7 @@ import static java.lang.Math.sin;
                 destinationMarker = mMap.addMarker(new MarkerOptions()
                         .position(DestinationNode)
                         .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.destination_marker_whitetext_lightgreen)));
+               /*
                 CameraPosition googlePlex1 = CameraPosition.builder()
                         .target(DestinationNode)
                         .zoom(18)
@@ -1801,10 +1802,12 @@ import static java.lang.Math.sin;
                         .build();
 
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
+                
+                */
             }else{
-                //  mMap.addMarker(new MarkerOptions()
-                //         .position(new LatLng(24.984408, 55.072814))
-                //        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.blue_circle)));
+                mMap.addMarker(new MarkerOptions()
+                         .position(new LatLng(24.984408, 55.072814))
+                        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.blue_circle)));
                 CameraPosition googlePlex = CameraPosition.builder()
                         .target(new LatLng(24.984408, 55.072814))
                         .zoom(15)
