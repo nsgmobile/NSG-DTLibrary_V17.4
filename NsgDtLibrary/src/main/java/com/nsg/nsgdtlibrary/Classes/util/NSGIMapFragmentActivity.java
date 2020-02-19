@@ -1000,7 +1000,7 @@ import static java.lang.Math.sin;
              Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
              Log.e("Route Deviation","CIRCLE RADIUS----"+  mCircle.getRadius());
 
-             if(distanceAtRouteDeviation> mCircle.getRadius() && returnedDistance >5 && returnedDistance <10){
+             if(distanceAtRouteDeviation> mCircle.getRadius() ){
                  String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                  String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                  final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
