@@ -1554,7 +1554,7 @@ import static java.lang.Math.sin;
             // Log.e("TAG", "  Need To travel DistanceInMTS " + needToTravelDistanceInMTS);
             // Log.e("TAG", "  Need To travel  Time " + resultNeedToTeavelTime);
             // double presentETATime = resultTravelledTime+resultNeedToTeavelTime;
-            tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
+            //tv2.setText("Time ETA : "+ resultNeedToTeavelTimeConverted +" SEC ");
 
             if (resultTravelledTimeConverted > resultTotalTimeConverted) {
                 etaCrossedFlag = "YES";
