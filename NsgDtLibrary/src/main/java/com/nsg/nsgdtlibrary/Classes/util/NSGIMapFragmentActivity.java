@@ -1095,6 +1095,7 @@ import static java.lang.Math.sin;
      public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
          LatLng FirstCordinate = null,SecondCordinate=null;
          LatLng  OldGpsRouteDeviation=null;
+         String st_vertex="",end_vertex="", directionTextRouteDeviation="";
          if(RouteDeviationConvertedPoints!=null) {
              Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
              Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
@@ -1131,6 +1132,20 @@ import static java.lang.Math.sin;
                      //  Log.e("Route Deviation", " FIRST Cordinate  From Route deviation" + FirstCordinate);
                      // key= String.valueOf(getKeysFromValue(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate));
                      // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
+                     for(int i=0;i<geometryRouteDeviatedEdgesData.size();i++){
+                         GeometryT geometry=geometryRouteDeviatedEdgesData.get(i);
+                         String routeDeviationTextPoint= geometry.getPositionMarkingPoint();
+                         // Log.e("Route Deviation", " ST_VERTEX From Route deviation" + routeDeviationTextPoint);
+
+                         if(routeDeviationTextPoint.equals(FirstCordinate.toString())){
+                             int index = geometryRouteDeviatedEdgesData.indexOf(routeDeviationTextPoint);
+                             st_vertex=geometry.getStartPoint();
+                             end_vertex=geometry.getEndPoint();
+                             directionTextRouteDeviation=geometry.getGeometryText();
+
+                         }
+                     }
+
                  } else {
                      System.out.println("The list does not contains " + "FALSE");
                  }
@@ -1183,6 +1198,7 @@ import static java.lang.Math.sin;
                          double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                          LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                          CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
+                         TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation,st_vertex,end_vertex);
                          AlertDestination(currentGpsPosition);
                          if (bearing > 0.0) {
                              CameraPosition currentPlace = new CameraPosition.Builder()
