@@ -1607,25 +1607,27 @@ import static java.lang.Math.sin;
                 if (speechStatus == TextToSpeech.ERROR) {
                     //   Log.e("TTS", "Error in converting Text to Speech!");
                 }
-                // Toast.makeText(getActivity(), "" + directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
-                LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                if(getActivity()!=null) {
+                    // Toast.makeText(getActivity(), "" + directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters", Toast.LENGTH_SHORT).show();
+                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
-                text.setText("" + directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
-                ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
-                if (directionTextInDeviation.contains("Take Right")) {
-                    image.setImageResource(R.drawable.direction_right);
-                } else if (directionTextInDeviation.contains("Take Left")) {
-                    image.setImageResource(R.drawable.direction_left);
+                    text.setText("" + directionTextInDeviation + " " + Distance_To_travelIn_Vertex_Convetred + "Meters");
+                    ImageView image = (ImageView) layout.findViewById(R.id.image_toast);
+                    if (directionTextInDeviation.contains("Take Right")) {
+                        image.setImageResource(R.drawable.direction_right);
+                    } else if (directionTextInDeviation.contains("Take Left")) {
+                        image.setImageResource(R.drawable.direction_left);
+                    }
+
+                    Toast toast = new Toast(getActivity().getApplicationContext());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    toast.setGravity(Gravity.TOP, 0, 180);
+                    toast.setView(layout);
+                    toast.show();
                 }
-
-                Toast toast = new Toast(getActivity().getApplicationContext());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.setGravity(Gravity.TOP, 0, 180);
-                toast.setView(layout);
-                toast.show();
 
             }
 
