@@ -1009,6 +1009,7 @@ import static java.lang.Math.sin;
              LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
              double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
              Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ----"+returnedDistance);
+
             // drawMarkerWithCircle(PrevousGpsPosition, markDistance);
             // double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
             // Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
