@@ -1802,12 +1802,12 @@ import static java.lang.Math.sin;
                         .build();
 
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
-                
+
                 */
             }else{
                 mMap.addMarker(new MarkerOptions()
                          .position(new LatLng(24.984408, 55.072814))
-                        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.blue_circle)));
+                        .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.blue_marker)));
                 CameraPosition googlePlex = CameraPosition.builder()
                         .target(new LatLng(24.984408, 55.072814))
                         .zoom(15)
