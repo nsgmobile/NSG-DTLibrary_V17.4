@@ -500,12 +500,16 @@ import static java.lang.Math.sin;
                     LatLng offsetNewLoc = p.fromScreenLocation(offset);
                     double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                     LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, location.getBearing());
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(shadowTgt));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+                    /*
                     CameraPosition currentPlace = new CameraPosition.Builder()
                             .target(shadowTgt)
                             .bearing(location.getBearing()).tilt(65.5f).zoom(18)
                             .build();
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-
+                    */
                 }else{
 
                 }
