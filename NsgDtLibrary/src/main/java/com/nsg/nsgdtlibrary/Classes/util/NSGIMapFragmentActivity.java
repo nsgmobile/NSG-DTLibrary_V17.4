@@ -141,13 +141,11 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
-import static com.nsg.nsgdtlibrary.Classes.util.NSGTiledLayerOnMap.distFrom;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
  public class NSGIMapFragmentActivity extends Fragment implements View.OnClickListener {
-     private boolean isAlertShown=false;
         private static final int PERMISSION_REQUEST_CODE = 200;
         boolean locationAccepted,islocationControlEnabled=false;
         // private static final int SENSOR_DELAY_NORMAL =50;
@@ -199,7 +197,7 @@ import static java.lang.Math.sin;
         private TextView tv,tv1,tv2,tv3,tv4,tv5;
         private String routeIDName;
         HashMap<LatLng,String>edgeDataPointsListData;
-        private ImageButton change_map_options,re_center;
+        private ImageButton change_map_options;
         private String geometryDirectionText="",key="",distanceKey="",geometryDirectionDistance="";
         HashMap<String,String>nearestValuesMap;
         private List<LatLng> OldNearestGpsList;
@@ -267,14 +265,14 @@ import static java.lang.Math.sin;
 
         }
         @SuppressLint("ValidFragment")
-        public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationBuffer,String routeDeviatedDT_URL,String AuthorisationKey) {
+        public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int radius,String routeDeviatedDT_URL,String AuthorisationKey) {
             //enteredMode = mode;
             //  routeDeviationDistance=radius;
             NSGIMapFragmentActivity.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
             NSGIMapFragmentActivity.this.stNode=stNode;
             NSGIMapFragmentActivity.this.endNode=endNode;
             // NSGTiledLayerOnMap.this.enteredMode=mode;
-            NSGIMapFragmentActivity.this.routeDeviationDistance=routeDeviationBuffer;
+            NSGIMapFragmentActivity.this.routeDeviationDistance=radius;
             NSGIMapFragmentActivity.this.routeData=routeData;
             NSGIMapFragmentActivity.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
             NSGIMapFragmentActivity.this.AuthorisationKey=AuthorisationKey;
@@ -368,7 +366,7 @@ import static java.lang.Math.sin;
             super.onAttach(context);
             try {
                 sqlHandler = new SqlHandler(getContext());// Sqlite handler
-                Callback = (NSGIMapFragmentActivity.FragmentToActivity) context;
+                Callback = (FragmentToActivity) context;
             } catch (ClassCastException e) {
                 throw new ClassCastException(context.toString()
                         + " must implement FragmentToActivity");
@@ -396,10 +394,8 @@ import static java.lang.Math.sin;
             requestPermission();
             String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
             sqlHandler.executeQuery(delQuery);
-            change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-            change_map_options.setOnClickListener(NSGIMapFragmentActivity.this);
-            re_center=(ImageButton)rootView.findViewById(R.id.re_center);
-            re_center.setOnClickListener(NSGIMapFragmentActivity.this);
+            //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
+            //change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
 
             if(stNode!=null && endNode!=null && routeData!=null){
                 InsertAllRouteData(stNode,endNode,routeData);
@@ -441,7 +437,7 @@ import static java.lang.Math.sin;
                         getAllEdgesData();
                         addMarkers();
                         getValidRouteData();
-                        if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
                             return;
@@ -467,7 +463,7 @@ import static java.lang.Math.sin;
         @Override
         public void onClick(View v) {
             if(v==change_map_options){
-
+        /*
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file
             popup.getMenuInflater()
@@ -505,25 +501,7 @@ import static java.lang.Math.sin;
                 }
             });
             popup.show();
-
-            }else if(v==re_center){
-                 /*
-                Recenter Button if map enabled and location enabled get location from map and update map position and
-                recenter to  the position captured
-                 */
-
-                mMap.setMyLocationEnabled(true);
-                Location location = mMap.getMyLocation();
-                LatLng myLocation=null;
-                if (location != null) {
-                    myLocation = new LatLng(location.getLatitude(),
-                            location.getLongitude());
-
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),16));
-
-                }else{
-
-                }
+             */
             }
 
         }
@@ -1430,35 +1408,45 @@ import static java.lang.Math.sin;
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
             if (distanceAtLast < mCircle.getRadius()) {
              /*   if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for ActivityCompat#requestPermissions for more details.
-                                return;
-                            }
-
-                            //Speech implementation
-                            mMap.setMyLocationEnabled(false);
-                            */
-
-
-                if (getActivity() != null) {
-                    if (isAlertShown == false) {
-                        String data1 = " Your Destination Reached ";
-                        int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
-                        if (speechStatus1 == TextToSpeech.ERROR) {
-                            Log.e("TTS", "Error in converting Text to Speech!");
-                        }
-                        sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
-
-                        isAlertShown = true;
-                    } else {
-
-                    }
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
                 }
+
+                //Speech implementation
+                mMap.setMyLocationEnabled(false);
+                */
+                String data1=" Your Destination Reached ";
+
+                int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
+                if (speechStatus1 == TextToSpeech.ERROR) {
+                    Log.e("TTS", "Error in converting Text to Speech!");
+                }
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.yourDialog);
+                builder.setTitle("Alert");
+                builder.setIcon(R.drawable.car_icon_32);
+                builder.setMessage("Destination Reached")
+                        .setCancelable(false)
+                        .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                StringBuilder destinationAlert=new StringBuilder("Destination Reached");
+                                sendData(MapEvents.ALERTVALUE_4,MapEvents.ALERTTYPE_4);
+                                Log.e("Alert Destination"," Alert Destination @@@@@@@@@@@@@@@@@@@@ "+ DestinationNode);
+
+                                getActivity().onBackPressed();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+
             }
         }
 
