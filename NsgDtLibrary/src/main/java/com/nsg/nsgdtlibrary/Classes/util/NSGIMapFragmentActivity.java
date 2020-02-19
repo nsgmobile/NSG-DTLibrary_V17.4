@@ -992,7 +992,7 @@ import static java.lang.Math.sin;
              float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
              //  Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
              LatLng nearest_LatLng= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
-             double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng);
+             double returnedDistance = showDistance(currentGpsPosition, PrevousGpsPosition);
              Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ----"+returnedDistance);
 
              drawMarkerWithCircle(PrevousGpsPosition, markDistance);
