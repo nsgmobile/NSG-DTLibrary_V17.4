@@ -197,7 +197,7 @@ import static java.lang.Math.sin;
         private TextView tv,tv1,tv2,tv3,tv4,tv5;
         private String routeIDName;
         HashMap<LatLng,String>edgeDataPointsListData;
-        private ImageButton change_map_options;
+        private ImageButton change_map_options,re_center;
         private String geometryDirectionText="",key="",distanceKey="",geometryDirectionDistance="";
         HashMap<String,String>nearestValuesMap;
         private List<LatLng> OldNearestGpsList;
@@ -265,14 +265,14 @@ import static java.lang.Math.sin;
 
         }
         @SuppressLint("ValidFragment")
-        public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,String routeDeviatedDT_URL,String AuthorisationKey) {
+        public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationBuffer,String routeDeviatedDT_URL,String AuthorisationKey) {
             //enteredMode = mode;
             //  routeDeviationDistance=radius;
             NSGIMapFragmentActivity.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
             NSGIMapFragmentActivity.this.stNode=stNode;
             NSGIMapFragmentActivity.this.endNode=endNode;
             // NSGTiledLayerOnMap.this.enteredMode=mode;
-            // NSGTiledLayerOnMap.this.routeDeviationDistance=radius;
+            NSGIMapFragmentActivity.this.routeDeviationDistance=routeDeviationBuffer;
             NSGIMapFragmentActivity.this.routeData=routeData;
             NSGIMapFragmentActivity.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
             NSGIMapFragmentActivity.this.AuthorisationKey=AuthorisationKey;
@@ -394,8 +394,10 @@ import static java.lang.Math.sin;
             requestPermission();
             String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
             sqlHandler.executeQuery(delQuery);
-            //change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
-            //change_map_options.setOnClickListener(NSGTiledLayerOnMap.this);
+            change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
+            change_map_options.setOnClickListener(NSGIMapFragmentActivity.this);
+            re_center=(ImageButton)rootView.findViewById(R.id.re_center);
+            re_center.setOnClickListener(NSGIMapFragmentActivity.this);
 
             if(stNode!=null && endNode!=null && routeData!=null){
                 InsertAllRouteData(stNode,endNode,routeData);
@@ -463,7 +465,7 @@ import static java.lang.Math.sin;
         @Override
         public void onClick(View v) {
             if(v==change_map_options){
-        /*
+
             PopupMenu popup = new PopupMenu(getContext(), change_map_options);
             //Inflating the Popup using xml file
             popup.getMenuInflater()
@@ -501,7 +503,25 @@ import static java.lang.Math.sin;
                 }
             });
             popup.show();
-             */
+
+            }else if(v==re_center){
+                 /*
+                Recenter Button if map enabled and location enabled get location from map and update map position and
+                recenter to  the position captured
+                 */
+
+                mMap.setMyLocationEnabled(true);
+                Location location = mMap.getMyLocation();
+                LatLng myLocation=null;
+                if (location != null) {
+                    myLocation = new LatLng(location.getLatitude(),
+                            location.getLongitude());
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()),16));
+
+                }else{
+
+                }
             }
 
         }
