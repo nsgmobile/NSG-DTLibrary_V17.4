@@ -1803,7 +1803,7 @@ import static java.lang.Math.sin;
                         .build();
 
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(googlePlex1), 1000, null);
-                
+
                 */
             }else{
                 //  mMap.addMarker(new MarkerOptions()
