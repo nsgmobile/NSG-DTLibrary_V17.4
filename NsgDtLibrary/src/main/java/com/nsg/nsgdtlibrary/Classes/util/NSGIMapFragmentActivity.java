@@ -1182,7 +1182,6 @@ import static java.lang.Math.sin;
                              .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
                              .flat(true));
                  } else {
-                     //start/stop navigation here
                      if(islocationControlEnabled==false) {
                          animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
                          int height = 0;
