@@ -1054,7 +1054,6 @@ import static java.lang.Math.sin;
 
                                  }else{
                                      isRouteDeviated = true;
-
                                      LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                      @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                      TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -1094,7 +1093,7 @@ import static java.lang.Math.sin;
                                              Polyline polyline = mMap.addPolyline(polylineOptions);
                                              polylineOptions.color(Color.RED).width(30);
                                              mMap.addPolyline(polylineOptions);
-                                             polyline.setJointType(JointType.ROUND);
+                                         polyline.setJointType(JointType.ROUND);
                                      }
 
                                  }
