@@ -1043,6 +1043,10 @@ import static java.lang.Math.sin;
                          GetRouteDetails(routeDiationPosition, destPoint);
                          //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                             List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+                             if(EdgeWithoutDuplicates!=null && RouteDeviationConvertedPoints!=null) {
+                                 checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationConvertedPoints);
+                             }
                              isRouteDeviated = true;
 
                              LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1098,6 +1102,20 @@ import static java.lang.Math.sin;
          }else{
 
          }
+     }
+
+     public void  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationConvertedPoints){
+
+         List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
+         for(int k=0;k< EdgeWithoutDuplicatesInRouteDeviationPoints.size();k++) {
+             Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
+         }
+         for(int k=0;k< edgeWithoutDuplicates.size();k++) {
+             Log.e("Route Deviated----", "edgeWithoutDuplicates ------- " + edgeWithoutDuplicates.get(k));
+         }
+         boolean isEqual = edgeWithoutDuplicates.equals(RouteDeviationConvertedPoints);      //false
+         System.out.println(isEqual);
+
      }
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
