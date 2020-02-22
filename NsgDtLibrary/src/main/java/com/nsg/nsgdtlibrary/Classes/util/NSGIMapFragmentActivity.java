@@ -1011,14 +1011,14 @@ import static java.lang.Math.sin;
              double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
              Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ----"+returnedDistance);
 
-            // drawMarkerWithCircle(PrevousGpsPosition, markDistance);
-            // double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
-            // Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
+             drawMarkerWithCircle(PrevousGpsPosition, markDistance);
+             double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
+             Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
              //Log.e("Route Deviation","CIRCLE RADIUS----"+  mCircle.getRadius());
              //  float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
              //  Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
 
-             if(returnedDistance>routeDeviationDistance){
+             if(returnedDistance > mCircle.getRadius()){
                  String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                  String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                  final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
@@ -1031,7 +1031,7 @@ import static java.lang.Math.sin;
                  Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
                  Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
                  //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                 //  DestinationPosition = new LatLng(destLat, destLng);
+                //  DestinationPosition = new LatLng(destLat, destLng);
                  dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
                  dialog.setMessage("Fetching new Route");
                  dialog.setMax(100);
@@ -1045,6 +1045,50 @@ import static java.lang.Math.sin;
                          //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+                             isRouteDeviated = true;
+                             LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                             @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                             TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                             text.setText("Route Deviated");
+
+                             Toast toast = new Toast(getActivity().getApplicationContext());
+                             toast.setDuration(Toast.LENGTH_LONG);
+                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                             toast.setGravity(Gravity.TOP, 0, 150);
+                             toast.setView(layout);
+                             toast.show();
+                             StringBuilder routeDeviatedAlert = new StringBuilder();
+                             routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                             sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                             if (mPositionMarker != null) {
+                                 mPositionMarker.remove();
+                                 Log.e("REMOVING MARKER", "REMOVING MARKER");
+                             }
+                             mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                     .position(currentGpsPosition)
+                                     .title("currentLocation")
+                                     .anchor(0.5f, 0.5f)
+                                     .flat(true)
+                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+
+
+                             CameraUpdate center =
+                                     CameraUpdateFactory.newLatLng(currentGpsPosition);
+                             CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                             mMap.moveCamera(center);
+                             mMap.animateCamera(zoom);
+                             if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                 PolylineOptions polylineOptions = new PolylineOptions();
+                                 // polylineOptions.add(OldGPSPosition);
+                                 polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                 Polyline polyline = mMap.addPolyline(polylineOptions);
+                                 polylineOptions.color(Color.RED).width(30);
+                                 mMap.addPolyline(polylineOptions);
+                                 polyline.setJointType(JointType.ROUND);
+                             }
+
+                             /*
                              if(EdgeWithoutDuplicates!=null && RouteDeviationPointsForComparision!=null) {
                                  boolean isRourteVerify=  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
                                  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
@@ -1098,6 +1142,7 @@ import static java.lang.Math.sin;
 
                                  }
                              }
+                             */
 
                          }
 
