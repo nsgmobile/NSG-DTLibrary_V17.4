@@ -171,6 +171,7 @@ import static java.lang.Math.sin;
         private List<EdgeDataT> edgeDataList;
         private List<GeometryT> geometryRouteDeviatedEdgesData;
         List RouteDeviationConvertedPoints;
+        private List<LatLng>RouteDeviationPointsForComparision;
         private List<RouteT> RouteDataList;
         private List PreviousGpsList;
         private Handler handler = new Handler();
@@ -1044,10 +1045,10 @@ import static java.lang.Math.sin;
                          //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
-                             if(EdgeWithoutDuplicates!=null && RouteDeviationConvertedPoints!=null) {
-                                 checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationConvertedPoints);
+                             if(EdgeWithoutDuplicates!=null && RouteDeviationPointsForComparision!=null) {
+                                 checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
                              }
-                             /*
+                            /*
                              isRouteDeviated = true;
 
                              LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1091,7 +1092,7 @@ import static java.lang.Math.sin;
                                  mMap.addPolyline(polylineOptions);
                                  polyline.setJointType(JointType.ROUND);
                              }
-                             */
+                            */
 
                          }
 
@@ -1287,6 +1288,7 @@ import static java.lang.Math.sin;
                                         PointBeforeRouteDeviation=new LatLng(OldGPSPosition.latitude,OldGPSPosition.longitude);
                                         Polyline polyline = null;
                                         RouteDeviationConvertedPoints=new ArrayList<LatLng>();
+                                        RouteDeviationPointsForComparision=new ArrayList<LatLng>();
                                         geometryRouteDeviatedEdgesData=new ArrayList<GeometryT>();
                                         for (int i = 0; i < jSonRoutes.length(); i++) {
                                             List deviationPoints=new ArrayList();
@@ -1335,6 +1337,9 @@ import static java.lang.Math.sin;
                                                 StringBuilder sb=new StringBuilder();
                                                 LatLng latLng = new LatLng(x, y);
                                                 RouteDeviationConvertedPoints.add(latLng);
+                                                LatLng reversePoint= new LatLng(y, x);
+                                                RouteDeviationPointsForComparision.add(reversePoint);
+
                                                 GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(latLng),GeometryText,"");
                                                 geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
                                             }
