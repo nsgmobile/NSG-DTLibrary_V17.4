@@ -1751,7 +1751,7 @@ import static java.lang.Math.sin;
 
         public void getValidRouteData(){
             if (edgeDataList != null && edgeDataList.size() > 0) {
-
+                edgeDataPointsList = new ArrayList<LatLng>();
                 AllPointsList=new ArrayList();
                 AllPointEdgeNo=new HashMap<>();
                 AllPointEdgeDistaces=new HashMap<>();
@@ -1797,7 +1797,7 @@ import static java.lang.Math.sin;
                         double Lat = Double.parseDouble(ptData[0]);
                         double Lang = Double.parseDouble(ptData[1]);
                         PointData = new LatLng(Lat, Lang);
-                        edgeDataPointsList = new ArrayList<LatLng>();
+
                         edgeDataPointsList.add(PointData);
 
 
