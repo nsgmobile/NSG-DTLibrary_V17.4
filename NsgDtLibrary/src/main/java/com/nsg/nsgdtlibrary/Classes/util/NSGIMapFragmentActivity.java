@@ -1088,7 +1088,7 @@ import static java.lang.Math.sin;
                                          mMap.animateCamera(zoom);
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                              PolylineOptions polylineOptions = new PolylineOptions();
-                                            // polylineOptions.add(OldGPSPosition);
+                                             // polylineOptions.add(OldGPSPosition);
                                              polylineOptions.addAll(RouteDeviationConvertedPoints);
                                              Polyline polyline = mMap.addPolyline(polylineOptions);
                                              polylineOptions.color(Color.RED).width(30);
