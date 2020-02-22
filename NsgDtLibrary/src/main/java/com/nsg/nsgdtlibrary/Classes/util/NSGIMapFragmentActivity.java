@@ -1047,6 +1047,7 @@ import static java.lang.Math.sin;
                              if(EdgeWithoutDuplicates!=null && RouteDeviationConvertedPoints!=null) {
                                  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationConvertedPoints);
                              }
+                             /*
                              isRouteDeviated = true;
 
                              LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1090,6 +1091,7 @@ import static java.lang.Math.sin;
                                  mMap.addPolyline(polylineOptions);
                                  polyline.setJointType(JointType.ROUND);
                              }
+                             */
 
                          }
 
@@ -1749,7 +1751,7 @@ import static java.lang.Math.sin;
 
         public void getValidRouteData(){
             if (edgeDataList != null && edgeDataList.size() > 0) {
-                edgeDataPointsList = new ArrayList<LatLng>();
+
                 AllPointsList=new ArrayList();
                 AllPointEdgeNo=new HashMap<>();
                 AllPointEdgeDistaces=new HashMap<>();
@@ -1795,6 +1797,7 @@ import static java.lang.Math.sin;
                         double Lat = Double.parseDouble(ptData[0]);
                         double Lang = Double.parseDouble(ptData[1]);
                         PointData = new LatLng(Lat, Lang);
+                        edgeDataPointsList = new ArrayList<LatLng>();
                         edgeDataPointsList.add(PointData);
 
 
@@ -1876,6 +1879,8 @@ import static java.lang.Math.sin;
             }
         }
         public void GetRouteFromDBPlotOnMap(String FeatureResponse){
+            String delQuery = "DELETE  FROM " + EdgeDataT.TABLE_NAME;
+            sqlHandler.executeQuery(delQuery);
             JSONObject jsonObject = null;
             try {
                 if(FeatureResponse!=null){
