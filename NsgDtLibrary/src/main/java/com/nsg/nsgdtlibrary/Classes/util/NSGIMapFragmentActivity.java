@@ -1046,10 +1046,11 @@ import static java.lang.Math.sin;
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
                              if(EdgeWithoutDuplicates!=null && RouteDeviationPointsForComparision!=null) {
-                               boolean isRoiurteVerify=  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
-                                 Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRoiurteVerify);
-                                 if(isRoiurteVerify==true){
-                                     isRouteDeviated = false;
+                                 boolean isRourteVerify=  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
+                                 Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
+                                 if(isRourteVerify==true){
+                                         Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
+                                         isRouteDeviated = false;
 
                                  }else{
                                      isRouteDeviated = true;
@@ -1074,26 +1075,26 @@ import static java.lang.Math.sin;
                                          Log.e("REMOVING MARKER", "REMOVING MARKER");
                                      }
                                      mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                             .position(currentGpsPosition)
-                                             .title("currentLocation")
-                                             .anchor(0.5f, 0.5f)
-                                             .flat(true)
-                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                         .position(currentGpsPosition)
+                                         .title("currentLocation")
+                                         .anchor(0.5f, 0.5f)
+                                         .flat(true)
+                                         .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
 
 
-                                     CameraUpdate center =
-                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
-                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
-                                     mMap.moveCamera(center);
-                                     mMap.animateCamera(zoom);
+                                         CameraUpdate center =
+                                                 CameraUpdateFactory.newLatLng(currentGpsPosition);
+                                         CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                                         mMap.moveCamera(center);
+                                         mMap.animateCamera(zoom);
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                         PolylineOptions polylineOptions = new PolylineOptions();
-                                         polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                         Polyline polyline = mMap.addPolyline(polylineOptions);
-                                         polylineOptions.color(Color.RED).width(30);
-                                         mMap.addPolyline(polylineOptions);
-                                         polyline.setJointType(JointType.ROUND);
+                                             PolylineOptions polylineOptions = new PolylineOptions();
+                                             polylineOptions.add(OldGPSPosition);
+                                             polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                             Polyline polyline = mMap.addPolyline(polylineOptions);
+                                             polylineOptions.color(Color.RED).width(30);
+                                             mMap.addPolyline(polylineOptions);
+                                             polyline.setJointType(JointType.ROUND);
                                      }
 
                                  }
