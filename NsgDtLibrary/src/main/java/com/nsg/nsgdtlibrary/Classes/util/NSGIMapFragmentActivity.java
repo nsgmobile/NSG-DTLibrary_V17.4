@@ -2597,9 +2597,9 @@ import static java.lang.Math.sin;
      public void writeLogFile(){
          if ( isExternalStorageWritable() ) {
 
-             File appDirectory = new File( Environment.getExternalStorageDirectory() + "/MyPersonalAppFolder" );
+             File appDirectory = new File( Environment.getExternalStorageDirectory() + "/RORO_AppLogs" );
              File logDirectory = new File( appDirectory + "/log" );
-             File logFile = new File( logDirectory, "logcat" + System.currentTimeMillis() + ".txt" );
+             File logFile = new File( logDirectory, "RORO_Log" + System.currentTimeMillis() + ".txt" );
 
              // create app folder
              if ( !appDirectory.exists() ) {
