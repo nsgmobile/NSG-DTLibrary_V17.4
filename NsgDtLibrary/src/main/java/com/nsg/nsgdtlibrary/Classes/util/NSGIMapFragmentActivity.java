@@ -1011,14 +1011,14 @@ import static java.lang.Math.sin;
              double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
              Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ----"+returnedDistance);
 
-             drawMarkerWithCircle(PrevousGpsPosition, markDistance);
-             double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
-             Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
+            // drawMarkerWithCircle(PrevousGpsPosition, markDistance);
+            // double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
+            // Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
              //Log.e("Route Deviation","CIRCLE RADIUS----"+  mCircle.getRadius());
              //  float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
              //  Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
 
-             if(returnedDistance > mCircle.getRadius()){
+             if(returnedDistance >routeDeviationDistance){
                  String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                  String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                  final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
