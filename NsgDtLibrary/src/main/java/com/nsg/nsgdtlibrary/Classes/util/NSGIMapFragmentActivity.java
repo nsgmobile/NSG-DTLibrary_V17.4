@@ -27,6 +27,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
@@ -337,6 +338,7 @@ import static java.lang.Math.sin;
                     }
                 }
             };
+            writeLogFile();
         }
         @Override
         public void onAttach(Context context) {
@@ -1001,7 +1003,6 @@ import static java.lang.Math.sin;
          Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
 
          if (PrevousGpsPosition != null){
-
              /*
              GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
               we are sending it for
@@ -1125,6 +1126,7 @@ import static java.lang.Math.sin;
                                      CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
                                      mMap.moveCamera(center);
                                      mMap.animateCamera(zoom);
+
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
                                          // polylineOptions.add(OldGPSPosition);
@@ -1136,10 +1138,7 @@ import static java.lang.Math.sin;
                                      }
 
 
-                                 }else if(commonPoints.size()>0){
-                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "  Points Matched Plot on Route");
-                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
+                                 }else if(commonPoints.size()>0 && new_unCommonPoints.size()>0){
                                      isRouteDeviated = true;
                                      LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                      @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
@@ -1173,6 +1172,7 @@ import static java.lang.Math.sin;
                                      CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
                                      mMap.moveCamera(center);
                                      mMap.animateCamera(zoom);
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
                                          // polylineOptions.add(OldGPSPosition);
@@ -1185,78 +1185,8 @@ import static java.lang.Math.sin;
 
                                  }else if(new_unCommonPoints.size()==0){
                                      Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
-                                     isRouteDeviated = false;
 
                                  }
-                                 /*
-                                    if(commonPoints.size()>0 && commonPoints!=null){
-                                        Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
-                                        isRouteDeviated = false;
-                                    }else if(commonPoints.size()==0){
-
-                                    }
-
-                                  */
-
-                                /*
-                                 boolean isRourteVerify =  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
-
-                                 Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
-
-                                 if(isRourteVerify==true){
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
-                                     isRouteDeviated = false;
-
-                                 }else {
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
-                                     isRouteDeviated = true;
-                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-                                     text.setText("Route Deviated");
-
-                                     Toast toast = new Toast(getActivity().getApplicationContext());
-                                     toast.setDuration(Toast.LENGTH_LONG);
-                                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                     toast.setGravity(Gravity.TOP, 0, 150);
-                                     toast.setView(layout);
-                                     toast.show();
-                                     StringBuilder routeDeviatedAlert = new StringBuilder();
-                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                     sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                     if (mPositionMarker != null) {
-                                         mPositionMarker.remove();
-                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
-                                     }
-                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                             .position(currentGpsPosition)
-                                             .title("currentLocation")
-                                             .anchor(0.5f, 0.5f)
-                                             .flat(true)
-                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-
-
-                                     CameraUpdate center =
-                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
-                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
-                                     mMap.moveCamera(center);
-                                     mMap.animateCamera(zoom);
-                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                         PolylineOptions polylineOptions = new PolylineOptions();
-                                         // polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                         Polyline polyline = mMap.addPolyline(polylineOptions);
-                                         polylineOptions.color(Color.RED).width(30);
-                                         mMap.addPolyline(polylineOptions);
-                                         polyline.setJointType(JointType.ROUND);
-                                     }
-                                 }
-
-                                 */
-
-
                              }
 
                          }
@@ -2630,5 +2560,217 @@ import static java.lang.Math.sin;
             super.onPause();
 
         }
+     public void writeLogFile(){
+         if ( isExternalStorageWritable() ) {
+
+             File appDirectory = new File( Environment.getExternalStorageDirectory() + "/MyPersonalAppFolder" );
+             File logDirectory = new File( appDirectory + "/log" );
+             File logFile = new File( logDirectory, "logcat" + System.currentTimeMillis() + ".txt" );
+
+             // create app folder
+             if ( !appDirectory.exists() ) {
+                 appDirectory.mkdir();
+             }
+
+             // create log folder
+             if ( !logDirectory.exists() ) {
+                 logDirectory.mkdir();
+             }
+
+             // clear the previous logcat and then write the new one to the file
+             try {
+                 Process process = Runtime.getRuntime().exec("logcat -c");
+                 process = Runtime.getRuntime().exec("logcat -f " + logFile);
+             } catch ( IOException e ) {
+                 e.printStackTrace();
+             }
+
+         } else if ( isExternalStorageReadable() ) {
+             // only readable
+         } else {
+             // not accessible
+         }
+     }
+
+
+     /* Checks if external storage is available for read and write */
+     public boolean isExternalStorageWritable() {
+         String state = Environment.getExternalStorageState();
+         if ( Environment.MEDIA_MOUNTED.equals( state ) ) {
+             return true;
+         }
+         return false;
+     }
+
+     /* Checks if external storage is available to at least read */
+     public boolean isExternalStorageReadable() {
+         String state = Environment.getExternalStorageState();
+         if ( Environment.MEDIA_MOUNTED.equals( state ) ||
+                 Environment.MEDIA_MOUNTED_READ_ONLY.equals( state ) ) {
+             return true;
+         }
+         return false;
+     }
 
  }
+/*
+
+                                 /*
+                                 if(commonPoints.size()==0){
+                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
+                                     isRouteDeviated = true;
+                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                                     text.setText("Route Deviated");
+
+                                     Toast toast = new Toast(getActivity().getApplicationContext());
+                                     toast.setDuration(Toast.LENGTH_LONG);
+                                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                     toast.setGravity(Gravity.TOP, 0, 150);
+                                     toast.setView(layout);
+                                     toast.show();
+                                     StringBuilder routeDeviatedAlert = new StringBuilder();
+                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                     sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                     if (mPositionMarker != null) {
+                                         mPositionMarker.remove();
+                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
+                                     }
+                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                             .position(currentGpsPosition)
+                                             .title("currentLocation")
+                                             .anchor(0.5f, 0.5f)
+                                             .flat(true)
+                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+
+
+                                     CameraUpdate center =
+                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
+                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                                     mMap.moveCamera(center);
+                                     mMap.animateCamera(zoom);
+                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                         PolylineOptions polylineOptions = new PolylineOptions();
+                                         // polylineOptions.add(OldGPSPosition);
+                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                         Polyline polyline = mMap.addPolyline(polylineOptions);
+                                         polylineOptions.color(Color.RED).width(30);
+                                         mMap.addPolyline(polylineOptions);
+                                         polyline.setJointType(JointType.ROUND);
+                                     }
+
+
+                                 }else if(commonPoints.size()>0){
+                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "  Points Matched Plot on Route");
+                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
+                                     isRouteDeviated = true;
+                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                                     text.setText("Route Deviated");
+
+                                     Toast toast = new Toast(getActivity().getApplicationContext());
+                                     toast.setDuration(Toast.LENGTH_LONG);
+                                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                     toast.setGravity(Gravity.TOP, 0, 150);
+                                     toast.setView(layout);
+                                     toast.show();
+                                     StringBuilder routeDeviatedAlert = new StringBuilder();
+                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                     sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                     if (mPositionMarker != null) {
+                                         mPositionMarker.remove();
+                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
+                                     }
+                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                             .position(currentGpsPosition)
+                                             .title("currentLocation")
+                                             .anchor(0.5f, 0.5f)
+                                             .flat(true)
+                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+
+
+                                     CameraUpdate center =
+                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
+                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                                     mMap.moveCamera(center);
+                                     mMap.animateCamera(zoom);
+                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                         PolylineOptions polylineOptions = new PolylineOptions();
+                                         // polylineOptions.add(OldGPSPosition);
+                                         polylineOptions.addAll(new_unCommonPoints);
+                                         Polyline polyline = mMap.addPolyline(polylineOptions);
+                                         polylineOptions.color(Color.RED).width(30);
+                                         mMap.addPolyline(polylineOptions);
+                                         polyline.setJointType(JointType.ROUND);
+                                     }
+
+                                 }else if(new_unCommonPoints.size()==0){
+                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
+                                     isRouteDeviated = false;
+
+                                 }
+                                 */
+
+                                /*
+                                 boolean isRourteVerify =  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
+
+                                 Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
+
+                                 if(isRourteVerify==true){
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
+                                     isRouteDeviated = false;
+
+                                 }else {
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
+                                     isRouteDeviated = true;
+                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                                     text.setText("Route Deviated");
+
+                                     Toast toast = new Toast(getActivity().getApplicationContext());
+                                     toast.setDuration(Toast.LENGTH_LONG);
+                                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                     toast.setGravity(Gravity.TOP, 0, 150);
+                                     toast.setView(layout);
+                                     toast.show();
+                                     StringBuilder routeDeviatedAlert = new StringBuilder();
+                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                     sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                     if (mPositionMarker != null) {
+                                         mPositionMarker.remove();
+                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
+                                     }
+                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                             .position(currentGpsPosition)
+                                             .title("currentLocation")
+                                             .anchor(0.5f, 0.5f)
+                                             .flat(true)
+                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+
+
+                                     CameraUpdate center =
+                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
+                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                                     mMap.moveCamera(center);
+                                     mMap.animateCamera(zoom);
+                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                         PolylineOptions polylineOptions = new PolylineOptions();
+                                         // polylineOptions.add(OldGPSPosition);
+                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                         Polyline polyline = mMap.addPolyline(polylineOptions);
+                                         polylineOptions.color(Color.RED).width(30);
+                                         mMap.addPolyline(polylineOptions);
+                                         polyline.setJointType(JointType.ROUND);
+                                     }
+                                 }
+
+                                 */
