@@ -487,6 +487,36 @@ import static java.lang.Math.sin;
                 recenter to  the position captured
                  */
                 mMap.setMyLocationEnabled(true);
+                if(mPositionMarker!=null){
+                    LatLng myLocation=null;
+                    /*
+                    Location location = mMap.getMyLocation();
+                    if (location != null) {
+                        myLocation = new LatLng(location.getLatitude(),
+                                location.getLongitude());
+                    }
+                     */
+                    myLocation= mPositionMarker.getPosition();
+                    int height=0;
+                    if(getView()!=null ) {
+                        height = getView().getMeasuredHeight();
+                    }
+                    /*
+                    Projection p = mMap.getProjection();
+                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                    Point offset = new Point(center.x, (center.y + (height / 4)));
+                    LatLng centerLoc = p.fromScreenLocation(center);
+                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                    LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, myLocation.getBearing());
+
+                     */
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+                }
+                /*
                 Location location = mMap.getMyLocation();
                 LatLng myLocation=null;
                 if (location != null) {
@@ -513,10 +543,11 @@ import static java.lang.Math.sin;
                             .bearing(location.getBearing()).tilt(65.5f).zoom(18)
                             .build();
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                    */
+
                 }else{
 
                 }
+                  */
 
             }
         }
@@ -1326,6 +1357,9 @@ import static java.lang.Math.sin;
                          double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                          LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                          CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
+                       //  verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
+
+                       //  verifyRouteDeviation(OldGpsRouteDeviation,currentGpsPosition,routeDeviationDistance,);
                          AlertDestination(currentGpsPosition);
                          if (bearing > 0.0) {
                              CameraPosition currentPlace = new CameraPosition.Builder()
