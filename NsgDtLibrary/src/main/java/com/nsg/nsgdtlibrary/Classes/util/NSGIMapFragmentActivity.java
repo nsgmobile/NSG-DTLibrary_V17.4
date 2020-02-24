@@ -1070,8 +1070,8 @@ import static java.lang.Math.sin;
                                      routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                      sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                      if (mPositionMarker != null) {
-                                         mPositionMarker.remove();
-                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
+                                         //mPositionMarker.remove();
+                                         //Log.e("REMOVING MARKER", "REMOVING MARKER");
                                      }
                                      mPositionMarker = mMap.addMarker(new MarkerOptions()
                                          .position(currentGpsPosition)
