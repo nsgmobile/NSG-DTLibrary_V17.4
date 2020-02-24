@@ -1044,9 +1044,12 @@ import static java.lang.Math.sin;
                          GetRouteDetails(routeDiationPosition, destPoint);
                          //checkPointsOfRoue1withNewRoute(EdgeWithoutDuplicates,PointBeforeRouteDeviation);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+
+
+
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
                              if(EdgeWithoutDuplicates!=null && RouteDeviationPointsForComparision!=null) {
-                                 boolean isRourteVerify=  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
+                                 boolean isRourteVerify =  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
                                  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
                                  if(isRourteVerify==true){
                                          Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
@@ -1098,7 +1101,6 @@ import static java.lang.Math.sin;
 
                                  }
                              }
-
 
                          }
 
