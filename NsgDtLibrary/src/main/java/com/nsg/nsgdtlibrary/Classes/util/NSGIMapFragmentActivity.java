@@ -1047,24 +1047,17 @@ import static java.lang.Math.sin;
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
 
                              if(EdgeWithoutDuplicates!=null && RouteDeviationPointsForComparision!=null) {
+
                                  boolean isRourteVerify =  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
-                                 List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
-                                 for(int k=0;k< EdgeWithoutDuplicatesInRouteDeviationPoints.size();k++) {
-                                     Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
-                                 }
 
-                                 boolean isEqual = EdgeWithoutDuplicatesInRouteDeviationPoints.retainAll(EdgeWithoutDuplicates);
-                                 Log.e("Route Deviation"," List Retains ELEMENTS--" +isEqual);
-                                // Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
-                                 if (EdgeWithoutDuplicatesInRouteDeviationPoints.equals(RouteDeviationPointsForComparision)) {
+                                 Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + isRourteVerify);
+
+
+                                 if(isRourteVerify==true){
                                      Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
                                      isRouteDeviated = false;
 
-                                 }else if(EdgeWithoutDuplicatesInRouteDeviationPoints.retainAll(RouteDeviationPointsForComparision)){
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route EQUAL");
-                                     isRouteDeviated = false;
-
-                                 }else if(EdgeWithoutDuplicatesInRouteDeviationPoints!=RouteDeviationPointsForComparision){
+                                 }else {
                                      Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
                                      isRouteDeviated = true;
                                      LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1083,8 +1076,8 @@ import static java.lang.Math.sin;
                                      routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                      sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                      if (mPositionMarker != null) {
-                                         //mPositionMarker.remove();
-                                         //Log.e("REMOVING MARKER", "REMOVING MARKER");
+                                         mPositionMarker.remove();
+                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
                                      }
                                      mPositionMarker = mMap.addMarker(new MarkerOptions()
                                              .position(currentGpsPosition)
