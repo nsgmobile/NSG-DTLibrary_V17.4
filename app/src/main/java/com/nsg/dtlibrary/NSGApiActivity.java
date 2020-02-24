@@ -28,6 +28,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
     private String charlsisNumber;
     private  Button Start,Stop;
     private String jobId="1",routeId;
+    /*
     String SourcePosition="78.570799 17.473538";
     String DestinationPosition="78.555714 17.456068";
     private String routeData="{\n" +
@@ -263,6 +264,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
             "        }\n" +
             "    ]\n" +
             "}";
+            */
 /*
     String SourcePosition="78.570759 17.473453";
     String DestinationPosition="78.555174 17.455362";
@@ -506,7 +508,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
 
  */
 
-    /*
+
     String SourcePosition="55.068072 24.979532";
     String DestinationPosition="55.068888 24.980723";
     private String  routeData="{\n" +
@@ -949,7 +951,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
             "}";
 
 
-*/
+
     /*
      private String SourcePosition = "55.067291 24.978782";
      private String DestinationPosition = "55.067205 24.979878";
