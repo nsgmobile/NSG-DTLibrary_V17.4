@@ -244,7 +244,10 @@ import static java.lang.Math.sin;
         LatLng currentGPSPosition;
         private boolean isContinue=true ;
         private boolean isGPS = false;
-        String s1,s2;
+        List <LatLng> commonPoints;
+        List <LatLng> new_unCommonPoints;
+
+     String s1,s2;
 
         public interface FragmentToActivity {
            // String communicate(String comm);
@@ -1022,6 +1025,17 @@ import static java.lang.Math.sin;
                sendData(time.toString(), MapEvents.ALERTTYPE_2);
            }
         }
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        public void VerifyRouteDeviationConsequently(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates){
+            Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+            Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+            if (PrevousGpsPosition != null){
+                LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
+                double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+                Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
+
+            }
+        }
 
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
@@ -1074,114 +1088,17 @@ import static java.lang.Math.sin;
                      @Override
                      public void run() {
                          String MESSAGE = "";
+
                          GetRouteDetails(routeDiationPosition, destPoint);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
                              List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
                              if(EdgeWithoutDuplicates!=null && EdgeWithoutDuplicatesInRouteDeviationPoints!=null) {
+                                 checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates,RouteDeviationPointsForComparision);
 
-                               /*  boolean isEqual = EdgeWithoutDuplicatesInRouteDeviationPoints.retainAll(EdgeWithoutDuplicates);
-                                 if(isEqual){
-                                     isRouteDeviated = false;
-                                 }else{
-                                     /*
-                                     isRouteDeviated = true;
-                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-                                     text.setText("Route Deviated");
-
-                                     Toast toast = new Toast(getActivity().getApplicationContext());
-                                     toast.setDuration(Toast.LENGTH_LONG);
-                                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                     toast.setGravity(Gravity.TOP, 0, 150);
-                                     toast.setView(layout);
-                                     toast.show();
-                                     StringBuilder routeDeviatedAlert = new StringBuilder();
-                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                     sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                     if (mPositionMarker != null) {
-                                         mPositionMarker.remove();
-                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
-                                     }
-                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                             .position(currentGpsPosition)
-                                             .title("currentLocation")
-                                             .anchor(0.5f, 0.5f)
-                                             .flat(true)
-                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-
-
-                                     CameraUpdate center =
-                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
-                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
-                                     mMap.moveCamera(center);
-                                     mMap.animateCamera(zoom);
-
-
-
-                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                         PolylineOptions polylineOptions = new PolylineOptions();
-                                         // polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                         Polyline polyline = mMap.addPolyline(polylineOptions);
-                                         polylineOptions.color(Color.RED).width(30);
-                                         mMap.addPolyline(polylineOptions);
-                                         polyline.setJointType(JointType.ROUND);
-                                     }
-                                 }
-                             */
-
-
-                                 List <LatLng> commonPoints =new ArrayList<LatLng>();
-                                 List <LatLng> new_unCommonPoints=new ArrayList<LatLng>();
-                                 String elementOfList1="";
-                                 String elementOfList2="";
-                                 String element1SubElement="";
-                                 String element2SubElement="";
-                                 for(int i=0;i<EdgeWithoutDuplicatesInRouteDeviationPoints.size();i++){
-                                     elementOfList1=EdgeWithoutDuplicatesInRouteDeviationPoints.get(i).toString();
-                                     element1SubElement = elementOfList1.substring(0,14);
-
-                                     for(int j=0;j<EdgeWithoutDuplicates.size();j++){
-                                         elementOfList2=EdgeWithoutDuplicates.get(j).toString();
-                                         element2SubElement=elementOfList2.substring(0,14);
-                                         if(element1SubElement.equals(element2SubElement)){
-                                             // three=new ArrayList<>();
-                                             String ElementData=elementOfList1.replace("lat/lng: (","");
-                                             String ElementData1=ElementData.replace(")","");
-                                             String[]Elements =ElementData1.split(",");
-                                             double lat= Double.parseDouble(Elements[0]);
-                                             double longi= Double.parseDouble(Elements[1]);
-                                             LatLng commonData=new LatLng(longi,lat);
-                                             commonPoints.add(commonData);
-                                             // Log.e("List Verification","List Verification THREE --"+ commonPoints.size());
-                                             // four.add(one.removeAll(three));
-
-                                         }
-
-                                     }
-                                     String ElementData=elementOfList1.replace("lat/lng: (","");
-                                     //Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData);
-                                     String ElementData1=ElementData.replace(")","");
-                                    // Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData1);
-                                     String[]Elements =ElementData1.split(",");
-                                    // Log.e("List Verification","List Verification commonPoints --  DATA "+ Elements);
-                                     double lat= Double.parseDouble(Elements[0]);
-                                    // Log.e("List Verification","List Verification commonPoints --  DATA "+ lat);
-                                     double longi= Double.parseDouble(Elements[1]);
-                                    // Log.e("List Verification","List Verification commonPoints --  DATA "+ longi);
-                                     LatLng commonData1=new LatLng(longi,lat);
-                                     new_unCommonPoints.add(commonData1);
-                                     new_unCommonPoints.removeAll(commonPoints);
-
-
-                                 }
                                  Log.e("List Verification","List Verification commonPoints --  DATA "+ commonPoints.size());
                                  Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ new_unCommonPoints.size());
                                  if(commonPoints.size()==0){
-
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
                                          // polylineOptions.add(OldGPSPosition);
@@ -1229,8 +1146,6 @@ import static java.lang.Math.sin;
                                  }
 
                                  else if(commonPoints.size()>0){
-
-
                                      Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
@@ -1241,40 +1156,42 @@ import static java.lang.Math.sin;
                                          mMap.addPolyline(polylineOptions);
                                          polyline.setJointType(JointType.ROUND);
                                      }
+                                     drawMarkerWithCircle(currentGpsPosition,20);
+                                     double verifyDistance=distFrom(currentGpsPosition.latitude,currentGpsPosition.longitude,RouteDeviatedSourcePosition.latitude,RouteDeviatedSourcePosition.longitude);
+                                     if(verifyDistance<20){
+                                         isRouteDeviated = false;
+                                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                         @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                         TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
-                                     isRouteDeviated = true;
+                                         text.setText("Route Deviated");
 
-                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                         Toast toast = new Toast(getActivity().getApplicationContext());
+                                         toast.setDuration(Toast.LENGTH_LONG);
+                                         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                         toast.setGravity(Gravity.TOP, 0, 150);
+                                         toast.setView(layout);
+                                         toast.show();
+                                         StringBuilder routeDeviatedAlert = new StringBuilder();
+                                         routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                         sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                         if (mPositionMarker != null) {
+                                             mPositionMarker.remove();
+                                             Log.e("REMOVING MARKER", "REMOVING MARKER");
+                                         }
+                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                 .position(currentGpsPosition)
+                                                 .title("currentLocation")
+                                                 .anchor(0.5f, 0.5f)
+                                                 .flat(true)
+                                                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                         CameraUpdate center =
+                                                 CameraUpdateFactory.newLatLng(currentGpsPosition);
+                                         CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
+                                         mMap.moveCamera(center);
+                                         mMap.animateCamera(zoom);
 
-                                     text.setText("Route Deviated");
-
-                                     Toast toast = new Toast(getActivity().getApplicationContext());
-                                     toast.setDuration(Toast.LENGTH_LONG);
-                                     toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                     toast.setGravity(Gravity.TOP, 0, 150);
-                                     toast.setView(layout);
-                                     toast.show();
-                                     StringBuilder routeDeviatedAlert = new StringBuilder();
-                                     routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                     sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                     if (mPositionMarker != null) {
-                                         mPositionMarker.remove();
-                                         Log.e("REMOVING MARKER", "REMOVING MARKER");
                                      }
-                                     mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                             .position(currentGpsPosition)
-                                             .title("currentLocation")
-                                             .anchor(0.5f, 0.5f)
-                                             .flat(true)
-                                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                     CameraUpdate center =
-                                             CameraUpdateFactory.newLatLng(currentGpsPosition);
-                                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
-                                     mMap.moveCamera(center);
-                                     mMap.animateCamera(zoom);
-
                                  }
                                  else if(new_unCommonPoints.size()==0){
                                      Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
@@ -1296,24 +1213,65 @@ import static java.lang.Math.sin;
          }
      }
 
-     public boolean  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
-
+     public void  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
          List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
          for(int k=0;k< EdgeWithoutDuplicatesInRouteDeviationPoints.size();k++) {
-             Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
+            // Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
          }
          for(int k=0;k< edgeWithoutDuplicates.size();k++) {
-             Log.e("Route Deviated----", "edgeWithoutDuplicates ------- " + edgeWithoutDuplicates.get(k));
+           //  Log.e("Route Deviated----", "edgeWithoutDuplicates ------- " + edgeWithoutDuplicates.get(k));
          }
+         commonPoints =new ArrayList<LatLng>();
+         commonPoints.clear();
+         new_unCommonPoints=new ArrayList<LatLng>();
+         new_unCommonPoints.clear();
+         String elementOfList1="";
+         String elementOfList2="";
+         String element1SubElement="";
+         String element2SubElement="";
+         for(int i=0;i<EdgeWithoutDuplicatesInRouteDeviationPoints.size();i++){
+             elementOfList1=EdgeWithoutDuplicatesInRouteDeviationPoints.get(i).toString();
+             element1SubElement = elementOfList1.substring(0,24);
 
 
+             for(int j=0;j<edgeWithoutDuplicates.size();j++){
+                 elementOfList2=edgeWithoutDuplicates.get(j).toString();
+                 element2SubElement=elementOfList2.substring(0,24);
+                 if(element1SubElement.equals(element2SubElement)){
+                     // three=new ArrayList<>();
+                     String ElementData=elementOfList1.replace("lat/lng: (","");
+                     String ElementData1=ElementData.replace(")","");
+                     String[]Elements =ElementData1.split(",");
+                     double lat= Double.parseDouble(Elements[0]);
+                     double longi= Double.parseDouble(Elements[1]);
+                     LatLng commonData=new LatLng(longi,lat);
+                     commonPoints.add(commonData);
+                 }
+
+             }
+             String ElementData=elementOfList1.replace("lat/lng: (","");
+             //Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData);
+             String ElementData1=ElementData.replace(")","");
+             // Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData1);
+             String[]Elements =ElementData1.split(",");
+             // Log.e("List Verification","List Verification commonPoints --  DATA "+ Elements);
+             double lat= Double.parseDouble(Elements[0]);
+             // Log.e("List Verification","List Verification commonPoints --  DATA "+ lat);
+             double longi= Double.parseDouble(Elements[1]);
+             // Log.e("List Verification","List Verification commonPoints --  DATA "+ longi);
+             LatLng commonData1=new LatLng(longi,lat);
+             new_unCommonPoints.add(commonData1);
+             new_unCommonPoints.removeAll(commonPoints);
+         }
+            /*
          boolean isEqual = EdgeWithoutDuplicatesInRouteDeviationPoints.retainAll(edgeWithoutDuplicates);
          Log.e("Route Deviation"," List Retains FLAG" +isEqual);
          Log.e("Route Deviation"," List Retains ELEMENTS--" + EdgeWithoutDuplicatesInRouteDeviationPoints);
 
         // boolean isEqual = edgeWithoutDuplicates.equals(RouteDeviationConvertedPoints);      //false
          System.out.println(isEqual);
-      return isEqual;
+         */
+
      }
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
