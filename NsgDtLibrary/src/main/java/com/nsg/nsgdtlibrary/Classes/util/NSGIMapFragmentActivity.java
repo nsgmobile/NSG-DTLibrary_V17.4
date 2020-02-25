@@ -603,6 +603,7 @@ import static java.lang.Math.sin;
                             handler.postDelayed(new Runnable() {
                                 public void run() {
                                     if (currentGpsPosition != null) {
+
                                         OldGPSPosition = currentGpsPosition;
                                         Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
                                     }
@@ -615,6 +616,7 @@ import static java.lang.Math.sin;
                                     if (isRouteDeviated == false) {
                                         if (OldGPSPosition != null) {
                                             double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+
                                             Log.e("distance", "distance" + distance);
                                             if (distance > 40) {
 
@@ -653,9 +655,9 @@ import static java.lang.Math.sin;
                                                             double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                                                             LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                             caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                            double returnedDistance1= verifyDeviationFirstTime(OldGPSPosition, currentGpsPosition);
-                                                            double returnedDistance2= verifyDeviationsecondTime(OldGPSPosition, currentGpsPosition);
-                                                            double returnedDistance3=verifyDeviationThirdTime(OldGPSPosition, currentGpsPosition);
+                                                             double returnedDistance1= verifyDeviationFirstTime(OldGPSPosition, currentGpsPosition);
+                                                             double returnedDistance2= verifyDeviationsecondTime(OldGPSPosition, currentGpsPosition);
+                                                             double returnedDistance3=verifyDeviationThirdTime(OldGPSPosition, currentGpsPosition);
                                                            if(returnedDistance1>routeDeviationDistance){
                                                               if(returnedDistance2>routeDeviationDistance) {
                                                                   if (returnedDistance3 > routeDeviationDistance) {
