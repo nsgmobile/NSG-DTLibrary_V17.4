@@ -1161,7 +1161,6 @@ import static java.lang.Math.sin;
                                      mMap.moveCamera(center);
                                      mMap.animateCamera(zoom);
                                  }
-
                                  else if(commonPoints.size()>0){
                                      Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
