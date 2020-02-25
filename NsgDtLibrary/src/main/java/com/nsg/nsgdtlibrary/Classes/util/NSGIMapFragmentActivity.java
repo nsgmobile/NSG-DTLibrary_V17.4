@@ -1336,7 +1336,7 @@ import static java.lang.Math.sin;
                  float bearing = (float) bearingBetweenLocations(OldGpsRouteDeviation, nearestPositionPoint); //correct method to change orientation of map
                  if (mPositionMarker == null) {
                      mPositionMarker = mMap.addMarker(new MarkerOptions()
-                             .position(SourceNode)
+                             .position(currentGpsPosition)
                              .title("currentLocation")
                              .anchor(0.5f, 0.5f)
                              .rotation(bearing)
