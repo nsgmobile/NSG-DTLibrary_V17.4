@@ -576,8 +576,9 @@ import static java.lang.Math.sin;
                                             if (isRouteDeviated == false) {
                                                 NavigationDirection(currentGpsPosition, DestinationNode);
                                             }else{
-                                                TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation,st_vertex,end_vertex);
-
+                                                if(directionTextRouteDeviation!=null && st_vertex!=null && end_vertex!=null) {
+                                                    TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation, st_vertex, end_vertex);
+                                                }
                                             }
 
                                         }else{
