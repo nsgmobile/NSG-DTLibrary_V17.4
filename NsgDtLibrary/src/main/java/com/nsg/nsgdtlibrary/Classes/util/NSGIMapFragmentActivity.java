@@ -1138,12 +1138,16 @@ import static java.lang.Math.sin;
                                  List <LatLng> new_unCommonPoints=new ArrayList<LatLng>();
                                  String elementOfList1="";
                                  String elementOfList2="";
+                                 String element1SubElement="";
+                                 String element2SubElement="";
                                  for(int i=0;i<EdgeWithoutDuplicatesInRouteDeviationPoints.size();i++){
                                      elementOfList1=EdgeWithoutDuplicatesInRouteDeviationPoints.get(i).toString();
+                                     element1SubElement = elementOfList1.substring(0,14);
 
                                      for(int j=0;j<EdgeWithoutDuplicates.size();j++){
                                          elementOfList2=EdgeWithoutDuplicates.get(j).toString();
-                                         if(elementOfList1.equals(elementOfList2)){
+                                         element2SubElement=elementOfList2.substring(0,14);
+                                         if(element1SubElement.equals(element2SubElement)){
                                              // three=new ArrayList<>();
                                              String ElementData=elementOfList1.replace("lat/lng: (","");
                                              String ElementData1=ElementData.replace(")","");
