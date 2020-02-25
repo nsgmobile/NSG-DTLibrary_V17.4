@@ -1079,10 +1079,12 @@ import static java.lang.Math.sin;
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
                              List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
                              if(EdgeWithoutDuplicates!=null && EdgeWithoutDuplicatesInRouteDeviationPoints!=null) {
-                                 boolean isEqual = EdgeWithoutDuplicatesInRouteDeviationPoints.retainAll(EdgeWithoutDuplicates);
+
+                               /*  boolean isEqual = EdgeWithoutDuplicatesInRouteDeviationPoints.retainAll(EdgeWithoutDuplicates);
                                  if(isEqual){
                                      isRouteDeviated = false;
                                  }else{
+                                     /*
                                      isRouteDeviated = true;
                                      LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                      @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
@@ -1118,6 +1120,7 @@ import static java.lang.Math.sin;
                                      mMap.animateCamera(zoom);
 
 
+
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
                                          // polylineOptions.add(OldGPSPosition);
@@ -1128,8 +1131,9 @@ import static java.lang.Math.sin;
                                          polyline.setJointType(JointType.ROUND);
                                      }
                                  }
+                             */
 
-                                /*
+
                                  List <LatLng> commonPoints =new ArrayList<LatLng>();
                                  List <LatLng> new_unCommonPoints=new ArrayList<LatLng>();
                                  String elementOfList1="";
@@ -1174,6 +1178,15 @@ import static java.lang.Math.sin;
                                  Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ new_unCommonPoints.size());
                                  if(commonPoints.size()==0){
 
+                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                         PolylineOptions polylineOptions = new PolylineOptions();
+                                         // polylineOptions.add(OldGPSPosition);
+                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                         Polyline polyline = mMap.addPolyline(polylineOptions);
+                                         polylineOptions.color(Color.RED).width(30);
+                                         mMap.addPolyline(polylineOptions);
+                                         polyline.setJointType(JointType.ROUND);
+                                     }
                                      Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
                                      Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
                                      isRouteDeviated = true;
@@ -1209,22 +1222,22 @@ import static java.lang.Math.sin;
                                      CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
                                      mMap.moveCamera(center);
                                      mMap.animateCamera(zoom);
+                                 }
+
+                                 else if(commonPoints.size()>0){
 
 
+                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
                                          // polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                         polylineOptions.addAll(new_unCommonPoints);
                                          Polyline polyline = mMap.addPolyline(polylineOptions);
                                          polylineOptions.color(Color.RED).width(30);
                                          mMap.addPolyline(polylineOptions);
                                          polyline.setJointType(JointType.ROUND);
                                      }
 
-
-                                 }
-
-                                 else if(commonPoints.size()>0){
                                      isRouteDeviated = true;
 
                                      LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1258,24 +1271,11 @@ import static java.lang.Math.sin;
                                      mMap.moveCamera(center);
                                      mMap.animateCamera(zoom);
 
-
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
-                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                         PolylineOptions polylineOptions = new PolylineOptions();
-                                         // polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(new_unCommonPoints);
-                                         Polyline polyline = mMap.addPolyline(polylineOptions);
-                                         polylineOptions.color(Color.RED).width(30);
-                                         mMap.addPolyline(polylineOptions);
-                                         polyline.setJointType(JointType.ROUND);
-                                     }
-
                                  }
                                  else if(new_unCommonPoints.size()==0){
                                      Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
 
                                  }
-                                 */
                              }
 
 
@@ -1533,16 +1533,19 @@ import static java.lang.Math.sin;
                                                 RouteDeviationConvertedPoints.add(latLng);
                                                 LatLng reversePoint= new LatLng(y, x);
                                                 RouteDeviationPointsForComparision.add(reversePoint);
+                                                Log.e("RouteDeviation","RouteDeviationConvertedPoints"+RouteDeviationConvertedPoints.size());
 
                                                 GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(latLng),GeometryText,"");
                                                 geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
                                             }
+
                                             // Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints);
                                             MarkerOptions markerOptions = new MarkerOptions();
+
                                             for (int k = 0; k < RouteDeviationConvertedPoints.size(); k++) {
                                                 if(polylineOptions!=null && mMap!=null) {
                                                     // markerOptions.position(RouteDeviationConvertedPoints.get(k));
-                                                    // Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints.get(k));
+                                                     Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints.get(k));
                                                     markerOptions.title("Position");
                                                 }
                                             }
