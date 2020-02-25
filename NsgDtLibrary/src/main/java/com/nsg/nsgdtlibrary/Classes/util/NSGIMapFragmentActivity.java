@@ -1174,7 +1174,8 @@ import static java.lang.Math.sin;
                                      }
                                      drawMarkerWithCircle(currentGpsPosition,20);
                                      double verifyDistance=distFrom(currentGpsPosition.latitude,currentGpsPosition.longitude,RouteDeviatedSourcePosition.latitude,RouteDeviatedSourcePosition.longitude);
-                                     if(verifyDistance<20){
+                                     Log.e("VERIFY DISTANCE","VERIFY DISTANCE"+verifyDistance);
+                                     if(verifyDistance < 20){
                                          isRouteDeviated = false;
                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                          @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
