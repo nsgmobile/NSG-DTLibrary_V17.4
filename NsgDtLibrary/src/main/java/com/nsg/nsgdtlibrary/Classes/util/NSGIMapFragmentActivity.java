@@ -1197,8 +1197,6 @@ import static java.lang.Math.sin;
                                              .anchor(0.5f, 0.5f)
                                              .flat(true)
                                              .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-
-
                                      CameraUpdate center =
                                              CameraUpdateFactory.newLatLng(currentGpsPosition);
                                      CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
