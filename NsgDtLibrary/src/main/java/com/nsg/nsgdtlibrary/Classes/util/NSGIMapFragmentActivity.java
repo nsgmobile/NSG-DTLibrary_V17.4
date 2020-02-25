@@ -386,8 +386,8 @@ import static java.lang.Math.sin;
                     String[]  text1 =destinationText.split(" ");
                     destLat= Double.parseDouble(text1[1]);
                     destLng= Double.parseDouble(text1[0]);
-                    SourceNode=new LatLng(sourceLat,sourceLng);
-                    DestinationNode=new LatLng(destLat,destLng);
+                   // SourceNode=new LatLng(sourceLat,sourceLng);
+                  //  DestinationNode=new LatLng(destLat,destLng);
                 }
             }
             //Initialise Map fragment
@@ -416,10 +416,10 @@ import static java.lang.Math.sin;
                         }
                         //get all edges data from local DB
                         getAllEdgesData();
+                        // get Valid Routedata acc to Map
+                        getValidRouteData();
                         //Adding markers on map
                         addMarkers();
-                       // get Valid Routedata acc to Map
-                        getValidRouteData();
                         if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
@@ -1937,11 +1937,9 @@ import static java.lang.Math.sin;
                         double Lat = Double.parseDouble(ptData[0]);
                         double Lang = Double.parseDouble(ptData[1]);
                         PointData = new LatLng(Lat, Lang);
-
                         edgeDataPointsList.add(PointData);
-
-
                     }
+
                 }
 
                 for(int k=0;k<EdgeContainsDataList.size();k++){
@@ -1951,6 +1949,18 @@ import static java.lang.Math.sin;
                 }
 
             }
+            //Getting Positions of Source and destinations
+            LatLng sr_data=edgeDataPointsList.get(0);
+            double x_sr=sr_data.latitude;
+            double y_sr=sr_data.longitude;
+            SourceNode= new LatLng(y_sr,x_sr);
+            Log.e("SourceNode","SourceNode"+SourceNode);
+
+            LatLng de_data=edgeDataPointsList.get(edgeDataPointsList.size()-1);
+            double x_de=de_data.latitude;
+            double y_de=de_data.longitude;
+            DestinationNode=new LatLng(y_de,x_de);
+            Log.e("DestinationNode","DestinationNode"+DestinationNode);
 
         }
 
@@ -2048,6 +2058,8 @@ import static java.lang.Math.sin;
                         for (int j = 0; j < jSonLegs.length(); j++) {
                             points.add(jSonLegs.get(j));
                         }
+
+
                         String  stPoint=String.valueOf(jSonLegs.get(0));
                         String  endPoint=String.valueOf(jSonLegs.get(jSonLegs.length()-1));
 
@@ -2064,6 +2076,7 @@ import static java.lang.Math.sin;
                         Double endPointLat= Double.valueOf(secondPoint[0]);
                         Double endPointLongi= Double.valueOf(secondPoint[1]);
                         LatLng endVertex=new LatLng(endPointLongi,endPointLat);
+
 
                         double distance=showDistance(stVertex,endVertex);
                         String distanceInKM = String.valueOf(distance/1000);
@@ -2090,6 +2103,8 @@ import static java.lang.Math.sin;
                             convertedPoints.add(latLng);
                         }
                         Log.e("convertedPoints", " convertedPoints------ " +  convertedPoints.size());
+
+                       // 55.065312867000046, 24.977084458000036
                         MarkerOptions markerOptions = new MarkerOptions();
                         for (int k = 0; k < convertedPoints.size(); k++) {
                             if(polylineOptions!=null && mMap!=null) {
