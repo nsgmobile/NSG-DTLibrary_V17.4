@@ -2179,7 +2179,7 @@ import static java.lang.Math.sin;
                     polyline = mMap.addPolyline(polylineOptions);
                     polylineOptions.color(Color.CYAN).width(30);
                     mMap.addPolyline(polylineOptions);
-                    polyline.setJointType(JointType.ROUND);
+                   // polyline.setJointType(JointType.ROUND);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
