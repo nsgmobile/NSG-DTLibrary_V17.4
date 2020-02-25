@@ -492,13 +492,6 @@ import static java.lang.Math.sin;
                 mMap.setMyLocationEnabled(true);
                 if(mPositionMarker!=null){
                     LatLng myLocation=null;
-                    /*
-                    Location location = mMap.getMyLocation();
-                    if (location != null) {
-                        myLocation = new LatLng(location.getLatitude(),
-                                location.getLongitude());
-                    }
-                     */
                     myLocation= mPositionMarker.getPosition();
                     int height=0;
                     if(getView()!=null ) {
@@ -513,7 +506,6 @@ import static java.lang.Math.sin;
                     LatLng offsetNewLoc = p.fromScreenLocation(offset);
                     double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                     LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, myLocation.getBearing());
-
                      */
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
@@ -592,11 +584,11 @@ import static java.lang.Math.sin;
 
                             }, 0, 15000);
                         }
-                        mMap.setMyLocationEnabled(true);
+                      //  mMap.setMyLocationEnabled(true);
                         mMap.setBuildingsEnabled(true);
                         mMap.getUiSettings().setZoomControlsEnabled(true);
                         mMap.getUiSettings().setCompassEnabled(true);
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                      //  mMap.getUiSettings().setMyLocationButtonEnabled(false);
                         mMap.getUiSettings().setMapToolbarEnabled(true);
                         mMap.getUiSettings().setZoomGesturesEnabled(true);
                         mMap.getUiSettings().setScrollGesturesEnabled(true);
@@ -661,23 +653,30 @@ import static java.lang.Math.sin;
                                                             double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                                                             LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                             caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                            verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
-                                                            AlertDestination(currentGpsPosition);
-                                                            if (bearing > 0.0) {
+                                                            double returnedDistance1= verifyDeviationFirstTime(OldGPSPosition, currentGpsPosition);
+                                                            double returnedDistance2= verifyDeviationsecondTime(OldGPSPosition, currentGpsPosition);
+                                                            double returnedDistance3=verifyDeviationThirdTime(OldGPSPosition, currentGpsPosition);
+                                                           if(returnedDistance1>routeDeviationDistance){
+                                                              if(returnedDistance2>routeDeviationDistance) {
+                                                                  if (returnedDistance3 > routeDeviationDistance) {
+                                                                      verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                  }
+                                                              }
+                                                           }else{
+
+                                                           }
+                                                           AlertDestination(currentGpsPosition);
+                                                           if (bearing > 0.0) {
                                                                 CameraPosition currentPlace = new CameraPosition.Builder()
                                                                         .target(shadowTgt)
                                                                         .bearing(bearing).tilt(65.5f).zoom(18)
                                                                         .build();
                                                                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                                            } else {
+                                                           } else {
 
-                                                            }
-
-
+                                                           }
                                                         }else if(islocationControlEnabled==true){
-
                                                             animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
-
                                                         }
 
 
@@ -1025,10 +1024,10 @@ import static java.lang.Math.sin;
                sendData(time.toString(), MapEvents.ALERTTYPE_2);
            }
         }
-        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-        public void VerifyRouteDeviationConsequently(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates){
-            Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
-            Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+     public void VerifyRouteDeviationConsequently(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
+        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
             if (PrevousGpsPosition != null){
                 LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
                 double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
@@ -1036,7 +1035,36 @@ import static java.lang.Math.sin;
 
             }
         }
-
+     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        public double verifyDeviationFirstTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
+            double firstDeviatrionDistance=0.0;
+            if (PrevousGpsPosition != null) {
+                 LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
+                 firstDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+            }
+            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 1 st TIME ---- "+ firstDeviatrionDistance);
+            return firstDeviatrionDistance;
+        }
+     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+     public double verifyDeviationsecondTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
+         double secondDeviatrionDistance=0.0;
+         if (PrevousGpsPosition != null) {
+             LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
+             secondDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+         }
+         Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 2 nd TIME ---- "+ secondDeviatrionDistance);
+         return secondDeviatrionDistance;
+     }
+     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+     public double verifyDeviationThirdTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
+         double thirdDeviatrionDistance=0.0;
+         if (PrevousGpsPosition != null) {
+             LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
+             thirdDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+         }
+         Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 3 rd TIME ---- "+ thirdDeviatrionDistance);
+         return thirdDeviatrionDistance;
+     }
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
                /*
@@ -1047,7 +1075,6 @@ import static java.lang.Math.sin;
               */
          Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
          Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
-
          if (PrevousGpsPosition != null){
              /*
              GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
@@ -1057,14 +1084,6 @@ import static java.lang.Math.sin;
              LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
              double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
              Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
-
-            // drawMarkerWithCircle(PrevousGpsPosition, markDistance);
-            // double distanceAtRouteDeviation = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
-            // Log.e("Route Deviation","ROUTE DEVIATION DISTANCE ----"+  distanceAtRouteDeviation);
-             //Log.e("Route Deviation","CIRCLE RADIUS----"+  mCircle.getRadius());
-             //  float rotateBearing= (float) bearingBetweenLocations(PrevousGpsPosition,currentGpsPosition);
-             //  Log.e("Route Deviation","ROUTE DEVIATION ANGLE ----"+ rotateBearing);
-
              if(returnedDistance >routeDeviationDistance){
                  String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                  String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
@@ -1083,12 +1102,10 @@ import static java.lang.Math.sin;
                  dialog.setMessage("Fetching new Route");
                  dialog.setMax(100);
                  dialog.show();
-
                  getActivity().runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
                          String MESSAGE = "";
-
                          GetRouteDetails(routeDiationPosition, destPoint);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
                              List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
