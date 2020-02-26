@@ -1024,6 +1024,13 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         mPositionMarker.setPosition(currentGpsPosition);
         mPositionMarker.setAnchor(0.5f,0.5f);
         currentLocationList.add(currentGpsPosition);
+        float bearing= (float) bearingBetweenLocations(OldGPSPosition,currentGpsPosition);
+        CameraPosition currentPlace = new CameraPosition.Builder()
+                .target(currentGpsPosition)
+                .bearing(bearing).tilt(65.5f).zoom(18)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if(OldGPSPosition!=null && currentGpsPosition!=null) {
                 verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
