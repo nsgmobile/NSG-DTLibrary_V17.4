@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 //import com.nsg.nsgdtlibrary.Classes.OldCode.NSGIMainFragment;
 import com.nsg.nsgdtlibrary.Classes.util.NSGIMapFragmentActivity;
-import com.nsg.nsgdtlibrary.Classes.util.NSGTiledLayerOnMap;
+import com.nsg.nsgdtlibrary.Classes.util.NSGINavigationFragment;
 import com.nsg.nsgdtlibrary.Classes.util.NavigationProperties;
 
 import java.io.File;
@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentActivity.FragmentToActivity, View.OnClickListener {
+public class NSGApiActivity extends FragmentActivity implements NSGINavigationFragment.FragmentToActivity, View.OnClickListener {
     private int bufferSize=9;
     private String charlsisNumber;
     private  Button Start,Stop;
@@ -1306,7 +1306,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
   //  com.nsg.dtlibrary.NavigationProperties properties=new com.nsg.dtlibrary.NavigationProperties();
 
-    NSGIMapFragmentActivity test = new NSGIMapFragmentActivity(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
+    NSGINavigationFragment test = new NSGINavigationFragment(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
   // NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT);
     @Override
     protected void onCreate(Bundle savedInstanceState) {

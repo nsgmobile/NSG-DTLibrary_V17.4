@@ -246,6 +246,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     private boolean isGPS = false;
     List <LatLng> commonPoints;
     List <LatLng> new_unCommonPoints;
+    int caluclateDistanceFlag=1;
 
     String s1,s2;
 
@@ -497,52 +498,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 if(getView()!=null ) {
                     height = getView().getMeasuredHeight();
                 }
-                    /*
-                    Projection p = mMap.getProjection();
-                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                    Point offset = new Point(center.x, (center.y + (height / 4)));
-                    LatLng centerLoc = p.fromScreenLocation(center);
-                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                    LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, myLocation.getBearing());
-                     */
-
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
             }
-                /*
-                Location location = mMap.getMyLocation();
-                LatLng myLocation=null;
-                if (location != null) {
-                    myLocation = new LatLng(location.getLatitude(),
-                            location.getLongitude());
-                    int height=0;
-                    if(getView()!=null ) {
-                        height = getView().getMeasuredHeight();
-                    }
-                    Projection p = mMap.getProjection();
-                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                    Point offset = new Point(center.x, (center.y + (height / 4)));
-                    LatLng centerLoc = p.fromScreenLocation(center);
-                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                    LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, location.getBearing());
-
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(shadowTgt));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                    /*
-                    CameraPosition currentPlace = new CameraPosition.Builder()
-                            .target(shadowTgt)
-                            .bearing(location.getBearing()).tilt(65.5f).zoom(18)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-
-                }else{
-
-                }
-                  */
 
         }
     }
@@ -560,6 +518,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
             nearestPointValuesList.add(new LatLng(sourceLat, sourceLng));
             OldNearestGpsList = new ArrayList<>();
             OldNearestGpsList.add(new LatLng(sourceLat, sourceLng));
+
+
             try {
                 if (mMap != null && isMapLoaded == true && isNavigationStarted == false) {
                     if (isTimerStarted = true) {
@@ -584,11 +544,11 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                         }, 0, 15000);
                     }
-                    //  mMap.setMyLocationEnabled(true);
+                    mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
-                    //  mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     mMap.getUiSettings().setMapToolbarEnabled(true);
                     mMap.getUiSettings().setZoomGesturesEnabled(true);
                     mMap.getUiSettings().setScrollGesturesEnabled(true);
@@ -599,98 +559,30 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         isTimerStarted = true;
                         Handler handler = new Handler();
-                        int delay = 1000 *1; //milliseconds
+                        int delay = 1000 *1; // 1 second
                         handler.postDelayed(new Runnable() {
                             public void run() {
+                                double returnedDistance1=0.0;
+                                double returnedDistance2=0.0;
+                                double returnedDistance3=0.0;
                                 if (currentGpsPosition != null) {
-
                                     OldGPSPosition = currentGpsPosition;
-                                    Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
+                                    returnedDistance1= verifyDeviationCalculateDistance(OldGPSPosition, currentGpsPosition);
+                                    Log.v("APP DATA ", " First Distance 1 ----" + returnedDistance1);
+                                    caluclateDistanceFlag=caluclateDistanceFlag+1;
+                                    returnedDistance2= verifyDeviationCalculateDistance(OldGPSPosition,currentGpsPosition);
+                                    Log.v("APP DATA ", "Second Distance 2 ----" + returnedDistance2);
+                                    caluclateDistanceFlag=caluclateDistanceFlag+1;
+                                    returnedDistance3= verifyDeviationCalculateDistance(OldGPSPosition,currentGpsPosition);
+                                    Log.v("APP DATA ", "Third Distance 3----" + returnedDistance3);
+                                    Log.v("APP DATA ", "START  OLD GPS POSITION ----" + OldGPSPosition);
                                 }
                                 isContinue = true;
                                 stringBuilder = new StringBuilder();
                                 currentGpsPosition = getLocation();
-                                Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
+                                Log.v("APP DATA ", "START  CURRENT GPS POSITION ----" + currentGpsPosition);
                                 // Navigation code starts from here
-                                LatLng OldNearestPosition = null;
-                                if (isRouteDeviated == false) {
-                                    if (OldGPSPosition != null) {
-                                        double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
 
-                                        Log.e("distance", "distance" + distance);
-                                        if (distance > 40) {
-
-                                        } else {
-                                            OldNearestPosition = nPosition;
-                                            Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
-                                            nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
-                                            Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                                            if (mPositionMarker == null) {
-                                                mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                        .position(SourceNode)
-                                                        .title("Nearest GpsPoint")
-                                                        .anchor(0.5f, 0.5f)
-                                                        .flat(true)
-                                                        .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                            } else {
-                                                Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
-                                                if (OldNearestPosition != null) {
-                                                    if(islocationControlEnabled==false) {
-                                                        Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
-                                                        Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
-                                                        Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
-                                                        animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
-                                                        float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
-                                                        Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                                        int height=0;
-                                                        if(getView()!=null ) {
-                                                            height = getView().getMeasuredHeight();
-                                                        }
-                                                        Projection p = mMap.getProjection();
-                                                        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                                                        Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                                                        Point offset = new Point(center.x, (center.y + (height / 4)));
-                                                        LatLng centerLoc = p.fromScreenLocation(center);
-                                                        LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                                                        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                                                        LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
-                                                        caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                        double returnedDistance1= verifyDeviationFirstTime(OldGPSPosition, currentGpsPosition);
-                                                        double returnedDistance2= verifyDeviationsecondTime(OldGPSPosition, currentGpsPosition);
-                                                        double returnedDistance3=verifyDeviationThirdTime(OldGPSPosition, currentGpsPosition);
-                                                        if(returnedDistance1>routeDeviationDistance){
-                                                            if(returnedDistance2>routeDeviationDistance) {
-                                                                if (returnedDistance3 > routeDeviationDistance) {
-                                                                    verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
-                                                                }
-                                                            }
-                                                        }else{
-
-                                                        }
-                                                        AlertDestination(currentGpsPosition);
-                                                        if (bearing > 0.0) {
-                                                            CameraPosition currentPlace = new CameraPosition.Builder()
-                                                                    .target(shadowTgt)
-                                                                    .bearing(bearing).tilt(65.5f).zoom(18)
-                                                                    .build();
-                                                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                                        } else {
-
-                                                        }
-                                                    }else if(islocationControlEnabled==true){
-                                                        animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
-                                                    }
-
-
-                                                }
-                                            }
-                                        }
-
-                                    }
-                                } else {
-                                    MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                }
-                                //Navigation code ends here
                                 handler.postDelayed(this, delay);
                             }
                         }, delay);
@@ -1038,7 +930,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public double verifyDeviationFirstTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
+    public double verifyDeviationCalculateDistance(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
         double firstDeviatrionDistance=0.0;
         if (PrevousGpsPosition != null) {
             LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
@@ -1046,26 +938,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
         Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 1 st TIME ---- "+ firstDeviatrionDistance);
         return firstDeviatrionDistance;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public double verifyDeviationsecondTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-        double secondDeviatrionDistance=0.0;
-        if (PrevousGpsPosition != null) {
-            LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
-            secondDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-        }
-        Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 2 nd TIME ---- "+ secondDeviatrionDistance);
-        return secondDeviatrionDistance;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public double verifyDeviationThirdTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-        double thirdDeviatrionDistance=0.0;
-        if (PrevousGpsPosition != null) {
-            LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
-            thirdDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-        }
-        Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 3 rd TIME ---- "+ thirdDeviatrionDistance);
-        return thirdDeviatrionDistance;
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
