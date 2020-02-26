@@ -1021,8 +1021,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveOutOfTrack(){
-        mPositionMarker.setPosition(currentGpsPosition);
-        mPositionMarker.setAnchor(0.5f,0.5f);
+        animateCarMove(mPositionMarker,OldGPSPosition,currentGPSPosition,1000);
+       // mPositionMarker.setPosition(currentGpsPosition);
+       // mPositionMarker.setAnchor(0.5f,0.5f);
         currentLocationList.add(currentGpsPosition);
         float bearing= (float) bearingBetweenLocations(OldGPSPosition,currentGpsPosition);
         CameraPosition currentPlace = new CameraPosition.Builder()
@@ -1114,7 +1115,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
+    public boolean verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
                /*
               After getting current gps verifing in the  radius of
               in the routebetween the Previous and current gps position
@@ -1172,6 +1173,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
+                                    isRouteDeviated = true;
                                     /*
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
@@ -1222,6 +1224,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
+                                    isRouteDeviated = true;
                                 }
                                 else if(new_unCommonPoints.size()==0){
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
@@ -1241,6 +1244,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }else{
 
         }
+        return isRouteDeviated;
     }
 
     public void  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
