@@ -1119,6 +1119,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
+
                                     MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     // isRouteDeviated = true;
                                 }
@@ -1130,7 +1131,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                         }
                     }
                 });
-
             }
         }
     }
