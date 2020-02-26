@@ -246,6 +246,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     private boolean isGPS = false;
     List <LatLng> commonPoints;
     List <LatLng> new_unCommonPoints;
+    public boolean isContinuoslyOutOfTrack=false;
+    public boolean isnotRouteDeviated=true;
     int caluclateDistanceFlag=1;
 
     String s1,s2;
@@ -576,7 +578,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
                                     // Navigation code starts from here
                                     LatLng OldNearestPosition = null;
-                                    if (isRouteDeviated == false) {
+                                    if (isRouteDeviated == false && isContinuoslyOutOfTrack==false) {
                                         if (OldGPSPosition != null) {
                                             double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                                       Log.e("distance", "distance" + distance);
@@ -634,7 +636,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                             if(returnedDistance1>routeDeviationDistance){
                                                                 if(returnedDistance2>routeDeviationDistance) {
                                                                     if (returnedDistance3 > routeDeviationDistance) {
-                                                                        verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                        verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
                                                                     }
                                                                 }
                                                             }else{
@@ -660,7 +662,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             }
 
                                         }
-                                    } else {
+                                    } else if(isRouteDeviated==true) {
                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     }
                                     //Navigation code ends here
@@ -1002,13 +1004,33 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public void VerifyRouteOutOfTrackConsequently(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
-        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
-        if (PrevousGpsPosition != null){
-            LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
-            double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
+    public boolean VerifyRouteOutOfTrackConsequently(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
+        List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+      //  List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
+        checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates,RouteDeviationPointsForComparision);
+        Log.e("List Verification","List Verification commonPoints --  DATA "+ commonPoints.size());
+        Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ new_unCommonPoints.size());
+
+        if(commonPoints.size()==0){
+          isContinuoslyOutOfTrack=true;
+
+        }
+    return isContinuoslyOutOfTrack;
+    }
+    public void MoveOutOfTrack(){
+        mPositionMarker.setPosition(currentGpsPosition);
+        mPositionMarker.setAnchor(0.5f,0.5f);
+        currentLocationList.add(currentGpsPosition);
+        if(commonPoints.size()==0){
+            if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                PolylineOptions polylineOptions = new PolylineOptions();
+                // polylineOptions.add(OldGPSPosition);
+                polylineOptions.addAll(currentLocationList);
+                Polyline polyline = mMap.addPolyline(polylineOptions);
+                polylineOptions.color(Color.YELLOW).width(30);
+                mMap.addPolyline(polylineOptions);
+                polyline.setJointType(JointType.ROUND);
+            }
 
         }
     }
@@ -1021,6 +1043,87 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
         Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 1 st TIME ---- "+ firstDeviatrionDistance);
         return firstDeviatrionDistance;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void verifyRouteDeviationTask(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates){
+        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+        if (PrevousGpsPosition != null){
+            LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
+            double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
+            if(returnedDistance >routeDeviationDistance){
+                String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                Log.e("Route Deviation","routeDiationPosition   ######"+ routeDiationPosition);
+
+                String destLatPos = String.valueOf(DestinationPosition.latitude);
+                String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                RouteDeviatedSourcePosition = new LatLng(Double.parseDouble(cgpsLat), Double.parseDouble(cgpsLongi));
+                Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
+                Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
+                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                dialog.setMessage("Fetching new Route");
+                dialog.setMax(100);
+                dialog.show();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String MESSAGE = "";
+                        GetRouteDetails(routeDiationPosition, destPoint);
+                        if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                            List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+                            List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
+                            if(EdgeWithoutDuplicates!=null && EdgeWithoutDuplicatesInRouteDeviationPoints!=null) {
+                                checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates,RouteDeviationPointsForComparision);
+                                Log.e("List Verification","List Verification commonPoints --  DATA "+ commonPoints.size());
+                                Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ new_unCommonPoints.size());
+                                VerifyRouteOutOfTrackConsequently(EdgeWithoutDuplicates,RouteDeviationPointsForComparision);
+                                if(isContinuoslyOutOfTrack==true) {
+                                    MoveOutOfTrack();
+                                   // isRouteDeviated=true;
+
+                                }else{
+                                    if (commonPoints.size() == 0) {
+                                        if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                            PolylineOptions polylineOptions = new PolylineOptions();
+                                            // polylineOptions.add(OldGPSPosition);
+                                            polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                            Polyline polyline = mMap.addPolyline(polylineOptions);
+                                            polylineOptions.color(Color.RED).width(30);
+                                            mMap.addPolyline(polylineOptions);
+                                            polyline.setJointType(JointType.ROUND);
+                                        }
+
+                                    } else if (commonPoints.size() > 0) {
+                                        Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
+                                        if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                            PolylineOptions polylineOptions = new PolylineOptions();
+                                            // polylineOptions.add(OldGPSPosition);
+                                            polylineOptions.addAll(new_unCommonPoints);
+                                            Polyline polyline = mMap.addPolyline(polylineOptions);
+                                            polylineOptions.color(Color.RED).width(30);
+                                            mMap.addPolyline(polylineOptions);
+                                            polyline.setJointType(JointType.ROUND);
+                                        }
+                                    } else if (new_unCommonPoints.size() == 0) {
+                                        Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + " OLD ROUTE");
+
+                                    }
+                                }
+                            }
+
+
+                        }
+
+
+                    }
+                });
+
+            }
+        }
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
@@ -1133,8 +1236,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     drawMarkerWithCircle(currentGpsPosition,20);
                                     double verifyDistance=distFrom(currentGpsPosition.latitude,currentGpsPosition.longitude,RouteDeviatedSourcePosition.latitude,RouteDeviatedSourcePosition.longitude);
                                     Log.e("VERIFY DISTANCE","VERIFY DISTANCE"+verifyDistance);
-                                    if(verifyDistance < 20){
+                                   // if(verifyDistance < 20){
                                         mPositionMarker.setPosition(currentGpsPosition);
+                                        mPositionMarker.setAnchor(0.5f, 0.5f);
                                         isRouteDeviated = false;
                                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                         @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
@@ -1167,7 +1271,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.moveCamera(center);
                                         mMap.animateCamera(zoom);
 
-                                    }
+                                  //  }
                                 }
                                 else if(new_unCommonPoints.size()==0){
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
