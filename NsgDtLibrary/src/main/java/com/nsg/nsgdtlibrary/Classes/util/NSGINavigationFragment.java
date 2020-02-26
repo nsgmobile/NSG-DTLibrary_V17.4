@@ -1078,10 +1078,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 RouteDeviatedSourcePosition = new LatLng(Double.parseDouble(cgpsLat), Double.parseDouble(cgpsLongi));
                 Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
                 Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
-               // dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-               // dialog.setMessage("Fetching new Route");
-               // dialog.setMax(100);
-              //  dialog.show();
+                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                dialog.setMessage("Fetching new Route");
+                dialog.setMax(100);
+                dialog.show();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -1167,11 +1167,11 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
                 Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
                 //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-                //  DestinationPosition = new LatLng(destLat, destLng);
-               // dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-               // dialog.setMessage("Fetching new Route");
-              //  dialog.setMax(100);
-              //  dialog.show();
+               // DestinationPosition = new LatLng(destLat, destLng);
+                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                dialog.setMessage("Fetching new Route");
+                dialog.setMax(100);
+               dialog.show();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -1596,14 +1596,14 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                         }catch (Exception ex){
 
                         }
-                       // dialog.dismiss();
+                        dialog.dismiss();
                     }
                 }
             });
         }catch(Exception e){
             e.printStackTrace();
         }
-      //  dialog.dismiss();
+        dialog.dismiss();
     }
     private String HttpPost(String myUrl,String latLng1,String latLng2) throws IOException, JSONException {
         StringBuilder sb = new StringBuilder();
