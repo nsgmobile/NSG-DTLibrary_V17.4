@@ -883,10 +883,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         return vfinalValue;
     }
     public void EdgesEndContaingData(LatLng currentGpsPosition, String shortestDistancePoint){
-            /*
+         /*
             Internal calculation to get Edges of CGPS point -- it gets shortest point with the edges
             using shotest distance from CGPS position
-             */
+         */
         String stPoint = "", endPoint = "", geometryTextimpValue = null, distanceInEdge = "";
         String position="";
         int indexPosition=0;
