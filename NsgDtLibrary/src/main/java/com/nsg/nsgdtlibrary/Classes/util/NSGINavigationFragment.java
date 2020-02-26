@@ -1242,8 +1242,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
-                                    isRouteDeviated = true;
-                                    MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                   // isRouteDeviated = true;
+                                   // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     //
                                     /*
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
@@ -1295,8 +1295,20 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
-                                   MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                   // isRouteDeviated = true;
+                                   //MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                   isRouteDeviated = true;
+                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+
+                                    text.setText("Route Deviated");
+
+                                    Toast toast = new Toast(getActivity().getApplicationContext());
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                    toast.setGravity(Gravity.TOP, 0, 150);
+                                    toast.setView(layout);
+                                    toast.show();
                                 }
                                 else if(new_unCommonPoints.size()==0){
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
@@ -1606,7 +1618,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             RouteDeviationConvertedPoints.add(latLng);
                                             LatLng reversePoint= new LatLng(y, x);
                                             RouteDeviationPointsForComparision.add(reversePoint);
-                                            Log.e("RouteDeviation","RouteDeviationConvertedPoints"+RouteDeviationConvertedPoints.size());
+                                            //Log.e("RouteDeviation","RouteDeviationConvertedPoints"+RouteDeviationConvertedPoints.size());
 
                                             GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(latLng),GeometryText,"");
                                             geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
