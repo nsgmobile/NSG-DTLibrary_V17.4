@@ -588,7 +588,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
                                                 Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
                                                 double distance_movement = distFrom(nPosition.latitude, nPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                                                if(distance_movement<routeDeviationDistance){
+                                                Log.e("Distance_movement", " Distance_movement" + distance_movement);
+                                                if(distance_movement<30){
                                                     if (mPositionMarker == null) {
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                 .position(SourceNode)
@@ -627,7 +628,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
 
                                                                     }
-
                                                                     returnedDistance1 = consDistList.get(consDistList.size() - 1);
                                                                     Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
                                                                     returnedDistance2 = consDistList.get(consDistList.size() - 2);
@@ -662,12 +662,16 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                         }
                                                     }
                                                 }else{
-                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                            .position(SourceNode)
-                                                            .title("")
-                                                            .anchor(0.5f, 0.5f)
-                                                            .flat(true)
-                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    if (mPositionMarker == null) {
+                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                .position(currentGPSPosition)
+                                                                .title("Nearest GpsPoint")
+                                                                .anchor(0.5f, 0.5f)
+                                                                .flat(true)
+                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    }else {
+                                                        animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
+                                                    }
                                                 }
                                             }
 
