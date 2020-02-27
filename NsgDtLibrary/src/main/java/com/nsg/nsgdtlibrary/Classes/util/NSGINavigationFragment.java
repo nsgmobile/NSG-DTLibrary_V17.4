@@ -1186,6 +1186,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
+                                            
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }else{
 
