@@ -591,7 +591,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                     Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
                                                     double distance_movement = distFrom(nPosition.latitude, nPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                     Log.e("Distance_movement", " Distance_movement" + distance_movement);
-                                                    if (distance_movement < routeDeviationDistance) {
+                                                    if (distance_movement <40) {
                                                         if (mPositionMarker == null) {
                                                             mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                     .position(SourceNode)
