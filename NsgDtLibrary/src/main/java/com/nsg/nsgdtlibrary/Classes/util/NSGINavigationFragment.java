@@ -578,7 +578,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
                                     // Navigation code starts from here
                                     LatLng OldNearestPosition = null;
-                                    if (isRouteDeviated == false) {
+                                   // if (isRouteDeviated == false) {
                                         if (OldGPSPosition != null) {
                                                 double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                 Log.e("distance", "distance" + distance);
@@ -715,9 +715,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             }
 
-                                   } else if(isRouteDeviated==true) {
-                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                    }
+                                  // } else if(isRouteDeviated==true) {
+                                   //     MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                  //  }
                                     //Navigation code ends here
                                 handler.postDelayed(this, delay);
                             }
@@ -1186,10 +1186,36 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
-
+                                            MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }else{
 
                                         }
+                                        /*
+                                         LatLng cur_position=mPositionMarker.getPosition();
+                                            String Route_end= String.valueOf(RouteDeviationConvertedPoints.get(RouteDeviationConvertedPoints.size()-1));
+                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point " +  RouteDeviationConvertedPoints.get(RouteDeviationConvertedPoints.size()-1));
+                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Route_end);
+
+
+                                            String Rt_end_pt=Route_end.replace("lat/lng: (","");
+                                            String Rt_end_pt1=Rt_end_pt.replace(")","");
+                                            String[]Rt_end_pt1Points =Rt_end_pt1.split(",");
+                                            double lat= Double.parseDouble(Rt_end_pt1Points[0]);
+                                            double longi= Double.parseDouble(Rt_end_pt1Points[1]);
+                                            LatLng RouteDeviation_RouteEnd_point=new LatLng(lat,longi);
+                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Rt_end_pt);
+
+                                            drawMarkerWithCircle(RouteDeviation_RouteEnd_point,20);
+                                            double rd_ditance=distFrom(RouteDeviation_RouteEnd_point.latitude,RouteDeviation_RouteEnd_point.longitude,cur_position.latitude,cur_position.longitude);
+                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer" + rd_ditance);
+                                            if(rd_ditance<20) {
+                                                Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
+                                                isRouteDeviated=false;
+
+                                            }else{
+
+                                            }
+                                         */
 
                                 }
                                 else if(new_unCommonPoints.size()==0){
@@ -1547,16 +1573,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                     }
 
-                }
-           // }else{
 
-           // }
-             /*
-             if (currentGpsPosition.equals(DestinationNode)) {
-                 nearestPointValuesList.add(DestinationPosition);
-             }
-              */
-            // AlertDestination(currentGpsPosition);
+                }
+
         }
     }
 
