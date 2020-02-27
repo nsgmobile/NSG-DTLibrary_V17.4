@@ -406,10 +406,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                     //set GoogleMap Style
                     NSGINavigationFragment.this.mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.stle_map_json));
                     //set  Tileprovider to GoogleMap
-                    TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
-                    TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
-                    tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
-                    tileOverlay.setVisible(true);
+                  //  TileProvider tileProvider = new ExpandedMBTilesTileProvider(new File(BASE_MAP_URL_FORMAT.toString()), 256, 256);
+                  //  TileOverlay tileOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
+                  //  tileOverlay.setTransparency(0.5f - tileOverlay.getTransparency());
+                  //  tileOverlay.setVisible(true);
                     if (routeData != null) {
                         /*Get Route From Database and plot on map*/
                         GetRouteFromDBPlotOnMap(routeData);
