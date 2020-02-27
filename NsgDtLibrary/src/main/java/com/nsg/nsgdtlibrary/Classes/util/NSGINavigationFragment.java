@@ -544,17 +544,17 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                         }, 0, 15000);
                     }
-                    mMap.setMyLocationEnabled(true);
+                   // mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
-                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                 //   mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     mMap.getUiSettings().setMapToolbarEnabled(true);
                     mMap.getUiSettings().setZoomGesturesEnabled(true);
                     mMap.getUiSettings().setScrollGesturesEnabled(true);
                     mMap.getUiSettings().setTiltGesturesEnabled(true);
                     mMap.getUiSettings().setRotateGesturesEnabled(true);
-                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                   // mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         List<Double> consDistList=new ArrayList<>();
