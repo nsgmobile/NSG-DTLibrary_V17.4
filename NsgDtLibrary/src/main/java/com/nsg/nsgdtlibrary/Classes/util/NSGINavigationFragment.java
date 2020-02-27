@@ -624,7 +624,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                                 double returnedDistance3 = 0.0;
                                                                 if (consDistList != null) {
                                                                     for (int i = 0; i < consDistList.size(); i++) {
-                                                                         Log.e("APP DATA ", " Distance 3 ----" + consDistList.get(i));
+
 
                                                                     }
 
@@ -1078,7 +1078,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 RouteDeviatedSourcePosition = new LatLng(Double.parseDouble(cgpsLat), Double.parseDouble(cgpsLongi));
                 Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
                 Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
-                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                dialog = new ProgressDialog(getContext(), R.style.ProgressDialog);
                 dialog.setMessage("Fetching new Route");
                 dialog.setMax(100);
                 dialog.show();
