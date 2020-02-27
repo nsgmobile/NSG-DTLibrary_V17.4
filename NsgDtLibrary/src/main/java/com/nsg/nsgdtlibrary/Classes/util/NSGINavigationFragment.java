@@ -1185,6 +1185,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 mMap.addPolyline(polylineOptions);
                                                 polyline.setJointType(JointType.ROUND);
                                             }
+                                            /*
                                             LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                             @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                             TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -1197,6 +1198,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             toast.setGravity(Gravity.TOP, 0, 150);
                                             toast.setView(layout);
                                             toast.show();
+                                             */
                                             StringBuilder routeDeviatedAlert = new StringBuilder();
                                             routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                             sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
@@ -1572,9 +1574,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                             double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                             LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                             CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
-                            //  verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
 
-                            //  verifyRouteDeviation(OldGpsRouteDeviation,currentGpsPosition,routeDeviationDistance,);
                             AlertDestination(currentGpsPosition);
                             if (bearing > 0.0) {
                                 CameraPosition currentPlace = new CameraPosition.Builder()
