@@ -1121,7 +1121,18 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
+                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
+                                    text.setText("Route Deviated");
+
+                                    Toast toast = new Toast(getActivity().getApplicationContext());
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                    toast.setGravity(Gravity.TOP, 0, 150);
+                                    toast.setView(layout);
+                                    toast.show();
                                     MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     // isRouteDeviated = true;
                                 }
