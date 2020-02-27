@@ -229,9 +229,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     NavigationProperties properties;
     LocationManager mLocationManager;
     private String directionTextRouteDeviation,st_vertex,end_vertex;
-    //  private boolean isGPSEnabled=false;
-
-    //Fused Location Client api
     private FusedLocationProviderClient mFusedLocationClient;
     private double wayLatitude = 0.0, wayLongitude = 0.0;
     private LocationRequest locationRequest;
