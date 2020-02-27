@@ -1193,39 +1193,13 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
-
-                                            MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                            if(isRouteDeviated==true) {
+                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                            }
 
                                         }else{
 
                                         }
-                                        /*
-                                         LatLng cur_position=mPositionMarker.getPosition();
-                                            String Route_end= String.valueOf(RouteDeviationConvertedPoints.get(RouteDeviationConvertedPoints.size()-1));
-                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point " +  RouteDeviationConvertedPoints.get(RouteDeviationConvertedPoints.size()-1));
-                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Route_end);
-
-
-                                            String Rt_end_pt=Route_end.replace("lat/lng: (","");
-                                            String Rt_end_pt1=Rt_end_pt.replace(")","");
-                                            String[]Rt_end_pt1Points =Rt_end_pt1.split(",");
-                                            double lat= Double.parseDouble(Rt_end_pt1Points[0]);
-                                            double longi= Double.parseDouble(Rt_end_pt1Points[1]);
-                                            LatLng RouteDeviation_RouteEnd_point=new LatLng(lat,longi);
-                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Rt_end_pt);
-
-                                            drawMarkerWithCircle(RouteDeviation_RouteEnd_point,20);
-                                            double rd_ditance=distFrom(RouteDeviation_RouteEnd_point.latitude,RouteDeviation_RouteEnd_point.longitude,cur_position.latitude,cur_position.longitude);
-                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer" + rd_ditance);
-                                            if(rd_ditance<20) {
-                                                Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
-                                                isRouteDeviated=false;
-
-                                            }else{
-
-                                            }
-                                         */
-
                                 }
                                 else if(new_unCommonPoints.size()==0){
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
@@ -1533,71 +1507,48 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
             nearestPointValuesList.add(nearestPositionPoint);
             Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGpsRouteDeviation);
             Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
-            //float bearing= (float) bearingBetweenLocations(OldGpsRouteDeviation,nearestPositionPoint);
             if (OldGpsRouteDeviation != null && nearestPositionPoint != null) {
                 if(mPositionMarker==null) {
                     mPositionMarker = mMap.addMarker(new MarkerOptions()
-                            .position(nearestPositionPoint)
+                           // .position(nearestPositionPoint)
                             .title("currentLocation")
                             .anchor(0.5f, 0.5f)
                             // .rotation(bearing)
                             .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
                             .flat(true));
                 }else{
-                    animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
+                    if (islocationControlEnabled == false) {
+                        animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
+                        float bearing = (float) bearingBetweenLocations(OldGpsRouteDeviation, nearestPositionPoint); //correct method to change orientation of map
+
+                        int height = 0;
+                        if (getView() != null) {
+                            height = getView().getMeasuredHeight();
+                        }
+                        Projection p = mMap.getProjection();
+                        Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                        Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                        Point offset = new Point(center.x, (center.y + (height / 4)));
+                        LatLng centerLoc = p.fromScreenLocation(center);
+                        LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                        double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                        LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
+                        CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
+                        AlertDestination(currentGpsPosition);
+                        Log.e("Route Deviation ", "Route Deviation bearing" + bearing);
+                    }else{
+                        animateCarMoveNotUpdateMarker(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
+                    }
+                    /*
+                    CameraPosition currentPlace = new CameraPosition.Builder()
+                            .target(shadowTgt)
+                            .tilt(65.5f).zoom(18)
+                            .build();
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+
+                     */
                 }
             }
-
-
-            double distance=distFrom(currentGpsPosition.latitude,currentGpsPosition.longitude,nearestPositionPoint.latitude,nearestPositionPoint.longitude);
-          //  if(distance<routeDeviationDistance) {
-            /*
-                if (OldGpsRouteDeviation != null && nearestPositionPoint != null) {
-                    float bearing = (float) bearingBetweenLocations(OldGpsRouteDeviation, nearestPositionPoint); //correct method to change orientation of map
-                    if (mPositionMarker == null) {
-                        mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                .position(currentGpsPosition)
-                                .title("currentLocation")
-                                .anchor(0.5f, 0.5f)
-                                .rotation(bearing)
-                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
-                                .flat(true));
-                    } else {
-                        if (islocationControlEnabled == false) {
-                            animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
-                            int height = 0;
-                            if (getView() != null) {
-                                height = getView().getMeasuredHeight();
-                            }
-                            Projection p = mMap.getProjection();
-                            Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                            Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                            Point offset = new Point(center.x, (center.y + (height / 4)));
-                            LatLng centerLoc = p.fromScreenLocation(center);
-                            LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                            double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                            LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
-                            CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
-
-                            AlertDestination(currentGpsPosition);
-                            if (bearing > 0.0) {
-                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                        .target(shadowTgt)
-                                        .bearing(bearing).tilt(65.5f).zoom(18)
-                                        .build();
-                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                            } else {
-
-                            }
-                        } else if (islocationControlEnabled == true) {
-
-                            animateCarMoveNotUpdateMarker(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
-
-                        }
-
-                    }
-                 }
-                */
         }
     }
 
