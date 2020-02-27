@@ -542,7 +542,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                         }, 0, 15000);
                     }
-                   // mMap.setMyLocationEnabled(true);
+                    mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
                     mMap.getUiSettings().setCompassEnabled(true);
