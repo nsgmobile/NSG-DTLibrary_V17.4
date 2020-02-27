@@ -588,7 +588,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
                                                 Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
                                                 double distance_movement = distFrom(nPosition.latitude, nPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                                               // if(distance_movement<routeDeviationDistance){
+                                                if(distance_movement<routeDeviationDistance){
                                                     if (mPositionMarker == null) {
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                 .position(SourceNode)
@@ -661,7 +661,14 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                                         }
                                                     }
-                                              //  }
+                                                }else{
+                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                            .position(SourceNode)
+                                                            .title("")
+                                                            .anchor(0.5f, 0.5f)
+                                                            .flat(true)
+                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                }
                                             }
 
                                         }
