@@ -1185,20 +1185,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 mMap.addPolyline(polylineOptions);
                                                 polyline.setJointType(JointType.ROUND);
                                             }
-                                            /*
-                                            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
 
-                                            text.setText("Route Deviated");
-
-                                            Toast toast = new Toast(getActivity().getApplicationContext());
-                                            toast.setDuration(Toast.LENGTH_LONG);
-                                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                            toast.setGravity(Gravity.TOP, 0, 150);
-                                            toast.setView(layout);
-                                            toast.show();
-                                             */
                                             StringBuilder routeDeviatedAlert = new StringBuilder();
                                             routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                             sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
@@ -1543,11 +1530,28 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 OldNearestGpsList.add(nearestPositionPoint);
 
             }
+            nearestPointValuesList.add(nearestPositionPoint);
             Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGpsRouteDeviation);
             Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
-            nearestPointValuesList.add(nearestPositionPoint);
+            //float bearing= (float) bearingBetweenLocations(OldGpsRouteDeviation,nearestPositionPoint);
+            if (OldGpsRouteDeviation != null && nearestPositionPoint != null) {
+                if(mPositionMarker==null) {
+                    mPositionMarker = mMap.addMarker(new MarkerOptions()
+                            .position(nearestPositionPoint)
+                            .title("currentLocation")
+                            .anchor(0.5f, 0.5f)
+                            // .rotation(bearing)
+                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
+                            .flat(true));
+                }else{
+                    animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
+                }
+            }
+
+
             double distance=distFrom(currentGpsPosition.latitude,currentGpsPosition.longitude,nearestPositionPoint.latitude,nearestPositionPoint.longitude);
           //  if(distance<routeDeviationDistance) {
+            /*
                 if (OldGpsRouteDeviation != null && nearestPositionPoint != null) {
                     float bearing = (float) bearingBetweenLocations(OldGpsRouteDeviation, nearestPositionPoint); //correct method to change orientation of map
                     if (mPositionMarker == null) {
@@ -1592,10 +1596,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                         }
 
                     }
-
-
-                }
-
+                 }
+                */
         }
     }
 
