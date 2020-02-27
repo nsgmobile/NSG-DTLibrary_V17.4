@@ -672,6 +672,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                             animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
                                                             CameraPosition currentPlace = new CameraPosition.Builder()
                                                                     .target(currentGPSPosition)
+                                                                    .tilt(65.5f).zoom(18)
                                                                     .build();
                                                             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
                                                             double returnedDistance1 = 0.0;
