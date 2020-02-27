@@ -578,7 +578,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
                                     // Navigation code starts from here
                                     LatLng OldNearestPosition = null;
-                                   // if (isRouteDeviated == false) {
+                                    if (isRouteDeviated == false) {
                                         if (OldGPSPosition != null) {
                                                 double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                 Log.e("distance", "distance" + distance);
@@ -716,9 +716,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             }
 
-                                  // } else if(isRouteDeviated==true) {
-                                   //     MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                  //  }
+                                   } else if(isRouteDeviated==true) {
+                                      MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                   }
                                     //Navigation code ends here
                                 handler.postDelayed(this, delay);
                             }
@@ -1193,9 +1193,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
-                                            if(isRouteDeviated==true) {
-                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                            }
+                                           // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+
 
                                         }else{
 
