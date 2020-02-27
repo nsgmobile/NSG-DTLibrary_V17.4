@@ -1535,6 +1535,11 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                         CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
                         AlertDestination(currentGpsPosition);
                         Log.e("Route Deviation ", "Route Deviation bearing" + bearing);
+                        CameraPosition currentPlace = new CameraPosition.Builder()
+                                .target(shadowTgt)
+                                .tilt(65.5f).zoom(18)
+                                .build();
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
                     }else{
                         animateCarMoveNotUpdateMarker(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
                     }
