@@ -249,6 +249,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     public boolean isContinuoslyOutOfTrack=false;
     public boolean isnotRouteDeviated=true;
     int caluclateDistanceFlag=1;
+    List<Double> consDistList=new ArrayList<>();
 
     String s1,s2;
 
@@ -557,7 +558,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                    // mMap.getUiSettings().setMyLocationButtonEnabled(true);
                     isNavigationStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        List<Double> consDistList=new ArrayList<>();
+
                         isTimerStarted = true;
                         Handler handler = new Handler();
                         int delay = 1000 *1; // 1 second
@@ -626,13 +627,15 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                                 double returnedDistance3 = 0.0;
                                                                 if (consDistList != null) {
                                                                     for (int i = 0; i < consDistList.size(); i++) {
-                                                                        //  Log.e("APP DATA ", " Distance 3 ----" + consDistList.get(i));
+                                                                         Log.e("APP DATA ", " Distance 3 ----" + consDistList.get(i));
+
                                                                     }
+
                                                                     returnedDistance1 = consDistList.get(consDistList.size() - 1);
-                                                                    returnedDistance2 = consDistList.get(consDistList.size() - 2);
-                                                                    returnedDistance3 = consDistList.get(consDistList.size() - 3);
                                                                     Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                                    returnedDistance2 = consDistList.get(consDistList.size() - 2);
                                                                     Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                                    returnedDistance3 = consDistList.get(consDistList.size() - 3);
                                                                     Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
                                                                 }
                                                                 if (returnedDistance1 > routeDeviationDistance) {
