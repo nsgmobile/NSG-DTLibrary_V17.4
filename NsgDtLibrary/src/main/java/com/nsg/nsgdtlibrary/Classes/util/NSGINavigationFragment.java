@@ -1497,6 +1497,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                             st_vertex=geometry.getStartPoint();
                             end_vertex=geometry.getEndPoint();
                             directionTextRouteDeviation=geometry.getGeometryText();
+                            Log.e("DirectionText","Direction Text Deviation"+directionTextRouteDeviation);
 
                         }
                     }
