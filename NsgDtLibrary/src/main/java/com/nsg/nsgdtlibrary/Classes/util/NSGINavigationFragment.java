@@ -670,7 +670,31 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                                 .flat(true)
                                                                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                     }else {
+                                                        double returnedDistance1 = 0.0;
+                                                        double returnedDistance2 = 0.0;
+                                                        double returnedDistance3 = 0.0;
                                                         animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
+                                                        if (consDistList != null) {
+                                                            for (int i = 0; i < consDistList.size(); i++) {
+
+
+                                                            }
+                                                            returnedDistance1 = consDistList.get(consDistList.size() - 1);
+                                                            Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                            returnedDistance2 = consDistList.get(consDistList.size() - 2);
+                                                            Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                            returnedDistance3 = consDistList.get(consDistList.size() - 3);
+                                                            Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
+                                                        }
+                                                        if (returnedDistance1 > routeDeviationDistance) {
+                                                            if (returnedDistance2 > routeDeviationDistance) {
+                                                                if (returnedDistance3 > routeDeviationDistance) {
+                                                                    verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                }
+                                                            }
+                                                        } else {
+
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1132,6 +1156,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         mMap.addPolyline(polylineOptions);
                                         polyline.setJointType(JointType.ROUND);
                                     }
+                                    /*
                                     LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                     @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                     TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -1144,6 +1169,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     toast.setGravity(Gravity.TOP, 0, 150);
                                     toast.setView(layout);
                                     toast.show();
+
+                                     */
                                     MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     // isRouteDeviated = true;
                                 }
