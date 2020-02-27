@@ -576,7 +576,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
                                     // Navigation code starts from here
                                     LatLng OldNearestPosition = null;
-                                    if (isRouteDeviated == false) {
+                                  //  if (isRouteDeviated == false) {
                                         if (OldGPSPosition != null) {
                                             double distance = distFrom(OldGPSPosition.latitude, OldGPSPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                                                                       Log.e("distance", "distance" + distance);
@@ -624,10 +624,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                                 double returnedDistance2 = 0.0;
                                                                 double returnedDistance3 = 0.0;
                                                                 if (consDistList != null) {
-                                                                    for (int i = 0; i < consDistList.size(); i++) {
-
-
-                                                                    }
                                                                     returnedDistance1 = consDistList.get(consDistList.size() - 1);
                                                                     Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
                                                                     returnedDistance2 = consDistList.get(consDistList.size() - 2);
@@ -675,10 +671,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                         double returnedDistance3 = 0.0;
                                                         animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
                                                         if (consDistList != null) {
-                                                            for (int i = 0; i < consDistList.size(); i++) {
 
-
-                                                            }
                                                             returnedDistance1 = consDistList.get(consDistList.size() - 1);
                                                             Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
                                                             returnedDistance2 = consDistList.get(consDistList.size() - 2);
@@ -700,9 +693,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             }
 
                                         }
-                                    } else if(isRouteDeviated==true) {
-                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                    }
+                                 //   } else if(isRouteDeviated==true) {
+                                 //       MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                 //   }
                                     //Navigation code ends here
                                 handler.postDelayed(this, delay);
                             }
@@ -1070,7 +1063,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if(OldGPSPosition!=null && currentGpsPosition!=null) {
-                verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                //verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
             }
         }
         if(isRouteDeviated==false) {
@@ -1098,10 +1091,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
-            LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
-            double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
-            if(returnedDistance >routeDeviationDistance){
+           // LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
+           // double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+          //  Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
+          //  if(returnedDistance >routeDeviationDistance){
                 String cgpsLat = String.valueOf(currentGpsPosition.latitude);
                 String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
                 final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
@@ -1182,26 +1175,27 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                         }
                     }
                 });
-            }
+            //}
         }
     }
+    /*
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public boolean verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
-               /*
-              After getting current gps verifing in the  radius of
-              in the routebetween the Previous and current gps position
-              if Route deviation exists it shows the message Route Deviated it will get route from the service and plot route on map
-               otherwise continue with the existed route
-              */
+
+             // After getting current gps verifing in the  radius of
+             // in the routebetween the Previous and current gps position
+             // if Route deviation exists it shows the message Route Deviated it will get route from the service and plot route on map
+             //  otherwise continue with the existed route
+
         Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
         Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
         if (PrevousGpsPosition != null){
-             /*
-             GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
-              we are sending it for
-             handling parameter exception only ---
-              */
+
+            // GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
+            //  we are sending it for
+           //  handling parameter exception only ---
+
             LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
             double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
             Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
@@ -1248,7 +1242,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                    // isRouteDeviated = true;
                                    // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                     //
-                                    /*
+
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
                                     isRouteDeviated = true;
@@ -1285,7 +1279,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     mMap.moveCamera(center);
                                     mMap.animateCamera(zoom);
 
-                                     */
+
                                 }
                                 else if(commonPoints.size()>0){
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
@@ -1333,6 +1327,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
         return isRouteDeviated;
     }
+
+     */
 
 
     public void  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
@@ -2617,6 +2613,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         double dl = Math.PI * (endLatLng.longitude - beginLatLng.longitude) / 180;
         return atan2(sin(dl) * cos(f2) , cos(f1) * sin(f2) - sin(f1) * cos(f2) * cos(dl));
     }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
 
@@ -2730,7 +2727,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
 
         caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-        verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+       // verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
         AlertDestination(currentGpsPosition);
 
         int width =getView().getMeasuredWidth();
