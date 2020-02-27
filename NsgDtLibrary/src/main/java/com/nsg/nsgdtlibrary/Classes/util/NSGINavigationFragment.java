@@ -1078,10 +1078,12 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 RouteDeviatedSourcePosition = new LatLng(Double.parseDouble(cgpsLat), Double.parseDouble(cgpsLongi));
                 Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
                 Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
-                dialog = new ProgressDialog(getContext(), R.style.ProgressDialog);
-                dialog.setMessage("Fetching new Route");
-                dialog.setMax(100);
-                dialog.show();
+                if(getActivity()!=null) {
+                    dialog = new ProgressDialog(getContext(), R.style.ProgressDialog);
+                    dialog.setMessage("Fetching new Route");
+                    dialog.setMax(100);
+                    dialog.show();
+                }
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
