@@ -591,7 +591,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                 }
                             }
 
-                        }, 0, 15000);
+                        }, 0, 50000);
                     }
 
                     mMap.setMyLocationEnabled(true);
@@ -757,6 +757,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                                 polylineOptions.color(Color.RED).width(30);
                                                                 mMap.addPolyline(polylineOptions);
                                                                 polyline.setJointType(JointType.ROUND);
+
+
                                                             }
 
 
