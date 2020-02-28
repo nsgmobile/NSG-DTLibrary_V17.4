@@ -1213,10 +1213,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             isContinuoslyOutOfTrack=false;
                                             LatLng markerPosition=mPositionMarker.getPosition();
                                             Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
-                                            if(new_unCommonPoints!=null && new_unCommonPoints.size()>0) {
+                                            if(new_unCommonPoints.size()>0) {
                                                 LatLng compare_pt = new_unCommonPoints.get(0);
                                                 Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
-
                                                 double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
 
                                                 drawMarkerWithCircle(compare_pt, 40);
