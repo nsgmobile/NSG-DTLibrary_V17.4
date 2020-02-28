@@ -686,6 +686,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                         }
                                                     }else {
                                                         isContinuoslyOutOfTrack=true;
+
                                                         if (mPositionMarker == null) {
                                                             mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                     .position(currentGPSPosition)
@@ -694,6 +695,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                                     .flat(true)
                                                                     .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
                                                         } else {
+
                                                             animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
                                                             CameraPosition currentPlace = new CameraPosition.Builder()
                                                                     .target(currentGPSPosition)
