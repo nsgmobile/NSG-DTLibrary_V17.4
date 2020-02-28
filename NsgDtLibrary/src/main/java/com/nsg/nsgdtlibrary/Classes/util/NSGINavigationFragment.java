@@ -1179,9 +1179,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                 }
                                 else if(commonPoints.size()>0){
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + new_unCommonPoints.size());
-                                    for(int i=0;i<new_unCommonPoints.size();i++){
-                                        Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + new_unCommonPoints.get(i));
-                                    }
+
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                         if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                             PolylineOptions polylineOptions = new PolylineOptions();
@@ -1216,7 +1214,30 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             LatLng markerPosition=mPositionMarker.getPosition();
                                             Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
 
+                                            for(int i=0;i<new_unCommonPoints.size();i++){
+                                                Log.e("Route Deviation", " IS ROUTE VERIFY un_CommonPoints  ###### " + new_unCommonPoints.get(i));
 
+
+                                            }
+                                            LatLng un_common_data_pt=new_unCommonPoints.get(1);
+                                            LatLng un_common_data_pt1=new_unCommonPoints.get(3);
+                                            double compare_distance=distFrom(markerPosition.latitude,markerPosition.longitude,un_common_data_pt1.latitude,un_common_data_pt.longitude);
+                                            if(compare_distance<20){
+                                                LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                                @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                                TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                                text.setText("Route Deviated");
+                                                Toast toast = new Toast(getActivity().getApplicationContext());
+                                                toast.setDuration(Toast.LENGTH_LONG);
+                                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                toast.setGravity(Gravity.TOP, 0, 150);
+                                                toast.setView(layout);
+                                                toast.show();
+                                                StringBuilder routeDeviatedAlert = new StringBuilder();
+                                                routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                                sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+
+                                            }
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }else{
 
