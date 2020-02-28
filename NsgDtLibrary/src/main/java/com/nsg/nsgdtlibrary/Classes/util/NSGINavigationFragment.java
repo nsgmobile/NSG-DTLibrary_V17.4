@@ -1247,7 +1247,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             }
                                          */
-
                                 }
                                 else if(new_unCommonPoints.size()==0){
                                     Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
