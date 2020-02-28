@@ -266,11 +266,11 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         NSGINavigationFragment.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
     }
     @SuppressLint("ValidFragment")
-    public NSGINavigationFragment(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationDistance,String routeDeviatedDT_URL,String AuthorisationKey) {
+    public NSGINavigationFragment(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int buffersize,String routeDeviatedDT_URL,String AuthorisationKey) {
         NSGINavigationFragment.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
         NSGINavigationFragment.this.stNode=stNode;
         NSGINavigationFragment.this.endNode=endNode;
-        NSGINavigationFragment.this.routeDeviationDistance=routeDeviationDistance;
+        NSGINavigationFragment.this.buffersize=buffersize;
         NSGINavigationFragment.this.routeData=routeData;
         NSGINavigationFragment.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
         NSGINavigationFragment.this.AuthorisationKey=AuthorisationKey;
@@ -516,8 +516,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
             }
 
         }else if(v==submit){
-            String buffer_distance = dynamic_buffer.getText().toString();
-           // routeDeviationDistance=buffer_distance
+            //String buffer_distance = dynamic_buffer.getText().toString();
+            int val = Integer.parseInt(dynamic_buffer.getText().toString());
+            routeDeviationDistance=val;
+            Log.e("Route Deviation Buffer","Deviation Buffer Test---- "+ routeDeviationDistance);
         }
     }
     public int startNavigation() {
