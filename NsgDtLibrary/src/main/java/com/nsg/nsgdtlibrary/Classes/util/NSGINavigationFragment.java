@@ -1226,9 +1226,13 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             for(int j=0;j<compareDistanceList.size();j++){
                                                 Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.get(j));
                                             }
-                                            /*
+                                            LatLng compare_pt= (LatLng) compareDistanceList.get(0);
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
 
-                                            if(compare_distance<20){
+                                            double compare_distance_pt=distFrom(markerPosition.latitude,markerPosition.longitude,compare_pt.latitude,compare_pt.longitude);
+
+                                            drawMarkerWithCircle(new_unCommonPoints.get(0),40);
+                                            if(compare_distance_pt<20){
                                                 LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                 @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                                 TextView text = (TextView) layout.findViewById(R.id.textView_toast);
@@ -1243,8 +1247,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                 sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                             }
-
-                                             */
 
                                             LatLng un_common_data_pt=new_unCommonPoints.get(1);
                                             LatLng un_common_data_pt1=new_unCommonPoints.get(3);
