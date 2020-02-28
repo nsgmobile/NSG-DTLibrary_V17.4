@@ -62,7 +62,6 @@
             android:textSize="15dp"
             android:textColor="#F44336"
             android:inputType="numberSigned"
-            android:text=" Buffer Size "
             android:layout_margin="5dp"
             android:padding="10dp" />
         <Button
