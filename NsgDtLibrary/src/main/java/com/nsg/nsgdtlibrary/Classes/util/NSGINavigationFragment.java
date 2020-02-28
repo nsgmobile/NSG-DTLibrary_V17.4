@@ -1226,7 +1226,16 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             for(int j=0;j<compareDistanceList.size();j++){
                                                 Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.get(j));
                                             }
-                                            LatLng compare_pt= (LatLng) compareDistanceList.get(0);
+                                            String point= String.valueOf(compareDistanceList.get(0));
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + point);
+                                            String point_pt=point.replace("lat/lng: (","");
+                                            String point_pt1=point_pt.replace(")","");
+                                            String[]point_Points =point_pt1.split(",");
+                                            double lat1= Double.parseDouble(point_Points[0]);
+                                            double longi1= Double.parseDouble(point_Points[1]);
+
+
+                                            LatLng compare_pt= new LatLng(lat1,longi1);
                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
 
                                             double compare_distance_pt=distFrom(markerPosition.latitude,markerPosition.longitude,compare_pt.latitude,compare_pt.longitude);
