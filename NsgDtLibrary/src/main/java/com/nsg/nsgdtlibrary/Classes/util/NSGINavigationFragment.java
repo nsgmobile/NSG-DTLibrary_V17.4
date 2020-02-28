@@ -1177,7 +1177,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                         polyline.setJointType(JointType.ROUND);
                                     }
                                 }
-                                else if(commonPoints.size()>0){
+                                else if(commonPoints.size()>1){
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + new_unCommonPoints.size());
 
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
@@ -1213,6 +1213,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             isContinuoslyOutOfTrack=false;
                                             LatLng markerPosition=mPositionMarker.getPosition();
                                             Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
+
                                             if(new_unCommonPoints.size()>0) {
                                                 LatLng compare_pt = new_unCommonPoints.get(0);
                                                 Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
