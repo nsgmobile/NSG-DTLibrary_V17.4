@@ -1479,8 +1479,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
             sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
 
 
-
-
             Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
             Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
             List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
