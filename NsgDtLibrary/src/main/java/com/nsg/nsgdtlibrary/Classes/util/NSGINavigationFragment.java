@@ -743,7 +743,42 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             }
 
                                    } else if(isRouteDeviated==true) {
-                                       MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                        if (isTimerStarted = true) {
+                                            myTimer.schedule(new TimerTask() {
+                                                @Override
+                                                public void run() {
+                                                    if (currentGpsPosition != null && DestinationNode != null) {
+                                                        if(isRouteDeviated==true){
+                                                            StringBuilder routeDeviatedAlert = new StringBuilder();
+                                                            routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                                            sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                                            if(getActivity()!=null) {
+                                                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                                                        @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                                                        TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                                                        text.setText("Route Deviated");
+                                                                        Toast toast = new Toast(getActivity().getApplicationContext());
+                                                                        toast.setDuration(Toast.LENGTH_LONG);
+                                                                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                                        toast.setGravity(Gravity.TOP, 0, 150);
+                                                                        toast.setView(layout);
+                                                                        toast.show();
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }
+
+                                                    }
+                                                }
+
+                                            }, 0, 30000);
+                                        }
+
+                                        MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                    }
                                     //Navigation code ends here
                                 handler.postDelayed(this, delay);
@@ -1215,40 +1250,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
-                                            if (isTimerStarted = true) {
-                                                myTimer.schedule(new TimerTask() {
-                                                    @Override
-                                                    public void run() {
-                                                        if (currentGpsPosition != null && DestinationNode != null) {
-                                                            if(isRouteDeviated==true){
-                                                                StringBuilder routeDeviatedAlert = new StringBuilder();
-                                                                routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                                                sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                                                if(getActivity()!=null) {
-                                                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                                                        @Override
-                                                                        public void run() {
-                                                                            LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                                                            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                                                            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                                            text.setText("Route Deviated");
-                                                                            Toast toast = new Toast(getActivity().getApplicationContext());
-                                                                            toast.setDuration(Toast.LENGTH_LONG);
-                                                                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                                            toast.setGravity(Gravity.TOP, 0, 150);
-                                                                            toast.setView(layout);
-                                                                            toast.show();
-                                                                        }
-                                                                    });
-                                                                }
-
-                                                            }
-
-                                                        }
-                                                    }
-
-                                                }, 0, 30000);
-                                            }
 
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }else{
@@ -1303,159 +1304,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-    /*
-
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    public boolean verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
-
-             // After getting current gps verifing in the  radius of
-             // in the routebetween the Previous and current gps position
-             // if Route deviation exists it shows the message Route Deviated it will get route from the service and plot route on map
-             //  otherwise continue with the existed route
-
-        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
-        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
-        if (PrevousGpsPosition != null){
-
-            // GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
-            //  we are sending it for
-           //  handling parameter exception only ---
-
-            LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
-            double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
-            if(returnedDistance >routeDeviationDistance){
-                String cgpsLat = String.valueOf(currentGpsPosition.latitude);
-                String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
-                final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
-                Log.e("Route Deviation","routeDiationPosition   ######"+ routeDiationPosition);
-
-                String destLatPos = String.valueOf(DestinationPosition.latitude);
-                String destLongiPos = String.valueOf(DestinationPosition.longitude);
-                final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
-                RouteDeviatedSourcePosition = new LatLng(Double.parseDouble(cgpsLat), Double.parseDouble(cgpsLongi));
-                Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
-                Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
-                //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
-               // DestinationPosition = new LatLng(destLat, destLng);
-                dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                dialog.setMessage("Fetching new Route");
-                dialog.setMax(100);
-               dialog.show();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String MESSAGE = "";
-                        GetRouteDetails(routeDiationPosition, destPoint);
-                        if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
-                            List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
-                            List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
-                            if(EdgeWithoutDuplicates!=null && EdgeWithoutDuplicatesInRouteDeviationPoints!=null) {
-                                checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates,RouteDeviationPointsForComparision);
-                                Log.e("List Verification","List Verification commonPoints --  DATA "+ commonPoints.size());
-                                Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ new_unCommonPoints.size());
-                                if(commonPoints.size()==0){
-                                    if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                        PolylineOptions polylineOptions = new PolylineOptions();
-                                        // polylineOptions.add(OldGPSPosition);
-                                        polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                        Polyline polyline = mMap.addPolyline(polylineOptions);
-                                        polylineOptions.color(Color.RED).width(30);
-                                        mMap.addPolyline(polylineOptions);
-                                        polyline.setJointType(JointType.ROUND);
-                                    }
-                                   // isRouteDeviated = true;
-                                   // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                    //
-
-                                    Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ "NEW ROUTE");
-                                    Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
-                                    isRouteDeviated = true;
-                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-                                    text.setText("Route Deviated");
-
-                                    Toast toast = new Toast(getActivity().getApplicationContext());
-                                    toast.setDuration(Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                    toast.setGravity(Gravity.TOP, 0, 150);
-                                    toast.setView(layout);
-                                    toast.show();
-                                    StringBuilder routeDeviatedAlert = new StringBuilder();
-                                    routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                    sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                    if (mPositionMarker != null) {
-                                        mPositionMarker.remove();
-                                        Log.e("REMOVING MARKER", "REMOVING MARKER");
-                                    }
-                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                            .position(currentGpsPosition)
-                                            .title("currentLocation")
-                                            .anchor(0.5f, 0.5f)
-                                            .flat(true)
-                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-
-
-                                    CameraUpdate center =
-                                            CameraUpdateFactory.newLatLng(currentGpsPosition);
-                                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
-                                    mMap.moveCamera(center);
-                                    mMap.animateCamera(zoom);
-
-
-                                }
-                                else if(commonPoints.size()>0){
-                                    Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
-                                    if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                        PolylineOptions polylineOptions = new PolylineOptions();
-                                        // polylineOptions.add(OldGPSPosition);
-                                        polylineOptions.addAll(new_unCommonPoints);
-                                        Polyline polyline = mMap.addPolyline(polylineOptions);
-                                        polylineOptions.color(Color.RED).width(30);
-                                        mMap.addPolyline(polylineOptions);
-                                        polyline.setJointType(JointType.ROUND);
-                                    }
-                                   //MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                   isRouteDeviated = true;
-                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-                                    text.setText("Route Deviated");
-
-                                    Toast toast = new Toast(getActivity().getApplicationContext());
-                                    toast.setDuration(Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                    toast.setGravity(Gravity.TOP, 0, 150);
-                                    toast.setView(layout);
-                                    toast.show();
-                                }
-                                else if(new_unCommonPoints.size()==0){
-                                    Log.e("List Verification","List Verification  new_unCommonPoints -- DATA "+ " OLD ROUTE");
-
-                                }
-                            }
-
-
-                        }
-
-
-                    }
-                });
-
-            }
-
-        }else{
-
-        }
-        return isRouteDeviated;
-    }
-
-     */
-
 
     public void  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
         List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
