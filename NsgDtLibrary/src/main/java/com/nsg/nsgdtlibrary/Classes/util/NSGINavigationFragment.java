@@ -778,7 +778,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             }, 0, 30000);
                                         }
-                                        
+
                                          */
 
                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
