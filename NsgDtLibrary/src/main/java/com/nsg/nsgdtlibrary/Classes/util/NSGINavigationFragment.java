@@ -1213,50 +1213,28 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             isContinuoslyOutOfTrack=false;
                                             LatLng markerPosition=mPositionMarker.getPosition();
                                             Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
-                                             /*
-                                            List compareDistanceList=new ArrayList();
-                                            for(int i=0;i<new_unCommonPoints.size();i++){
-                                                Log.e("Route Deviation", " IS ROUTE VERIFY un_CommonPoints  ###### " + new_unCommonPoints.get(i));
-                                                LatLng un_common_data_pt=new_unCommonPoints.get(i);
-                                                double compare_distance=distFrom(markerPosition.latitude,markerPosition.longitude,un_common_data_pt.latitude,un_common_data_pt.longitude);
-                                                Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compare_distance);
-                                                compareDistanceList.add(compare_distance);
-                                                Collections.sort(compareDistanceList);
-                                            }
+                                            if(new_unCommonPoints!=null && new_unCommonPoints.size()>0) {
+                                                LatLng compare_pt = new_unCommonPoints.get(0);
+                                                Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
 
-                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.size());
-                                            for(int j=0;j<compareDistanceList.size();j++){
-                                                Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.get(j));
-                                            }
-                                            String point= String.valueOf(compareDistanceList.get(0));
-                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + point);
-                                            String point_pt=point.replace("lat/lng: (","");
-                                            String point_pt1=point_pt.replace(")","");
-                                            String[]point_Points =point_pt1.split(",");
-                                            double lat1= Double.parseDouble(point_Points[0]);
-                                            double longi1= Double.parseDouble(point_Points[1]);
+                                                double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
 
-                                             */
-                                            LatLng compare_pt= new_unCommonPoints.get(0);
-                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
-
-                                            double compare_distance_pt=distFrom(markerPosition.latitude,markerPosition.longitude,compare_pt.latitude,compare_pt.longitude);
-
-                                            drawMarkerWithCircle(compare_pt,40);
-                                            if(compare_distance_pt < 20){
-                                                LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                                @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                                TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                text.setText("Route Deviated");
-                                                Toast toast = new Toast(getActivity().getApplicationContext());
-                                                toast.setDuration(Toast.LENGTH_LONG);
-                                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                toast.setGravity(Gravity.TOP, 0, 150);
-                                                toast.setView(layout);
-                                                toast.show();
-                                                StringBuilder routeDeviatedAlert = new StringBuilder();
-                                                routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                                sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                                drawMarkerWithCircle(compare_pt, 40);
+                                                if (compare_distance_pt < 20) {
+                                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                                    text.setText("Route Deviated");
+                                                    Toast toast = new Toast(getActivity().getApplicationContext());
+                                                    toast.setDuration(Toast.LENGTH_LONG);
+                                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                    toast.setGravity(Gravity.TOP, 0, 150);
+                                                    toast.setView(layout);
+                                                    toast.show();
+                                                    StringBuilder routeDeviatedAlert = new StringBuilder();
+                                                    routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                                    sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                                }
                                             }
 
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
