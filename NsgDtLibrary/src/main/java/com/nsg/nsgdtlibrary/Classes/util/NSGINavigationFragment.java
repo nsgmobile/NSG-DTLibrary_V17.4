@@ -517,9 +517,13 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
         }else if(v==submit){
             //String buffer_distance = dynamic_buffer.getText().toString();
-            int val = Integer.parseInt(dynamic_buffer.getText().toString());
-            routeDeviationDistance=val;
-            Log.e("Route Deviation Buffer"," Deviation Buffer Test---- "+ routeDeviationDistance);
+            if(!dynamic_buffer.getText().toString().isEmpty()) {
+                int val = Integer.parseInt(dynamic_buffer.getText().toString());
+                routeDeviationDistance = val;
+                Log.e("Route Deviation Buffer", " Deviation Buffer Test---- " + routeDeviationDistance);
+            }else{
+                routeDeviationDistance = 10;
+            }
         }
     }
     public int startNavigation() {
