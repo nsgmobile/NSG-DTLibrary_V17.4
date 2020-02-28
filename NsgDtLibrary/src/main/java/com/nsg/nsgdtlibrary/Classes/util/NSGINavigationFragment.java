@@ -1473,6 +1473,14 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         LatLng FirstCordinate = null,SecondCordinate=null;
         LatLng  OldGpsRouteDeviation=null;
         if(RouteDeviationConvertedPoints!=null) {
+
+            StringBuilder routeDeviatedAlert = new StringBuilder();
+            routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+            sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+
+
+
+
             Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
             Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
             List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
