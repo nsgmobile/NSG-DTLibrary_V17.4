@@ -574,6 +574,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                             public void run() {
                                 if (currentGpsPosition != null && DestinationNode != null) {
                                     if(isRouteDeviated==true){
+                                        StringBuilder routeDeviatedAlert = new StringBuilder();
+                                        routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                        sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                         if(getActivity()!=null) {
                                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                                 @Override
