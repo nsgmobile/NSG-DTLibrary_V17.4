@@ -1222,6 +1222,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             LatLng un_common_data_pt=new_unCommonPoints.get(1);
                                             LatLng un_common_data_pt1=new_unCommonPoints.get(3);
                                             double compare_distance=distFrom(markerPosition.latitude,markerPosition.longitude,un_common_data_pt1.latitude,un_common_data_pt.longitude);
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compare_distance);
+
                                             if(compare_distance<20){
                                                 LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                 @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
