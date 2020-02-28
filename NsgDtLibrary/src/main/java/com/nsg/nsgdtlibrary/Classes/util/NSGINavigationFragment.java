@@ -43,6 +43,7 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -247,7 +248,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     public boolean isnotRouteDeviated=true;
     int caluclateDistanceFlag=1;
     List<Double> consDistList=new ArrayList<>();
-
+    private int buffersize;
+    private EditText dynamic_buffer;
+    private Button submit;
     String s1,s2;
 
     public interface FragmentToActivity {
@@ -263,11 +266,11 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         NSGINavigationFragment.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
     }
     @SuppressLint("ValidFragment")
-    public NSGINavigationFragment(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationBuffer,String routeDeviatedDT_URL,String AuthorisationKey) {
+    public NSGINavigationFragment(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationDistance,String routeDeviatedDT_URL,String AuthorisationKey) {
         NSGINavigationFragment.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
         NSGINavigationFragment.this.stNode=stNode;
         NSGINavigationFragment.this.endNode=endNode;
-        NSGINavigationFragment.this.routeDeviationDistance=routeDeviationBuffer;
+        NSGINavigationFragment.this.routeDeviationDistance=routeDeviationDistance;
         NSGINavigationFragment.this.routeData=routeData;
         NSGINavigationFragment.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
         NSGINavigationFragment.this.AuthorisationKey=AuthorisationKey;
@@ -372,6 +375,15 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         re_center.setOnClickListener(NSGINavigationFragment.this);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(NSGINavigationFragment.this);
+
+        dynamic_buffer = (EditText)rootView.findViewById(R.id.dynamic_buffer);
+       // dynamic_buffer.setOnClickListener(NSGINavigationFragment.this);
+
+
+        submit = (Button)rootView.findViewById(R.id.submit);
+        submit.setOnClickListener(NSGINavigationFragment.this);
+
+
 
         // Delete Contents fron ROUTE_T On initialisation of Route view
         String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
@@ -503,6 +515,9 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
             }
 
+        }else if(v==submit){
+            String buffer_distance = dynamic_buffer.getText().toString();
+           // routeDeviationDistance=buffer_distance
         }
     }
     public int startNavigation() {
