@@ -372,6 +372,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         re_center.setOnClickListener(NSGINavigationFragment.this);
         change_map_options = (ImageButton)rootView.findViewById(R.id.change_map_options);
         change_map_options.setOnClickListener(NSGINavigationFragment.this);
+
         // Delete Contents fron ROUTE_T On initialisation of Route view
         String delQuery = "DELETE  FROM " + RouteT.TABLE_NAME;
         sqlHandler.executeQuery(delQuery);

@@ -25,7 +25,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:orientation="vertical">
-
                 <ImageButton
                     android:id="@+id/change_map_options"
                     android:layout_width="50dp"
@@ -47,52 +46,28 @@
                     android:src="@drawable/gps_transperent"
                     android:textColorHint="#000000"
                     android:textSize="15dp" />
-
             </RelativeLayout>
-            <!--
-                      <RelativeLayout
-                          android:id="@+id/lay4"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_alignParentRight="true"
-                          android:layout_alignParentBottom="true"
-                          android:layout_marginBottom="5dp"
-                          android:orientation="vertical">
-
-                          <Button
-                              android:id="@+id/location_tracking_start"
-                              android:layout_width="wrap_content"
-                              android:layout_height="40dp"
-                              android:layout_alignParentBottom="true"
-                              android:layout_alignParentRight="true"
-                              android:textSize="15dp"
-                              android:layout_marginLeft="30dp"
-                              android:layout_marginRight="30dp"
-                              android:text="START"
-                              android:textColor="#FFFFFF"
-                              android:textColorHint="#000000"
-                              android:layout_margin="5dp"
-                              android:background="#4CAF50"
-                              android:padding="10dp" />
-
-                <Button
-                    android:id="@+id/location_tracking_stop"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_alignParentBottom="true"
-                    android:gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:textSize="15dp"
-                    android:textColor="#FFFFFF"
-                    android:text="STOP"
-                    android:textColorHint="#000000"
-                    android:layout_margin="5dp"
-                    android:background="#F44336"
-                    android:padding="10dp" />
-
-            </RelativeLayout>
-   -->
         </fragment>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff">
+            <EditText
+                android:id="@+id/dynamic_buffer"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginBottom="30dp"
+                android:textSize="15dp"
+                android:textColor="#F44336"
+                android:text="Buffer Size"
+                android:layout_margin="5dp"
+                android:padding="10dp" />
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_toRightOf="@id/dynamic_buffer" />
+
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
