@@ -1199,7 +1199,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                        // drawMarkerWithCircle(RouteDeviation_RouteSt_point,20);
                                         double rd_ditance=distFrom(RouteDeviation_RouteSt_point.latitude,RouteDeviation_RouteSt_point.longitude,cur_position.latitude,cur_position.longitude);
                                         Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer" + rd_ditance);
-                                        if(rd_ditance<20) {
+                                        if(rd_ditance<30) {
                                             Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
