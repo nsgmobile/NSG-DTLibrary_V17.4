@@ -743,6 +743,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             }
 
                                    } else if(isRouteDeviated==true) {
+                                        /*
                                         if (isTimerStarted = true) {
                                             myTimer.schedule(new TimerTask() {
                                                 @Override
@@ -777,6 +778,8 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                                             }, 0, 30000);
                                         }
+                                        
+                                         */
 
                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                    }
