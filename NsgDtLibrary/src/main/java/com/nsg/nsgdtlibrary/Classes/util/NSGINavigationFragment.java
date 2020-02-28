@@ -1178,6 +1178,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                     }
                                 }
                                 else if(commonPoints.size()>0){
+                                    Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + new_unCommonPoints.size());
+                                    for(int i=0;i<new_unCommonPoints.size();i++){
+                                        Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + new_unCommonPoints.get(i));
+                                    }
                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                         if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                             PolylineOptions polylineOptions = new PolylineOptions();
@@ -1209,6 +1213,10 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
                                             isRouteDeviated=true;
                                             isContinuoslyOutOfTrack=false;
+                                            LatLng markerPosition=mPositionMarker.getPosition();
+                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
+
+
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }else{
 
