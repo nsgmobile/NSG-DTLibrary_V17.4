@@ -1222,6 +1222,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 compareDistanceList.add(compare_distance);
                                                 Collections.sort(compareDistanceList);
                                             }
+                                            /*
                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.size());
                                             for(int j=0;j<compareDistanceList.size();j++){
                                                 Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.get(j));
@@ -1234,14 +1235,14 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             double lat1= Double.parseDouble(point_Points[0]);
                                             double longi1= Double.parseDouble(point_Points[1]);
 
-
-                                            LatLng compare_pt= new LatLng(lat1,longi1);
+                                             */
+                                            LatLng compare_pt= new_unCommonPoints.get(0);
                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
 
                                             double compare_distance_pt=distFrom(markerPosition.latitude,markerPosition.longitude,compare_pt.latitude,compare_pt.longitude);
 
                                             drawMarkerWithCircle(new_unCommonPoints.get(0),40);
-                                            if(compare_distance_pt<20){
+                                            if(compare_distance_pt < 20){
                                                 LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                 @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                                 TextView text = (TextView) layout.findViewById(R.id.textView_toast);
