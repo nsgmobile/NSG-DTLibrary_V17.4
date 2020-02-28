@@ -562,6 +562,38 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
 
                         }, 0, 15000);
                     }
+                    if (isTimerStarted = true) {
+                        myTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (currentGpsPosition != null && DestinationNode != null) {
+                                    if(isRouteDeviated==true){
+                                        if(getActivity()!=null) {
+                                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                                    text.setText("Route Deviated");
+                                                    Toast toast = new Toast(getActivity().getApplicationContext());
+                                                    toast.setDuration(Toast.LENGTH_LONG);
+                                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                    toast.setGravity(Gravity.TOP, 0, 150);
+                                                    toast.setView(layout);
+                                                    toast.show();
+                                                }
+                                            });
+                                        }
+
+                                    }
+
+                                }
+                            }
+
+                        }, 0, 15000);
+                    }
+
                     mMap.setMyLocationEnabled(true);
                     mMap.setBuildingsEnabled(true);
                     mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -1184,23 +1216,6 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             mMap.addPolyline(polylineOptions);
                                             polyline.setJointType(JointType.ROUND);
                                        }
-                                        if(getActivity()!=null) {
-                                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                                    @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                                    TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                    text.setText("Route Deviated");
-                                                    Toast toast = new Toast(getActivity().getApplicationContext());
-                                                    toast.setDuration(Toast.LENGTH_LONG);
-                                                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                    toast.setGravity(Gravity.TOP, 0, 150);
-                                                    toast.setView(layout);
-                                                    toast.show();
-                                                }
-                                            });
-                                        }
 
                                         LatLng cur_position=mPositionMarker.getPosition();
                                         String Route_st= String.valueOf(RouteDeviationConvertedPoints.get(0));
