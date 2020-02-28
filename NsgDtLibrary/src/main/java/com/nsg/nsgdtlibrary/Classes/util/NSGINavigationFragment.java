@@ -1213,16 +1213,20 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                             isContinuoslyOutOfTrack=false;
                                             LatLng markerPosition=mPositionMarker.getPosition();
                                             Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
-
+                                            List compareDistanceList=new ArrayList();
                                             for(int i=0;i<new_unCommonPoints.size();i++){
                                                 Log.e("Route Deviation", " IS ROUTE VERIFY un_CommonPoints  ###### " + new_unCommonPoints.get(i));
-
-
+                                                LatLng un_common_data_pt=new_unCommonPoints.get(i);
+                                                double compare_distance=distFrom(markerPosition.latitude,markerPosition.longitude,un_common_data_pt.latitude,un_common_data_pt.longitude);
+                                                Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compare_distance);
+                                                compareDistanceList.add(compare_distance);
+                                                Collections.sort(compareDistanceList);
                                             }
-                                            LatLng un_common_data_pt=new_unCommonPoints.get(1);
-                                            LatLng un_common_data_pt1=new_unCommonPoints.get(3);
-                                            double compare_distance=distFrom(markerPosition.latitude,markerPosition.longitude,un_common_data_pt1.latitude,un_common_data_pt.longitude);
-                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compare_distance);
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.size());
+                                            for(int j=0;j<compareDistanceList.size();j++){
+                                                Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compareDistanceList.get(j));
+                                            }
+                                            /*
 
                                             if(compare_distance<20){
                                                 LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1236,10 +1240,17 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
                                                 toast.setView(layout);
                                                 toast.show();
                                                 StringBuilder routeDeviatedAlert = new StringBuilder();
-                                                routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                                routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                 sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-
                                             }
+
+                                             */
+
+                                            LatLng un_common_data_pt=new_unCommonPoints.get(1);
+                                            LatLng un_common_data_pt1=new_unCommonPoints.get(3);
+                                            double compare_distance=distFrom(markerPosition.latitude,markerPosition.longitude,un_common_data_pt1.latitude,un_common_data_pt.longitude);
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare_Distance" + compare_distance);
+
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                         }else{
 
