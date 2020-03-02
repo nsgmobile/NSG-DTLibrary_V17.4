@@ -246,6 +246,7 @@ import static java.lang.Math.sin;
         private boolean isGPS = false;
         List <LatLng> commonPoints;
         List <LatLng> new_unCommonPoints;
+     List<Double> consDistList=new ArrayList<>();
 
      String s1,s2;
 
@@ -497,53 +498,9 @@ import static java.lang.Math.sin;
                     if(getView()!=null ) {
                         height = getView().getMeasuredHeight();
                     }
-                    /*
-                    Projection p = mMap.getProjection();
-                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                    Point offset = new Point(center.x, (center.y + (height / 4)));
-                    LatLng centerLoc = p.fromScreenLocation(center);
-                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                    LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, myLocation.getBearing());
-                     */
-
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(18));
                 }
-                /*
-                Location location = mMap.getMyLocation();
-                LatLng myLocation=null;
-                if (location != null) {
-                    myLocation = new LatLng(location.getLatitude(),
-                            location.getLongitude());
-                    int height=0;
-                    if(getView()!=null ) {
-                        height = getView().getMeasuredHeight();
-                    }
-                    Projection p = mMap.getProjection();
-                    Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                    Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                    Point offset = new Point(center.x, (center.y + (height / 4)));
-                    LatLng centerLoc = p.fromScreenLocation(center);
-                    LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                    double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                    LatLng shadowTgt = SphericalUtil.computeOffset(myLocation, offsetDistance, location.getBearing());
-
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(shadowTgt));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                    /*
-                    CameraPosition currentPlace = new CameraPosition.Builder()
-                            .target(shadowTgt)
-                            .bearing(location.getBearing()).tilt(65.5f).zoom(18)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-
-                }else{
-
-                }
-                  */
-
             }
         }
         public int startNavigation() {
@@ -602,11 +559,15 @@ import static java.lang.Math.sin;
                              int delay = 1000 *1; //milliseconds
                             handler.postDelayed(new Runnable() {
                                 public void run() {
-                                    if (currentGpsPosition != null) {
+                                    double returnedDistance_ref=0.0;
 
+                                    if (currentGpsPosition != null) {
                                         OldGPSPosition = currentGpsPosition;
                                         Log.v("APP DATA ", "START NAV OLD GPS POSITION ----" + OldGPSPosition);
+                                        returnedDistance_ref = verifyDeviationCalculateDistance(OldGPSPosition, currentGpsPosition);
+                                        Log.e("APP DATA ", " Distance1 ----" + returnedDistance_ref);
                                     }
+                                    consDistList.add(returnedDistance_ref);
                                     isContinue = true;
                                     stringBuilder = new StringBuilder();
                                     currentGpsPosition = getLocation();
@@ -655,9 +616,17 @@ import static java.lang.Math.sin;
                                                             double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                                                             LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
                                                             caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                             double returnedDistance1= verifyDeviationFirstTime(OldGPSPosition, currentGpsPosition);
-                                                             double returnedDistance2= verifyDeviationsecondTime(OldGPSPosition, currentGpsPosition);
-                                                             double returnedDistance3=verifyDeviationThirdTime(OldGPSPosition, currentGpsPosition);
+                                                            double returnedDistance1 = 0.0;
+                                                            double returnedDistance2 = 0.0;
+                                                            double returnedDistance3 = 0.0;
+                                                            if (consDistList != null) {
+                                                                returnedDistance1 = consDistList.get(consDistList.size() - 1);
+                                                                Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                                returnedDistance2 = consDistList.get(consDistList.size() - 2);
+                                                                Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                                returnedDistance3 = consDistList.get(consDistList.size() - 3);
+                                                                Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
+                                                            }
                                                            if(returnedDistance1>routeDeviationDistance){
                                                               if(returnedDistance2>routeDeviationDistance) {
                                                                   if (returnedDistance3 > routeDeviationDistance) {
@@ -707,6 +676,16 @@ import static java.lang.Math.sin;
             //  }
             return 0;
         }
+     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+     public double verifyDeviationCalculateDistance(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
+         double firstDeviatrionDistance=0.0;
+         if (PrevousGpsPosition != null) {
+             LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
+             firstDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+         }
+         Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 1 st TIME ---- "+ firstDeviatrionDistance);
+         return firstDeviatrionDistance;
+     }
         public int stopNavigation(){
             /*
               StopNavigation if user enables stop navigation
