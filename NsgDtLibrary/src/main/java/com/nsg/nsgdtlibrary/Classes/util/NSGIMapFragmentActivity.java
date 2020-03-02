@@ -1764,6 +1764,7 @@ import static java.lang.Math.sin;
             drawMarkerWithCircle(DestinationNode,routeDeviationDistance);
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude,  mCircle.getCenter().longitude);
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
+            Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ DestinationGeoFenceCordinatesList.size());
            // if (distanceAtLast < mCircle.getRadius()) {
                 if (getActivity() != null) {
                     if(isAlertShown==false) {
