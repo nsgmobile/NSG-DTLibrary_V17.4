@@ -1259,30 +1259,28 @@ import static java.lang.Math.sin;
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
                                              double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
-                                             if (routeDeviated_distance_1 > 20) {
+                                             if (routeDeviated_distance_1 > routeDeviationDistance) {
                                                  Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_1);
-                                                 if (routeDeviated_distance_2 > 20) {
+                                                 if (routeDeviated_distance_2 > routeDeviationDistance) {
                                                      Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_2);
-                                                     if (routeDeviated_distance_3 > 20) {
+                                                     if (routeDeviated_distance_3 > routeDeviationDistance) {
                                                          Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
-                                                         drawMarkerWithCircle(compare_pt, 40);
-                                                         if (compare_distance_pt < 20) {
-                                                             LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                                             @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                                             TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                             text.setText("Route Deviated");
-                                                             Toast toast = new Toast(getActivity().getApplicationContext());
-                                                             toast.setDuration(Toast.LENGTH_LONG);
-                                                             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                             toast.setGravity(Gravity.TOP, 0, 150);
-                                                             toast.setView(layout);
-                                                             toast.show();
-                                                             StringBuilder routeDeviatedAlert = new StringBuilder();
-                                                             routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                                             sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                                             Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
-                                                         }
+                                                        // drawMarkerWithCircle(compare_pt, 40);
+                                                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                                         @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                                         TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                                         text.setText("Route Deviated");
+                                                         Toast toast = new Toast(getActivity().getApplicationContext());
+                                                         toast.setDuration(Toast.LENGTH_LONG);
+                                                         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                         toast.setGravity(Gravity.TOP, 0, 150);
+                                                         toast.setView(layout);
+                                                         toast.show();
+                                                         StringBuilder routeDeviatedAlert = new StringBuilder();
+                                                         routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                                         sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                                         Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
                                                      }
                                                  }
                                              }
