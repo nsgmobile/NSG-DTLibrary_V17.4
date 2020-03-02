@@ -1761,10 +1761,10 @@ import static java.lang.Math.sin;
         }
         public void AlertDestination(LatLng currentGpsPosition){
           //  int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
-            drawMarkerWithCircle(DestinationNode,10);
+            drawMarkerWithCircle(DestinationNode,routeDeviationDistance);
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude,  mCircle.getCenter().longitude);
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
-            if (distanceAtLast < mCircle.getRadius()) {
+           // if (distanceAtLast < mCircle.getRadius()) {
                 if (getActivity() != null) {
                     if(isAlertShown==false) {
                         isLieInGeofence=DestinationPolygonGeofence(DestinationNode,DestinationGeoFenceCordinatesList);
@@ -1784,7 +1784,7 @@ import static java.lang.Math.sin;
 
                     }
                 }
-            }
+           // }
         }
         public boolean DestinationPolygonGeofence(LatLng destinationPt,List<LatLng>destinationPtsList){
              boolean geofenceValue=false;
