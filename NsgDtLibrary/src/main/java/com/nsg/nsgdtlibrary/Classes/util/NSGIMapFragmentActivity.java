@@ -1273,58 +1273,10 @@ import static java.lang.Math.sin;
                                                  sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                                  Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3 );
                                              }
-                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                            // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                          }
+                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
 
-                                         /*
-                                         LatLng cur_position=mPositionMarker.getPosition();
-                                         String Route_st= String.valueOf(RouteDeviationConvertedPoints.get(0));
-                                         Log.e("Route Deviation", "RouteDeviation_RouteSt_point " +  RouteDeviationConvertedPoints.get(0));
-                                         Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Route_st);
-
-
-                                         String Rt_st_pt=Route_st.replace("lat/lng: (","");
-                                         String Rt_st_pt1=Rt_st_pt.replace(")","");
-                                         String[]Rt_st_pt1Points =Rt_st_pt1.split(",");
-                                         double lat= Double.parseDouble(Rt_st_pt1Points[0]);
-                                         double longi= Double.parseDouble(Rt_st_pt1Points[1]);
-                                         LatLng RouteDeviation_RouteSt_point=new LatLng(lat,longi);
-                                         Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Route_st);
-
-                                         // drawMarkerWithCircle(RouteDeviation_RouteSt_point,20);
-                                         double rd_ditance=distFrom(RouteDeviation_RouteSt_point.latitude,RouteDeviation_RouteSt_point.longitude,cur_position.latitude,cur_position.longitude);
-                                         Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer" + rd_ditance);
-                                         if(rd_ditance<20) {
-                                             Log.e("Route Deviation", " Inside Route Deviation Buffer " + rd_ditance);
-                                             isRouteDeviated=true;
-                                             LatLng markerPosition=mPositionMarker.getPosition();
-                                             Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
-
-
-                                             LatLng compare_pt = new_unCommonPoints.get(0);
-                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
-                                             double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
-
-                                             drawMarkerWithCircle(compare_pt, 40);
-                                             if (compare_distance_pt < 20) {
-                                                 LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                                 @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                                 TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                 text.setText("Route Deviated");
-                                                 Toast toast = new Toast(getActivity().getApplicationContext());
-                                                 toast.setDuration(Toast.LENGTH_LONG);
-                                                 toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                                 toast.setGravity(Gravity.TOP, 0, 150);
-                                                 toast.setView(layout);
-                                                 toast.show();
-                                                 StringBuilder routeDeviatedAlert = new StringBuilder();
-                                                 routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                                 sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                             }
-                                              MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                         }
-                                         */
-                                        // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                      }else{
 
                                      }
