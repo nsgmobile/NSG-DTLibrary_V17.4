@@ -1097,7 +1097,6 @@ import static java.lang.Math.sin;
                                  else if(commonPoints.size()>0){
                                      Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + new_unCommonPoints.size());
                                      if(new_unCommonPoints.size()>5) {
-
                                          Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                          if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                              PolylineOptions polylineOptions = new PolylineOptions();
