@@ -1593,7 +1593,7 @@ import static java.lang.Math.sin;
                                                 RouteDeviationConvertedPoints.add(latLng);
                                                 LatLng reversePoint= new LatLng(y, x);
                                                 RouteDeviationPointsForComparision.add(reversePoint);
-                                                Log.e("RouteDeviation","RouteDeviationConvertedPoints"+RouteDeviationConvertedPoints.size());
+                                               // Log.e("RouteDeviation","RouteDeviationConvertedPoints"+RouteDeviationConvertedPoints.size());
 
                                                 GeometryT edgeRouteDeviatedPointData = new GeometryT(stPoint,jSonLegs.get(jSonLegs.length()-1).toString(),String.valueOf(latLng),GeometryText,"");
                                                 geometryRouteDeviatedEdgesData.add(edgeRouteDeviatedPointData);
@@ -1605,7 +1605,7 @@ import static java.lang.Math.sin;
                                             for (int k = 0; k < RouteDeviationConvertedPoints.size(); k++) {
                                                 if(polylineOptions!=null && mMap!=null) {
                                                     // markerOptions.position(RouteDeviationConvertedPoints.get(k));
-                                                     Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints.get(k));
+                                                    // Log.e("INSERTION QUERY","RouteDeviationConvertedPoints----- "+ RouteDeviationConvertedPoints.get(k));
                                                     markerOptions.title("Position");
                                                 }
                                             }
