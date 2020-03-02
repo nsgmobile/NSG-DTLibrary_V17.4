@@ -1272,7 +1272,7 @@ import static java.lang.Math.sin;
                                                  routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                  sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                              }
-                                            // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                          }
 
                                          /*
