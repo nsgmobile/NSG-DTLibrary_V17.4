@@ -1248,6 +1248,7 @@ import static java.lang.Math.sin;
                                              mMap.addPolyline(polylineOptions);
                                              polyline.setJointType(JointType.ROUND);
                                          }
+                                         /*
                                          LatLng cur_position=mPositionMarker.getPosition();
                                          String Route_st= String.valueOf(RouteDeviationConvertedPoints.get(0));
                                          Log.e("Route Deviation", "RouteDeviation_RouteSt_point " +  RouteDeviationConvertedPoints.get(0));
@@ -1292,8 +1293,10 @@ import static java.lang.Math.sin;
                                                  routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                  sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                              }
-                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                              MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                          }
+                                         */
+                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                      }else{
 
                                      }
