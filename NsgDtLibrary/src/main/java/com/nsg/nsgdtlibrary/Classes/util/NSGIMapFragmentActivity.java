@@ -80,6 +80,7 @@ import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.PolyUtil;
 import com.google.maps.android.SphericalUtil;
 import com.nsg.nsgdtlibrary.Classes.activities.AppConstants;
 import com.nsg.nsgdtlibrary.Classes.activities.ExpandedMBTilesTileProvider;
@@ -249,6 +250,8 @@ import static java.lang.Math.sin;
         List <LatLng> new_unCommonPoints;
      List<Double> consDistList=new ArrayList<>();
      List<Double> consRouteDeviatedDistList=new ArrayList<>();
+     List<LatLng> DestinationGeoFenceCordinatesList;
+     private boolean isLieInGeofence=false;
 
      String s1,s2;
 
@@ -439,6 +442,7 @@ import static java.lang.Math.sin;
                             String MapAlert="Map is Ready";
                             sendData(MapEvents.ALERTVALUE_6,MapEvents.ALERTTYPE_6);
                         }
+                        SplitDestinationData(GeoFenceCordinates);
 
                     }
                 }
@@ -759,7 +763,23 @@ import static java.lang.Math.sin;
             super.onDetach();
             // Callback = null;
         }
-        private  List<RouteT> getRouteAccordingToRouteID(String stNode,String endNode) {
+
+     public void SplitDestinationData(String destinationData){
+         DestinationGeoFenceCordinatesList=new ArrayList<LatLng>();
+         String[] DestinationCordinates=destinationData.split(",");
+         for(int p=0;p<DestinationCordinates.length;p++){
+             Log.e("DestinationData","Destination Data" + DestinationCordinates[p]);
+             String dest_data=DestinationCordinates[p].toString();
+             String[] dest_latLngs=dest_data.split(" ");
+             double dest_lat= Double.parseDouble(dest_latLngs[0]);
+             double dest_lang= Double.parseDouble(dest_latLngs[1]);
+             LatLng destinationLatLng=new LatLng(dest_lat,dest_lang);
+             DestinationGeoFenceCordinatesList.add(destinationLatLng);
+
+         }
+     }
+
+     private  List<RouteT> getRouteAccordingToRouteID(String stNode,String endNode) {
             String query = "SELECT * FROM " + RouteT.TABLE_NAME +" WHERE startNode = "+"'"+stNode+"'"+" AND "+ "endNode= "+ "'"+endNode+"'";
             //Log.e("QUERY","QUERY"+ query);
             Cursor c1 = sqlHandler.selectQuery(query);
@@ -1753,52 +1773,33 @@ import static java.lang.Math.sin;
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude,  mCircle.getCenter().longitude);
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
             if (distanceAtLast < mCircle.getRadius()) {
-             /*   if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-
-                //Speech implementation
-                mMap.setMyLocationEnabled(false);
-                */
-
-
                 if (getActivity() != null) {
                     if(isAlertShown==false) {
-                        String data1=" Your Destination Reached ";
-                        int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
-                        if (speechStatus1 == TextToSpeech.ERROR) {
-                            Log.e("TTS", "Error in converting Text to Speech!");
+                        isLieInGeofence=DestinationPolygonGeofence(DestinationNode,DestinationGeoFenceCordinatesList);
+                        Log.e("Destination Geofence","Destination Geofence : " + isLieInGeofence);
+                        if(isLieInGeofence==true) {
+
+                            String data1 = " Your Destination Reached ";
+                            int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
+                            if (speechStatus1 == TextToSpeech.ERROR) {
+                                Log.e("TTS", "Error in converting Text to Speech!");
+                            }
+                            sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
                         }
-                        sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
 
-                        /*
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.yourDialog);
-                        builder.setTitle("Alert");
-                        builder.setIcon(R.drawable.car_icon_32);
-                        builder.setMessage("Destination Reached")
-                                .setCancelable(false)
-                                .setPositiveButton(" Finish ", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-
-                                        getActivity().onBackPressed();
-                                    }
-                                });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                         */
                         isAlertShown=true;
                     }else{
 
                     }
                 }
             }
+        }
+        public boolean DestinationPolygonGeofence(LatLng destinationPt,List<LatLng>destinationPtsList){
+             boolean geofenceValue=false;
+             if(destinationPtsList!=null && destinationPtsList.size()>0) {
+                 geofenceValue = PolyUtil.containsLocation(destinationPt, destinationPtsList, false);
+             }
+             return geofenceValue;
         }
 
         public void CaluculateETAInRouteDeviationDirection( final double TotalDistance, final LatLng sourcePosition, final LatLng currentGpsPosition, LatLng DestinationPosition){
