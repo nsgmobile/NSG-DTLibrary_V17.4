@@ -1770,7 +1770,7 @@ import static java.lang.Math.sin;
             if (distanceAtLast < mCircle.getRadius()) {
                 if (getActivity() != null) {
                     if(isAlertShown==false) {
-                        isLieInGeofence=DestinationPolygonGeofence(DestinationNode,DestinationGeoFenceCordinatesList);
+                        isLieInGeofence=DestinationPolygonGeofence(currentGpsPosition,DestinationGeoFenceCordinatesList);
                         Log.e("Destination Geofence","Destination Geofence : " + isLieInGeofence);
                         if(isLieInGeofence==true) {
 
