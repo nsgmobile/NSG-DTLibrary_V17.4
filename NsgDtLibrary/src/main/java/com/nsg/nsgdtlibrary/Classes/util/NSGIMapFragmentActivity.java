@@ -1759,14 +1759,6 @@ import static java.lang.Math.sin;
             mCircle = mMap.addCircle(circleOptions);
 
         }
-        /*
-     public static LatLng computeOffset(LatLng from,
-                                        double distance,
-                                        double heading){
-        return  LatLng;
-     }
-
-         */
         public void AlertDestination(LatLng currentGpsPosition){
           //  int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
             drawMarkerWithCircle(DestinationNode,10);
