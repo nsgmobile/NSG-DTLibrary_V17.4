@@ -1263,8 +1263,6 @@ import static java.lang.Math.sin;
                                                  Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
                                                      Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_2);
-                                                     if (routeDeviated_distance_3 > 20) {
-                                                         Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
                                                         // drawMarkerWithCircle(compare_pt, 40);
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1281,7 +1279,6 @@ import static java.lang.Math.sin;
                                                          routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                          sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                                          Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
-                                                     }
                                                  }
                                              }
                                          }
