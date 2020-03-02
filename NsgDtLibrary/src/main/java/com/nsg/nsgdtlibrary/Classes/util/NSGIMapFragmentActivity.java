@@ -1273,7 +1273,6 @@ import static java.lang.Math.sin;
                                                  sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                                  Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3 );
                                              }
-                                            // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                          }
                                          MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
 
