@@ -1237,56 +1237,6 @@ import static java.lang.Math.sin;
                                      isRouteDeviated = true;
                                  }
                                  else if(commonPoints.size()>0){
-                                     /*
-                                     Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
-                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                         PolylineOptions polylineOptions = new PolylineOptions();
-                                         // polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(new_unCommonPoints);
-                                         Polyline polyline = mMap.addPolyline(polylineOptions);
-                                         polylineOptions.color(Color.RED).width(30);
-                                         mMap.addPolyline(polylineOptions);
-                                         polyline.setJointType(JointType.ROUND);
-                                     }
-                                     drawMarkerWithCircle(currentGpsPosition,20);
-                                     double verifyDistance=distFrom(currentGpsPosition.latitude,currentGpsPosition.longitude,RouteDeviatedSourcePosition.latitude,RouteDeviatedSourcePosition.longitude);
-                                     Log.e("VERIFY DISTANCE","VERIFY DISTANCE"+verifyDistance);
-                                     if(verifyDistance < 20){
-                                         isRouteDeviated = false;
-                                         LayoutInflater inflater1 = getActivity().getLayoutInflater();
-                                         @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
-                                         TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-
-                                         text.setText("Route Deviated");
-
-                                         Toast toast = new Toast(getActivity().getApplicationContext());
-                                         toast.setDuration(Toast.LENGTH_LONG);
-                                         toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
-                                         toast.setGravity(Gravity.TOP, 0, 150);
-                                         toast.setView(layout);
-                                         toast.show();
-                                         StringBuilder routeDeviatedAlert = new StringBuilder();
-                                         routeDeviatedAlert.append("ROUTE DEVIATED" + "RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
-                                         sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                         if (mPositionMarker != null) {
-                                             mPositionMarker.remove();
-                                             Log.e("REMOVING MARKER", "REMOVING MARKER");
-                                         }
-                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                 .position(currentGpsPosition)
-                                                 .title("currentLocation")
-                                                 .anchor(0.5f, 0.5f)
-                                                 .flat(true)
-                                                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                         CameraUpdate center =
-                                                 CameraUpdateFactory.newLatLng(currentGpsPosition);
-                                         CameraUpdate zoom = CameraUpdateFactory.zoomTo(22);
-                                         mMap.moveCamera(center);
-                                         mMap.animateCamera(zoom);
-
-                                     }
-
-                                      */
                                      if(new_unCommonPoints.size()>5) {
 
                                          Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
