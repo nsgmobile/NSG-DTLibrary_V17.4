@@ -1255,6 +1255,8 @@ import static java.lang.Math.sin;
                                          Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
                                          double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
                                          consRouteDeviatedDistList.add(compare_distance_pt);
+                                         Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
+
                                          if(consRouteDeviatedDistList!=null && consRouteDeviatedDistList.size()>2) {
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
@@ -1264,7 +1266,6 @@ import static java.lang.Math.sin;
                                                  if (routeDeviated_distance_2 > 20) {
                                                      Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_2);
                                                      isRouteDeviated = true;
-                                                     // drawMarkerWithCircle(compare_pt, 40);
                                                      LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                      @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                                      TextView text = (TextView) layout.findViewById(R.id.textView_toast);
