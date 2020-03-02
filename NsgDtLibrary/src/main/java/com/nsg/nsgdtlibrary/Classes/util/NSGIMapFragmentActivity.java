@@ -1767,7 +1767,7 @@ import static java.lang.Math.sin;
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude,  mCircle.getCenter().longitude);
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
             Log.e("LAST DISTANCE"," DestinationGeoFenceCordinatesList @@@@@@@@@@@@@@@@@@@@ "+ DestinationGeoFenceCordinatesList.size());
-           // if (distanceAtLast < mCircle.getRadius()) {
+            if (distanceAtLast < mCircle.getRadius()) {
                 if (getActivity() != null) {
                     if(isAlertShown==false) {
                         isLieInGeofence=DestinationPolygonGeofence(DestinationNode,DestinationGeoFenceCordinatesList);
@@ -1787,7 +1787,7 @@ import static java.lang.Math.sin;
 
                     }
                 }
-           // }
+            }
         }
         public boolean DestinationPolygonGeofence(LatLng destinationPt,List<LatLng>destinationPtsList){
              boolean geofenceValue=false;
