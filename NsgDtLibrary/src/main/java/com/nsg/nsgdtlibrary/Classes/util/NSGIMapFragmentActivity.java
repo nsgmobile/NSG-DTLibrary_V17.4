@@ -431,6 +431,7 @@ import static java.lang.Math.sin;
                         getValidRouteData();
                         //Adding markers on map
                         addMarkers();
+                        SplitDestinationData(GeoFenceCordinates);
                         if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
@@ -442,7 +443,7 @@ import static java.lang.Math.sin;
                             String MapAlert="Map is Ready";
                             sendData(MapEvents.ALERTVALUE_6,MapEvents.ALERTTYPE_6);
                         }
-                        SplitDestinationData(GeoFenceCordinates);
+
 
                     }
                 }
