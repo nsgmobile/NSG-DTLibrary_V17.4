@@ -1323,7 +1323,7 @@ import static java.lang.Math.sin;
                                               MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                          }
                                          */
-                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                        // MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                      }else{
 
                                      }
