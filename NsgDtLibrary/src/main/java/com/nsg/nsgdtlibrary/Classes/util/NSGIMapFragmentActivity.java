@@ -244,6 +244,7 @@ import static java.lang.Math.sin;
         LatLng currentGPSPosition;
         private boolean isContinue=true ;
         private boolean isGPS = false;
+        private String GeoFenceCordinates;
         List <LatLng> commonPoints;
         List <LatLng> new_unCommonPoints;
      List<Double> consDistList=new ArrayList<>();
@@ -264,7 +265,7 @@ import static java.lang.Math.sin;
             NSGIMapFragmentActivity.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
         }
         @SuppressLint("ValidFragment")
-        public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationBuffer,String routeDeviatedDT_URL,String AuthorisationKey) {
+        public NSGIMapFragmentActivity(String BASE_MAP_URL_FORMAT,String stNode,String endNode, String routeData,int routeDeviationBuffer,String routeDeviatedDT_URL,String AuthorisationKey,String GeoFenceCordinates) {
             NSGIMapFragmentActivity.this.BASE_MAP_URL_FORMAT = BASE_MAP_URL_FORMAT;
             NSGIMapFragmentActivity.this.stNode=stNode;
             NSGIMapFragmentActivity.this.endNode=endNode;
@@ -272,6 +273,8 @@ import static java.lang.Math.sin;
             NSGIMapFragmentActivity.this.routeData=routeData;
             NSGIMapFragmentActivity.this.routeDeviatedDT_URL=routeDeviatedDT_URL;
             NSGIMapFragmentActivity.this.AuthorisationKey=AuthorisationKey;
+            NSGIMapFragmentActivity.this.GeoFenceCordinates=GeoFenceCordinates;
+
 
         }
         @Override
