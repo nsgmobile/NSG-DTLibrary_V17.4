@@ -1259,11 +1259,11 @@ import static java.lang.Math.sin;
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
                                              double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
-                                             if (routeDeviated_distance_1 > routeDeviationDistance) {
+                                             if (routeDeviated_distance_1 > 20) {
                                                  Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_1);
-                                                 if (routeDeviated_distance_2 > routeDeviationDistance) {
+                                                 if (routeDeviated_distance_2 > 20) {
                                                      Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_2);
-                                                     if (routeDeviated_distance_3 > routeDeviationDistance) {
+                                                     if (routeDeviated_distance_3 > 20) {
                                                          Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
                                                         // drawMarkerWithCircle(compare_pt, 40);
