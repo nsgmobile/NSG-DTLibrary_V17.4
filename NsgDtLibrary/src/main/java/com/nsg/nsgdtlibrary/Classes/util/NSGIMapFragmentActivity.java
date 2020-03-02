@@ -1134,8 +1134,8 @@ import static java.lang.Math.sin;
                                              LatLng compare_pt = new_unCommonPoints.get(0);
                                              Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
                                              double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
-
-                                             drawMarkerWithCircle(compare_pt, 40);
+                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _ Distance" + compare_distance_pt);
+                                            // drawMarkerWithCircle(compare_pt, 40);
                                              if (compare_distance_pt < 20) {
                                                  LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                  @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
