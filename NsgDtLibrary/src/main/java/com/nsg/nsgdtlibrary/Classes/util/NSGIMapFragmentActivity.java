@@ -710,6 +710,7 @@ import static java.lang.Math.sin;
                                                         } else {
 
                                                         }
+                                                        /*
                                                         if(isContinuoslyOutOfTrack==true){
                                                             currentLocationList.add(currentGpsPosition);
                                                             PolylineOptions polylineOptions = new PolylineOptions();
@@ -720,6 +721,8 @@ import static java.lang.Math.sin;
                                                             mMap.addPolyline(polylineOptions);
                                                             polyline.setJointType(JointType.ROUND);
                                                         }
+
+                                                         */
 
 
                                                     }
