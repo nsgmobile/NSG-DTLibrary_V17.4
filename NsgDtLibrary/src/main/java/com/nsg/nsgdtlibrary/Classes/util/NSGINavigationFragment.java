@@ -251,6 +251,7 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
     private int buffersize;
     private EditText dynamic_buffer;
     private Button submit;
+    List<Double> consRouteDeviatedDistList=new ArrayList<>();
 
     String s1,s2;
 
@@ -812,6 +813,152 @@ public class NSGINavigationFragment extends Fragment implements View.OnClickList
         }
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
+               /*
+              After getting current gps verifing in the  radius of
+              in the routebetween the Previous and current gps position
+              if Route deviation exists it shows the message Route Deviated it will get route from the service and plot route on map
+               otherwise continue with the existed route
+              */
+        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
+        Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
+        if (PrevousGpsPosition != null){
+             /*
+             GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
+              we are sending it for
+             handling parameter exception only ---
+              */
+            LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
+            double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
+            Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
+            if(returnedDistance >routeDeviationDistance) {
+                String cgpsLat = String.valueOf(currentGpsPosition.latitude);
+                String cgpsLongi = String.valueOf(currentGpsPosition.longitude);
+                final String routeDiationPosition = cgpsLongi.concat(" ").concat(cgpsLat);
+                Log.e("Route Deviation", "routeDiationPosition   ######" + routeDiationPosition);
+
+                String destLatPos = String.valueOf(DestinationPosition.latitude);
+                String destLongiPos = String.valueOf(DestinationPosition.longitude);
+                final String destPoint = destLongiPos.concat(" ").concat(destLatPos);
+                RouteDeviatedSourcePosition = new LatLng(Double.parseDouble(cgpsLat), Double.parseDouble(cgpsLongi));
+                Log.e("Route Deviation", "routeDiation SOURCE Position  ###### " + RouteDeviatedSourcePosition);
+                Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
+                //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
+                //  DestinationPosition = new LatLng(destLat, destLng);
+                if (getActivity() != null){
+                    dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                    dialog.setMessage("Fetching new Route");
+                    dialog.setMax(100);
+                    dialog.show();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String MESSAGE = "";
+                            GetRouteDetails(routeDiationPosition, destPoint);
+                            if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
+                                List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+                                List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
+                                if (EdgeWithoutDuplicates != null && EdgeWithoutDuplicatesInRouteDeviationPoints != null) {
+                                    checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
+
+                                    Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
+                                    Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
+                                    if (commonPoints.size() == 0) {
+                                        if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                            PolylineOptions polylineOptions = new PolylineOptions();
+                                            // polylineOptions.add(OldGPSPosition);
+                                            polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                            Polyline polyline = mMap.addPolyline(polylineOptions);
+                                            polylineOptions.color(Color.RED).width(30);
+                                            mMap.addPolyline(polylineOptions);
+                                            polyline.setJointType(JointType.ROUND);
+                                        }
+                                        Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + "NEW ROUTE");
+                                        Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
+                                        isRouteDeviated = true;
+                                    } else if (commonPoints.size() > 0) {
+                                        if (new_unCommonPoints.size() > 5) {
+
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
+                                            if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                                PolylineOptions polylineOptions = new PolylineOptions();
+                                                // polylineOptions.add(OldGPSPosition);
+                                                polylineOptions.addAll(new_unCommonPoints);
+                                                Polyline polyline = mMap.addPolyline(polylineOptions);
+                                                polylineOptions.color(Color.RED).width(30);
+                                                mMap.addPolyline(polylineOptions);
+                                                polyline.setJointType(JointType.ROUND);
+                                            }
+                                            LatLng markerPosition = mPositionMarker.getPosition();
+                                            Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
+                                            LatLng compare_pt = new_unCommonPoints.get(0);
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
+                                            double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
+                                            consRouteDeviatedDistList.add(compare_distance_pt);
+                                            Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
+
+                                            if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 3) {
+                                                double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
+                                                double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
+                                                double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
+
+
+                                                if (routeDeviated_distance_1 > 20) {
+                                                    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
+                                                    if (routeDeviated_distance_2 > 20) {
+                                                        Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
+                                                        if (routeDeviated_distance_3 > 20) {
+                                                            Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
+                                                            isRouteDeviated = true;
+                                                            LayoutInflater inflater1 = getActivity().getLayoutInflater();
+                                                            @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
+                                                            TextView text = (TextView) layout.findViewById(R.id.textView_toast);
+                                                            text.setText("Route Deviated");
+                                                            Toast toast = new Toast(getActivity().getApplicationContext());
+                                                            toast.setDuration(Toast.LENGTH_LONG);
+                                                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+                                                            toast.setGravity(Gravity.TOP, 0, 150);
+                                                            toast.setView(layout);
+                                                            toast.show();
+                                                            StringBuilder routeDeviatedAlert = new StringBuilder();
+                                                            routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
+                                                            sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                                            Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            if(currentGpsPosition.toString().startsWith("lat/lng: (")){
+
+                                            }else {
+                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                            }
+
+                                        } else {
+
+                                        }
+                                    } else if (new_unCommonPoints.size() == 0) {
+                                        Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + " OLD ROUTE");
+
+                                    }
+                                }
+
+
+                            }
+
+
+                        }
+                    });
+                }
+
+            }
+
+        }else{
+
+        }
+    }
+
 
     public void onDestroy() {
         super.onDestroy();

@@ -597,74 +597,79 @@ import static java.lang.Math.sin;
                                                 Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
                                                 nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
                                                 Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
-                                                if (mPositionMarker == null) {
-                                                    mPositionMarker = mMap.addMarker(new MarkerOptions()
-                                                            .position(SourceNode)
-                                                            .title("Nearest GpsPoint")
-                                                            .anchor(0.5f, 0.5f)
-                                                            .flat(true)
-                                                            .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
-                                                } else {
-                                                    Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
-                                                    if (OldNearestPosition != null) {
-                                                        if(islocationControlEnabled==false) {
-                                                            Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
-                                                            Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
-                                                            Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
-                                                            animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
-                                                            float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
-                                                            Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
-                                                            int height=0;
-                                                            if(getView()!=null ) {
-                                                             height = getView().getMeasuredHeight();
-                                                            }
-                                                            Projection p = mMap.getProjection();
-                                                            Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
-                                                            Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
-                                                            Point offset = new Point(center.x, (center.y + (height / 4)));
-                                                            LatLng centerLoc = p.fromScreenLocation(center);
-                                                            LatLng offsetNewLoc = p.fromScreenLocation(offset);
-                                                            double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
-                                                            LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
-                                                            caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
-                                                            double returnedDistance1 = 0.0;
-                                                            double returnedDistance2 = 0.0;
-                                                            double returnedDistance3 = 0.0;
-                                                            if (consDistList != null) {
-                                                                returnedDistance1 = consDistList.get(consDistList.size() - 1);
-                                                                Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
-                                                                returnedDistance2 = consDistList.get(consDistList.size() - 2);
-                                                                Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
-                                                                returnedDistance3 = consDistList.get(consDistList.size() - 3);
-                                                                Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
-                                                            }
-                                                           if(returnedDistance1>routeDeviationDistance){
-                                                              if(returnedDistance2>routeDeviationDistance) {
-                                                                  if (returnedDistance3 > routeDeviationDistance) {
-                                                                      verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
-                                                                   //   verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
-                                                                  }
-                                                              }
-                                                           }else{
+                                                double distance_movement = distFrom(nPosition.latitude, nPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
+                                                Log.e("Distance_movement", " Distance_movement" + distance_movement);
+                                                if (distance_movement <40) {
+                                                    if (mPositionMarker == null) {
+                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                .position(SourceNode)
+                                                                .title("Nearest GpsPoint")
+                                                                .anchor(0.5f, 0.5f)
+                                                                .flat(true)
+                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    } else {
+                                                        Log.e("CurrentGpsPoint", " currentGpsPosition ------ " + currentGpsPosition);
+                                                        if (OldNearestPosition != null) {
+                                                            if (islocationControlEnabled == false) {
+                                                                Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
+                                                                Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
+                                                                Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
+                                                                animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                                float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
+                                                                Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
+                                                                int height = 0;
+                                                                if (getView() != null) {
+                                                                    height = getView().getMeasuredHeight();
+                                                                }
+                                                                Projection p = mMap.getProjection();
+                                                                Point bottomRightPoint = p.toScreenLocation(p.getVisibleRegion().nearRight);
+                                                                Point center = new Point(bottomRightPoint.x / 2, bottomRightPoint.y / 2);
+                                                                Point offset = new Point(center.x, (center.y + (height / 4)));
+                                                                LatLng centerLoc = p.fromScreenLocation(center);
+                                                                LatLng offsetNewLoc = p.fromScreenLocation(offset);
+                                                                double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
+                                                                LatLng shadowTgt = SphericalUtil.computeOffset(nPosition, offsetDistance, bearing);
+                                                                caclulateETA(TotalDistanceInMTS, SourceNode, currentGpsPosition, DestinationNode);
+                                                                double returnedDistance1 = 0.0;
+                                                                double returnedDistance2 = 0.0;
+                                                                double returnedDistance3 = 0.0;
+                                                                if (consDistList != null) {
+                                                                    returnedDistance1 = consDistList.get(consDistList.size() - 1);
+                                                                    Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                                    returnedDistance2 = consDistList.get(consDistList.size() - 2);
+                                                                    Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                                    returnedDistance3 = consDistList.get(consDistList.size() - 3);
+                                                                    Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
+                                                                }
+                                                                if (returnedDistance1 > routeDeviationDistance) {
+                                                                    if (returnedDistance2 > routeDeviationDistance) {
+                                                                        if (returnedDistance3 > routeDeviationDistance) {
+                                                                            verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                            //   verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                        }
+                                                                    }
+                                                                } else {
 
-                                                           }
-                                                           AlertDestination(currentGpsPosition);
-                                                           if (bearing > 0.0) {
-                                                                CameraPosition currentPlace = new CameraPosition.Builder()
-                                                                        .target(shadowTgt)
-                                                                        .bearing(bearing).tilt(65.5f).zoom(18)
-                                                                        .build();
-                                                                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
-                                                           } else {
+                                                                }
+                                                                AlertDestination(currentGpsPosition);
+                                                                if (bearing > 0.0) {
+                                                                    CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                            .target(shadowTgt)
+                                                                            .bearing(bearing).tilt(65.5f).zoom(18)
+                                                                            .build();
+                                                                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                                } else {
 
-                                                           }
-                                                        }else if(islocationControlEnabled==true){
-                                                            animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                                }
+                                                            } else if (islocationControlEnabled == true) {
+                                                                animateCarMoveNotUpdateMarker(mPositionMarker, OldNearestPosition, nPosition, 1000);
+                                                            }
+
+
                                                         }
-
-
                                                     }
                                                 }
+
                                             }
 
                                          }
