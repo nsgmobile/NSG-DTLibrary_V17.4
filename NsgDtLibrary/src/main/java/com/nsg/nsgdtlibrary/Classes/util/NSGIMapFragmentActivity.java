@@ -252,6 +252,7 @@ import static java.lang.Math.sin;
      List<Double> consRouteDeviatedDistList=new ArrayList<>();
      List<LatLng> DestinationGeoFenceCordinatesList;
      private boolean isLieInGeofence=false;
+     private boolean isContinuoslyOutOfTrack=false;
 
      String s1,s2;
 
@@ -667,6 +668,58 @@ import static java.lang.Math.sin;
 
 
                                                         }
+                                                    }
+                                                }else{
+                                                    isContinuoslyOutOfTrack=true;
+                                                    if (mPositionMarker == null) {
+                                                        mPositionMarker = mMap.addMarker(new MarkerOptions()
+                                                                .position(currentGPSPosition)
+                                                                .title("Nearest GpsPoint")
+                                                                .anchor(0.5f, 0.5f)
+                                                                .flat(true)
+                                                                .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+                                                    } else {
+                                                        animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
+                                                        CameraPosition currentPlace = new CameraPosition.Builder()
+                                                                .target(currentGPSPosition)
+                                                                .tilt(65.5f).zoom(18)
+                                                                .build();
+                                                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 1000, null);
+                                                        double returnedDistance1 = 0.0;
+                                                        double returnedDistance2 = 0.0;
+                                                        double returnedDistance3 = 0.0;
+                                                        animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
+                                                        if (consDistList != null) {
+
+                                                            returnedDistance1 = consDistList.get(consDistList.size() - 1);
+                                                            Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                            returnedDistance2 = consDistList.get(consDistList.size() - 2);
+                                                            Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                            returnedDistance3 = consDistList.get(consDistList.size() - 3);
+                                                            Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
+                                                        }
+                                                        if (returnedDistance1 > routeDeviationDistance) {
+                                                            if (returnedDistance2 > routeDeviationDistance) {
+                                                                if (returnedDistance3 > routeDeviationDistance) {
+                                                                    verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+
+                                                                }
+                                                            }
+                                                        } else {
+
+                                                        }
+                                                        if(isContinuoslyOutOfTrack==true){
+                                                            currentLocationList.add(currentGpsPosition);
+                                                            PolylineOptions polylineOptions = new PolylineOptions();
+                                                            // polylineOptions.add(OldGPSPosition);
+                                                            polylineOptions.addAll(currentLocationList);
+                                                            Polyline polyline = mMap.addPolyline(polylineOptions);
+                                                            polylineOptions.color(Color.RED).width(30);
+                                                            mMap.addPolyline(polylineOptions);
+                                                            polyline.setJointType(JointType.ROUND);
+                                                        }
+
+
                                                     }
                                                 }
 
