@@ -950,7 +950,6 @@ import static java.lang.Math.sin;
             LatLng end_Point_vertex=new LatLng(end_point_lat,end_point_lnag);
             double Distance_To_travelIn_Vertex=showDistance(currentGpsPosition,end_Point_vertex);
             String Distance_To_travelIn_Vertex_Convetred=String.format("%.0f", Distance_To_travelIn_Vertex);
-
             if (geometryTextimpValue.equals("-")) {
 
             } else {
