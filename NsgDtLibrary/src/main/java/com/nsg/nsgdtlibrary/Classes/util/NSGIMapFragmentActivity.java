@@ -1317,7 +1317,11 @@ import static java.lang.Math.sin;
                                                  }
                                              }
                                          }
-                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                         if(currentGpsPosition.toString().startsWith("lat/lng: (")){
+
+                                         }else {
+                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                         }
 
                                      } else {
 
