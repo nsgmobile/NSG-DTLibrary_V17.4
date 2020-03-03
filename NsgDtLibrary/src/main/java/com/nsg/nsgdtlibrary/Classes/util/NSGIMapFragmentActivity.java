@@ -538,7 +538,9 @@ import static java.lang.Math.sin;
                                     if (currentGpsPosition != null && DestinationNode != null) {
                                         if(islocationControlEnabled==false) {
                                             if (isRouteDeviated == false) {
-                                                NavigationDirection(currentGpsPosition, DestinationNode);
+                                                if(isContinuoslyOutOfTrack==false) {
+                                                    NavigationDirection(currentGpsPosition, DestinationNode);
+                                                }
                                             }else{
                                                 if(directionTextRouteDeviation!=null && st_vertex!=null && end_vertex!=null) {
                                                     TextImplementationRouteDeviationDirectionText(directionTextRouteDeviation, st_vertex, end_vertex);
@@ -1359,6 +1361,7 @@ import static java.lang.Math.sin;
                                                      if (routeDeviated_distance_3 > 20) {
                                                          Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
+                                                         isContinuoslyOutOfTrack=true;
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                          @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                                          TextView text = (TextView) layout.findViewById(R.id.textView_toast);
