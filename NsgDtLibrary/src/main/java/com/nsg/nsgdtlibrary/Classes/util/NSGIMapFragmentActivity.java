@@ -1289,11 +1289,11 @@ import static java.lang.Math.sin;
 
 
                                              if (routeDeviated_distance_1 > 20) {
-                                                 Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_1);
+                                                 Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
-                                                     Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_2);
+                                                     Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
                                                      if (routeDeviated_distance_3 > 20) {
-                                                         Log.e("Route Deviation", " Inside Route Deviation Buffer " + routeDeviated_distance_3);
+                                                         Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                          @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
