@@ -431,7 +431,9 @@ import static java.lang.Math.sin;
                         getValidRouteData();
                         //Adding markers on map
                         addMarkers();
-                        SplitDestinationData(GeoFenceCordinates);
+                        if(GeoFenceCordinates!=null && !GeoFenceCordinates.isEmpty()) {
+                            SplitDestinationData(GeoFenceCordinates);
+                        }
                         if (ActivityCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
@@ -1780,24 +1782,26 @@ import static java.lang.Math.sin;
             double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude,  mCircle.getCenter().longitude);
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
             Log.e("LAST DISTANCE"," DestinationGeoFenceCordinatesList @@@@@@@@@@@@@@@@@@@@ "+ DestinationGeoFenceCordinatesList.size());
-            if (distanceAtLast < mCircle.getRadius()) {
-                if (getActivity() != null) {
-                    if(isAlertShown==false) {
-                        isLieInGeofence=DestinationPolygonGeofence(currentGpsPosition,DestinationGeoFenceCordinatesList);
-                        Log.e("Destination Geofence","Destination Geofence : " + isLieInGeofence);
-                        if(isLieInGeofence==true) {
+            if(DestinationGeoFenceCordinatesList!=null && DestinationGeoFenceCordinatesList.size()>1) {
+                if (distanceAtLast < mCircle.getRadius()) {
+                    if (getActivity() != null) {
+                        if (isAlertShown == false) {
+                            isLieInGeofence = DestinationPolygonGeofence(currentGpsPosition, DestinationGeoFenceCordinatesList);
+                            Log.e("Destination Geofence", "Destination Geofence : " + isLieInGeofence);
+                            if (isLieInGeofence == true) {
 
-                            String data1 = " Your Destination Reached ";
-                            int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
-                            if (speechStatus1 == TextToSpeech.ERROR) {
-                                Log.e("TTS", "Error in converting Text to Speech!");
+                                String data1 = " Your Destination Reached ";
+                                int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
+                                if (speechStatus1 == TextToSpeech.ERROR) {
+                                    Log.e("TTS", "Error in converting Text to Speech!");
+                                }
+                                sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
                             }
-                            sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
+
+                            isAlertShown = true;
+                        } else {
+
                         }
-
-                        isAlertShown=true;
-                    }else{
-
                     }
                 }
             }

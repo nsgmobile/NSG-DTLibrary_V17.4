@@ -23,13 +23,11 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * Created by sailaja.ch NSGI on 27/09/2019
  */
-public class NSGApiActivity extends FragmentActivity implements NSGINavigationFragment.FragmentToActivity, View.OnClickListener {
+public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentActivity.FragmentToActivity, View.OnClickListener {
     private int bufferSize=10;
     private String charlsisNumber;
     private  Button Start,Stop;
     private String jobId="1",routeId;
-
-
     private String GeoFenceCordinates="24.979977 55.067160,\n" +
             "24.979958 55.067257,\n" +
             "24.979864 55.067257,\n" +
@@ -1952,7 +1950,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGINavigationFr
     String CSVFile_Path= Environment.getExternalStorageDirectory() + File.separator + "MBTILES" + File.separator + "RouteSample"+".txt";
   //  com.nsg.dtlibrary.NavigationProperties properties=new com.nsg.dtlibrary.NavigationProperties();
 
-    NSGINavigationFragment test = new NSGINavigationFragment(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,bufferSize,routeDeviatedDT_URL,AuthorisationKey);
+    NSGIMapFragmentActivity test = new NSGIMapFragmentActivity(BASE_MAP_URL_FORMAT,SourcePosition,DestinationPosition,routeData,bufferSize,routeDeviatedDT_URL,AuthorisationKey,GeoFenceCordinates);
   // NSGTiledLayerOnMap test = new NSGTiledLayerOnMap(BASE_MAP_URL_FORMAT);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
