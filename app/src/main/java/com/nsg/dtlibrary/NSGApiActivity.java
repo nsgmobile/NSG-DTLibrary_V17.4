@@ -2021,7 +2021,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
 
     @Override
     public String communicate(String comm, int alertType) {
-        Log.d("received", " Recieved From ETA Listener---"+ comm + "alert type "+ alertType);
+
         if(alertType==MapEvents.ALERTTYPE_6){
             // if alert recieved you can start navigation here
            // test.startNavigation();
