@@ -597,11 +597,11 @@ import static java.lang.Math.sin;
 
                                             } else {
                                                 OldNearestPosition = nPosition;
-                                                Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
+                                               // Log.e("CurrentGpsPoint", " OLD Nearest GpsPoint " + OldNearestPosition);
                                                 nPosition = GetNearestPointOnRoadFromGPS(OldGPSPosition, currentGpsPosition);
-                                                Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
+                                               // Log.e("CurrentGpsPoint", " Nearest GpsPoint" + nPosition);
                                                 double distance_movement = distFrom(nPosition.latitude, nPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
-                                                Log.e("Distance_movement", " Distance_movement" + distance_movement);
+                                              //  Log.e("Distance_movement", " Distance_movement" + distance_movement);
                                                 if (distance_movement <40) {
                                                     if (mPositionMarker == null) {
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
@@ -615,8 +615,8 @@ import static java.lang.Math.sin;
                                                         if (OldNearestPosition != null) {
                                                             if (islocationControlEnabled == false) {
                                                                 Log.e("CurrentGpsPoint", " curren FRM START NAVI ------ " + currentGpsPosition);
-                                                                Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
-                                                                Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
+                                                               // Log.e("CurrentGpsPoint", " Old  FRM START NAVI ------ " + OldNearestPosition);
+                                                               // Log.e("CurrentGpsPoint", " islocationControlEnabled FLAG------ " + islocationControlEnabled);
                                                                 animateCarMove(mPositionMarker, OldNearestPosition, nPosition, 1000);
                                                                 float bearing = (float) bearingBetweenLocations(OldNearestPosition, nPosition);
                                                                 Log.e("BEARING", "BEARING @@@@@@@ " + bearing);
@@ -638,11 +638,11 @@ import static java.lang.Math.sin;
                                                                 double returnedDistance3 = 0.0;
                                                                 if (consDistList != null) {
                                                                     returnedDistance1 = consDistList.get(consDistList.size() - 1);
-                                                                    Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                                   // Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
                                                                     returnedDistance2 = consDistList.get(consDistList.size() - 2);
-                                                                    Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                                  //  Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
                                                                     returnedDistance3 = consDistList.get(consDistList.size() - 3);
-                                                                    Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
+                                                                   // Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
                                                                 }
                                                                 if (returnedDistance1 > routeDeviationDistance) {
                                                                     if (returnedDistance2 > routeDeviationDistance) {
@@ -695,11 +695,11 @@ import static java.lang.Math.sin;
                                                         if (consDistList != null) {
 
                                                             returnedDistance1 = consDistList.get(consDistList.size() - 1);
-                                                            Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
+                                                            //Log.e("APP DATA ", " Distance 1 ----" + returnedDistance1);
                                                             returnedDistance2 = consDistList.get(consDistList.size() - 2);
-                                                            Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
+                                                           // Log.e("APP DATA ", " Distance 2 ----" + returnedDistance2);
                                                             returnedDistance3 = consDistList.get(consDistList.size() - 3);
-                                                            Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
+                                                           // Log.e("APP DATA ", " Distance 3 ----" + returnedDistance3);
                                                         }
                                                         if (returnedDistance1 > routeDeviationDistance) {
                                                             if (returnedDistance2 > routeDeviationDistance) {
