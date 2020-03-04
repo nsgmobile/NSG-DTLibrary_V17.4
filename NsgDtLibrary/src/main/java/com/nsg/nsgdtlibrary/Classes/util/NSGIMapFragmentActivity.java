@@ -722,7 +722,7 @@ import static java.lang.Math.sin;
                                                             mMap.addPolyline(polylineOptions);
                                                             polyline.setJointType(JointType.ROUND);
                                                         }
-                                                        
+
                                                          */
                                                     }
                                                 }
