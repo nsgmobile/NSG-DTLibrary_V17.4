@@ -2000,7 +2000,7 @@ import static java.lang.Math.sin;
         private void sendData(String comm,int AlertType) {
             //comm=time.toString();
             if(comm!=null) {
-                Log.e("SendData", "SendData ------- " + comm + "AlertType" + AlertType);
+              //  Log.e("SendData", "SendData ------- " + comm + "AlertType" + AlertType);
                 Callback.communicate(comm, AlertType);
             }else{
 
