@@ -671,6 +671,7 @@ import static java.lang.Math.sin;
 
                                                         }
                                                     }
+
                                                 }else{
                                                     isContinuoslyOutOfTrack=true;
                                                     if (mPositionMarker == null) {
@@ -721,10 +722,8 @@ import static java.lang.Math.sin;
                                                             mMap.addPolyline(polylineOptions);
                                                             polyline.setJointType(JointType.ROUND);
                                                         }
-
+                                                        
                                                          */
-
-
                                                     }
                                                 }
 
