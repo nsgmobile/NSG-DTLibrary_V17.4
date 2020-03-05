@@ -731,11 +731,9 @@ import static java.lang.Math.sin;
 
                                          }
                                     } else {
-                                        if(currentGpsPosition.toString().startsWith("lat/lng: (17")) {
 
-                                        }else{
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                        }
+
                                     }
                                     //Navigation code ends here
                                     handler.postDelayed(this, delay);
