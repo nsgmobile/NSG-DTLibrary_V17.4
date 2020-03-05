@@ -1226,15 +1226,15 @@ import static java.lang.Math.sin;
 
 
                                              LatLng compare_pt = new_unCommonPoints.get(0);
-                                           //  Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
+                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
                                              double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
-                                           //  Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _ Distance" + compare_distance_pt);
+                                             Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _ Distance" + compare_distance_pt);
                                             // drawMarkerWithCircle(compare_pt, 40);
                                              if (compare_distance_pt > 20) {
                                                  LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                  @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                                  TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                 text.setText("Route Deviated");
+                                                 text.setText("ROUTE DEVIATED");
                                                  Toast toast = new Toast(getActivity().getApplicationContext());
                                                  toast.setDuration(Toast.LENGTH_LONG);
                                                  toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -1244,6 +1244,7 @@ import static java.lang.Math.sin;
                                                  StringBuilder routeDeviatedAlert = new StringBuilder();
                                                  routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                  sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
+                                                 Log.e("Route Deviation", " ROUTE DEVIATED" + "ROUTE DEVIATED ALERT POSTED");
                                              }
                                              MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
                                          }
@@ -1846,7 +1847,7 @@ import static java.lang.Math.sin;
             Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
             Log.e("LAST DISTANCE"," DestinationGeoFenceCordinatesList @@@@@@@@@@@@@@@@@@@@ "+ DestinationGeoFenceCordinatesList.size());
             if(DestinationGeoFenceCordinatesList!=null && DestinationGeoFenceCordinatesList.size()>1) {
-                if (distanceAtLast < mCircle.getRadius()) {
+               // if (distanceAtLast < mCircle.getRadius()) {
                     if (getActivity() != null) {
                         if (isAlertShown == false) {
                             isLieInGeofence = DestinationPolygonGeofence(currentGpsPosition, DestinationGeoFenceCordinatesList);
@@ -1859,6 +1860,7 @@ import static java.lang.Math.sin;
                                     Log.e("TTS", "Error in converting Text to Speech!");
                                 }
                                 sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
+                                Log.e("Destination Geofence", "Destination ALERT: " + "Destination ALERT");
                             }
 
                             isAlertShown = true;
@@ -1866,7 +1868,7 @@ import static java.lang.Math.sin;
 
                         }
                     }
-                }
+               // }
             }
         }
         public boolean DestinationPolygonGeofence(LatLng destinationPt,List<LatLng>destinationPtsList){
