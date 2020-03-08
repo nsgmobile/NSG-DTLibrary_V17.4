@@ -74,6 +74,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlay;
@@ -1838,6 +1839,44 @@ import static java.lang.Math.sin;
             mCircle = mMap.addCircle(circleOptions);
 
         }
+     public void AlertDestination(LatLng currentGpsPosition) {
+         //  int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
+         drawMarkerWithCircle(DestinationNode, routeDeviationDistance);
+         double distanceAtLast = distFrom(currentGpsPosition.latitude, currentGpsPosition.longitude, mCircle.getCenter().latitude, mCircle.getCenter().longitude);
+         Log.e("LAST DISTANCE"," LAST DISTANCE @@@@@@@@@@@@@@@@@@@@ "+ distanceAtLast);
+         // Log.e("LAST DISTANCE"," DestinationGeoFenceCordinatesList @@@@@@@@@@@@@@@@@@@@ "+ DestinationGeoFenceCordinatesList.size());
+         // if(distanceAtLast<mCircle.getRadius()){
+         if (DestinationGeoFenceCordinatesList != null && DestinationGeoFenceCordinatesList.size() > 1) {
+             PolygonOptions polygonOptions = new PolygonOptions().addAll(DestinationGeoFenceCordinatesList);
+             mMap.addPolygon(polygonOptions);
+             polygonOptions.fillColor(Color.CYAN);
+             isLieInGeofence = DestinationPolygonGeofence(currentGpsPosition, DestinationGeoFenceCordinatesList);
+             Log.e("Destination Geofence", "Destination Geofence : " + isLieInGeofence);
+             if (getActivity() != null) {
+                 if (isAlertShown == false) {
+
+                     if (isLieInGeofence == true) {
+
+                         String data1 = " Your Destination Reached ";
+                         int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
+                         if (speechStatus1 == TextToSpeech.ERROR) {
+                             Log.e("TTS", "Error in converting Text to Speech!");
+                         }
+                         sendData(MapEvents.ALERTVALUE_4, MapEvents.ALERTTYPE_4);
+
+                         Log.e("AlertDestination", "Alert Destination" + "DESTINATION REACHED--");
+                         isAlertShown = true;
+                     }else{
+                         Log.e("AlertDestination", "Alert Destination" + "DESTINATION NOT REACHED--");
+                     }
+                 } else {
+
+                 }
+             }
+         }
+     }
+
+     /*
         public void AlertDestination(LatLng currentGpsPosition){
           //  int GpsIndex=OldNearestGpsList.indexOf(nearestPositionPoint);
            // drawMarkerWithCircle(DestinationNode,routeDeviationDistance);
@@ -1869,6 +1908,8 @@ import static java.lang.Math.sin;
                // }
             }
         }
+
+         */
         public boolean DestinationPolygonGeofence(LatLng destinationPt,List<LatLng>destinationPtsList){
              boolean geofenceValue=false;
              if(destinationPtsList!=null && destinationPtsList.size()>0) {
