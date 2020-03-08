@@ -1377,7 +1377,7 @@ import static java.lang.Math.sin;
                                                          StringBuilder routeDeviatedAlert = new StringBuilder();
                                                          routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                          sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
-                                                     //    Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
+                                                         Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
                                                      }
                                                  }
                                              }
