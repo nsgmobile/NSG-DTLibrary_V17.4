@@ -1305,12 +1305,12 @@ import static java.lang.Math.sin;
                                              polyline.setJointType(JointType.ROUND);
                                          }
                                          LatLng markerPosition = mPositionMarker.getPosition();
-                                       //  Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
+                                         Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer --Marker _Position" + markerPosition);
                                          LatLng compare_pt = new_unCommonPoints.get(0);
-                                        // Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
+                                         Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _point" + compare_pt);
                                          double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
                                          consRouteDeviatedDistList.add(compare_distance_pt);
-                                       //  Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
+                                         Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
 
                                          if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 3) {
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
@@ -1319,11 +1319,11 @@ import static java.lang.Math.sin;
 
 
                                              if (routeDeviated_distance_1 > 20) {
-                                               //  Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
+                                                 Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
-                                                 //    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
+                                                     Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
                                                      if (routeDeviated_distance_3 > 20) {
-                                                     //    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
+                                                         Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
                                                          isContinuoslyOutOfTrack=true;
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
