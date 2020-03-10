@@ -1100,7 +1100,7 @@ import static java.lang.Math.sin;
                sendData(time.toString(), MapEvents.ALERTTYPE_2);
            }
         }
-    
+
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void verifyRouteDeviationTask(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates){
          Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
@@ -1289,10 +1289,8 @@ import static java.lang.Math.sin;
                                      }
                                    //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + "NEW ROUTE");
                                    //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
-                                     isRouteDeviated = true;
                                  } else if (commonPoints.size() > 0) {
                                      if (new_unCommonPoints.size() > 5) {
-
                                        //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                          if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                              PolylineOptions polylineOptions = new PolylineOptions();
@@ -1310,13 +1308,10 @@ import static java.lang.Math.sin;
                                          double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
                                          consRouteDeviatedDistList.add(compare_distance_pt);
                                        //  Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
-
                                          if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 2) {
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
                                             // double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
-
-
                                              if (routeDeviated_distance_1 > 20) {
                                                //  Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
@@ -1811,9 +1806,7 @@ import static java.lang.Math.sin;
              Log.e("Destination Geofence", "Destination Geofence : " + isLieInGeofence);
              if (getActivity() != null) {
                  if (isAlertShown == false) {
-
                      if (isLieInGeofence == true) {
-
                          String data1 = " Your Destination Reached ";
                          int speechStatus1 = textToSpeech.speak(data1, TextToSpeech.QUEUE_FLUSH, null);
                          if (speechStatus1 == TextToSpeech.ERROR) {
