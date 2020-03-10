@@ -291,7 +291,6 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
             "    ]\n" +
             "}";
 
-
 /*
     private String SourcePosition = "55.067291 24.978782";
     private String DestinationPosition = "55.067205 24.979878";
