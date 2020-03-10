@@ -351,7 +351,7 @@ import static java.lang.Math.sin;
                     }
                 }
             };
-            writeLogFile();
+          //  writeLogFile();
         }
         @Override
         public void onAttach(Context context) {
