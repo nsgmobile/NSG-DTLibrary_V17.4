@@ -1100,47 +1100,7 @@ import static java.lang.Math.sin;
                sendData(time.toString(), MapEvents.ALERTTYPE_2);
            }
         }
-     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-     public void VerifyRouteDeviationConsequently(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-        Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
-       // Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
-            if (PrevousGpsPosition != null){
-                LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
-                double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-              //  Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
-
-            }
-        }
-     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-        public double verifyDeviationFirstTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-            double firstDeviatrionDistance=0.0;
-            if (PrevousGpsPosition != null) {
-                 LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
-                 firstDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-            }
-          //  Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 1 st TIME ---- "+ firstDeviatrionDistance);
-            return firstDeviatrionDistance;
-        }
-     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-     public double verifyDeviationsecondTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-         double secondDeviatrionDistance=0.0;
-         if (PrevousGpsPosition != null) {
-             LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
-             secondDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-         }
-       //  Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 2 nd TIME ---- "+ secondDeviatrionDistance);
-         return secondDeviatrionDistance;
-     }
-     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-     public double verifyDeviationThirdTime(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition){
-         double thirdDeviatrionDistance=0.0;
-         if (PrevousGpsPosition != null) {
-             LatLng nearest_LatLng_deviation = GetNearestPointOnRoadFromGPS(PrevousGpsPosition, currentGpsPosition);
-             thirdDeviatrionDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
-         }
-       //  Log.e("Route Deviation","ROUTE DEVIATION DISTANCE 3 rd TIME ---- "+ thirdDeviatrionDistance);
-         return thirdDeviatrionDistance;
-     }
+    
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void verifyRouteDeviationTask(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates){
          Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
