@@ -312,7 +312,7 @@ import static java.lang.Math.sin;
             //Initialise Location Listener
             locationRequest = LocationRequest.create();
             //Initialise Accuracy
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+           // locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             //Initialise interval
             locationRequest.setInterval(1 * 1000); // 1 seconds
             // locationRequest.setFastestInterval(5 * 1000); // 5 seconds
