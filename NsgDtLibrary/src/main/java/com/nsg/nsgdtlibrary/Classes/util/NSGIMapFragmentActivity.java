@@ -1229,22 +1229,14 @@ import static java.lang.Math.sin;
              }
          }
      }
+     /*
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void verifyRouteDeviation(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates) {
-               /*
-              After getting current gps verifing in the  radius of
-              in the routebetween the Previous and current gps position
-              if Route deviation exists it shows the message Route Deviated it will get route from the service and plot route on map
-               otherwise continue with the existed route
-              */
+
          Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
          Log.e("Route Deviation", " OLD GPS POSITION  ----" + PrevousGpsPosition);
          if (PrevousGpsPosition != null){
-             /*
-             GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition)-- in this method PrevousGpsPosition is not using any where,
-              we are sending it for
-             handling parameter exception only ---
-              */
+
              LatLng nearest_LatLng_deviation= GetNearestPointOnRoadFromGPS(PrevousGpsPosition,currentGpsPosition);
              double returnedDistance = showDistance(currentGpsPosition, nearest_LatLng_deviation);
              //Log.e("Route Deviation","ROUTE DEVIATION DISTANCE RETURNED ---- "+returnedDistance);
@@ -1362,6 +1354,7 @@ import static java.lang.Math.sin;
 
          }
      }
+     */
 
      public void  checkPointsOfExistingRoutewithNewRoute(List<LatLng> edgeWithoutDuplicates,List<LatLng> RouteDeviationPointsForComparision){
          List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
@@ -2768,7 +2761,7 @@ import static java.lang.Math.sin;
             }
 
             caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-            verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+            verifyRouteDeviationTask(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
             AlertDestination(currentGpsPosition);
 
             int width =getView().getMeasuredWidth();
