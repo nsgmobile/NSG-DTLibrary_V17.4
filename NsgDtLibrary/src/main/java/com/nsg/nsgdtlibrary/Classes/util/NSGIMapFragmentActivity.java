@@ -373,6 +373,7 @@ import static java.lang.Math.sin;
             //Request permissions for Location and storage
             requestPermission();
             //set marker icon
+            writeLogFile();
             mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gps_transperent_98);
             //Initialise RootView
             View rootView = inflater.inflate(R.layout.fragment_map, container, false);
