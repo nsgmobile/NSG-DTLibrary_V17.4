@@ -1312,7 +1312,7 @@ import static java.lang.Math.sin;
                                          consRouteDeviatedDistList.add(compare_distance_pt);
                                          Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
 
-                                         if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 2) {
+                                         if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 3) {
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              Log.e("Route Deviation", " Route Deviation Distance --1 " + routeDeviated_distance_1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
