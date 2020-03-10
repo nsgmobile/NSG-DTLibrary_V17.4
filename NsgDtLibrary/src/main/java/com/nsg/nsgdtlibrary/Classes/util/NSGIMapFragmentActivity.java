@@ -1311,8 +1311,7 @@ import static java.lang.Math.sin;
                                          double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
                                          consRouteDeviatedDistList.add(compare_distance_pt);
                                          Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
-                                        // drawMarkerWithCircle(compare_pt,20);
-                                       //  if(compare_distance_pt < 40) {
+
                                              if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 3) {
                                                  double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                                  Log.e("Route Deviation", " Route Deviation Distance --1 " + routeDeviated_distance_1);
@@ -1347,7 +1346,6 @@ import static java.lang.Math.sin;
                                                  }
                                              }
                                              MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                        // }
 
                                      } else {
 
