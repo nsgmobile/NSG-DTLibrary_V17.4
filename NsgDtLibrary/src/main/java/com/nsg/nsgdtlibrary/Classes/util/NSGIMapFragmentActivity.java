@@ -1265,10 +1265,10 @@ import static java.lang.Math.sin;
                          String MESSAGE = "";
                          GetRouteDetails(routeDiationPosition, destPoint);
                          if (RouteDeviationConvertedPoints != null && RouteDeviationConvertedPoints.size() > 0) {
-                             List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
-                             List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
+                            // List<LatLng> EdgeWithoutDuplicates = removeDuplicates(edgeDataPointsList);
+                            / List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationPointsForComparision);
                              if (EdgeWithoutDuplicates != null && EdgeWithoutDuplicatesInRouteDeviationPoints != null) {
-                                 checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
+                                 //checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
 
                                 // Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
                                 // Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
@@ -1521,7 +1521,7 @@ import static java.lang.Math.sin;
                          double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                          LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                          CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
-                       //  verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
+                         verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
 
                        //  verifyRouteDeviation(OldGpsRouteDeviation,currentGpsPosition,routeDeviationDistance,);
                          AlertDestination(currentGpsPosition);
@@ -2761,7 +2761,7 @@ import static java.lang.Math.sin;
             }
 
             caclulateETA(TotalDistanceInMTS,SourceNode,currentGpsPosition,DestinationNode);
-            verifyRouteDeviationTask(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
+            verifyRouteDeviation(PrevousGpsPosition,currentGpsPosition,DestinationNode,40,EdgeWithoutDuplicates);
             AlertDestination(currentGpsPosition);
 
             int width =getView().getMeasuredWidth();
