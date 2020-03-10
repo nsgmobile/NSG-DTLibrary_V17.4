@@ -555,7 +555,7 @@ import static java.lang.Math.sin;
                                     }
                                 }
 
-                            }, 0, 15000);
+                            }, 0, 5000);
                         }
                         mMap.setMyLocationEnabled(true);
                         mMap.setBuildingsEnabled(true);
@@ -706,7 +706,7 @@ import static java.lang.Math.sin;
                                                         if (returnedDistance1 > routeDeviationDistance) {
                                                             if (returnedDistance2 > routeDeviationDistance) {
                                                                 if (returnedDistance3 > routeDeviationDistance) {
-                                                                    verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                    verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
 
                                                                 }
                                                             }
