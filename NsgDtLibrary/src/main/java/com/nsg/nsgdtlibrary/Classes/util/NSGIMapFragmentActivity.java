@@ -1166,7 +1166,6 @@ import static java.lang.Math.sin;
                                        //  Log.e("Route Deviation", "RouteDeviation_RouteSt_point " +  RouteDeviationConvertedPoints.get(0));
                                       //   Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Route_st);
 
-
                                          String Rt_st_pt=Route_st.replace("lat/lng: (","");
                                          String Rt_st_pt1=Rt_st_pt.replace(")","");
                                          String[]Rt_st_pt1Points =Rt_st_pt1.split(",");
