@@ -314,7 +314,7 @@ import static java.lang.Math.sin;
             //Initialise Accuracy
             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             //Initialise interval
-            locationRequest.setInterval(10 * 1000); // 10 seconds
+            locationRequest.setInterval(1 * 1000); // 1 seconds
             // locationRequest.setFastestInterval(5 * 1000); // 5 seconds
 
             new GpsUtils(getContext()).turnGPSOn(new GpsUtils.onGpsListener() {
