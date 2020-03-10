@@ -1350,24 +1350,24 @@ import static java.lang.Math.sin;
                                          consRouteDeviatedDistList.add(compare_distance_pt);
                                        //  Log.e("Route Deviation", " IS ROUTE VERIFY   ###### consRouteDeviatedDistList " + consRouteDeviatedDistList.size());
 
-                                         if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 3) {
+                                         if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 2) {
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
-                                             double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
+                                            // double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
 
 
                                              if (routeDeviated_distance_1 > 20) {
                                                //  Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
                                                  //    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
-                                                     if (routeDeviated_distance_3 > 20) {
+                                                    // if (routeDeviated_distance_3 > 20) {
                                                      //    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
                                                          isRouteDeviated = true;
                                                          isContinuoslyOutOfTrack=true;
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
                                                          @SuppressLint("WrongViewCast") View layout = inflater1.inflate(R.layout.custom_toast, (ViewGroup) getActivity().findViewById(R.id.textView_toast));
                                                          TextView text = (TextView) layout.findViewById(R.id.textView_toast);
-                                                         text.setText("Route Deviated");
+                                                         text.setText("ROUTE DEVIATED");
                                                          Toast toast = new Toast(getActivity().getApplicationContext());
                                                          toast.setDuration(Toast.LENGTH_LONG);
                                                          toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
@@ -1378,15 +1378,11 @@ import static java.lang.Math.sin;
                                                          routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                          sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                                          Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
-                                                     }
+                                                   //  }
                                                  }
                                              }
                                          }
-                                         if(currentGpsPosition.toString().startsWith("lat/lng: (")){
-
-                                         }else {
-                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                         }
+                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
 
                                      } else {
 
