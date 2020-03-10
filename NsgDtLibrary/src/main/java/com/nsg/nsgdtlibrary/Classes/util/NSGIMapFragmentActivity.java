@@ -1437,7 +1437,7 @@ import static java.lang.Math.sin;
      public void MoveWithGpsPointInRouteDeviatedPoints(LatLng currentGpsPosition){
          LatLng FirstCordinate = null,SecondCordinate=null;
          LatLng  OldGpsRouteDeviation=null;
-         if(RouteDeviationConvertedPoints!=null && currentGpsPosition.toString()!="lat/lng: (") {
+         if(RouteDeviationConvertedPoints!=null ) {
            //  Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
              Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
              List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
