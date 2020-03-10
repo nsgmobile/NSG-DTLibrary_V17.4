@@ -1311,13 +1311,10 @@ import static java.lang.Math.sin;
                                          if (consRouteDeviatedDistList != null && consRouteDeviatedDistList.size() > 2) {
                                              double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
-                                            // double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
                                              if (routeDeviated_distance_1 > 20) {
                                                //  Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
-                                                 //    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
-                                                    // if (routeDeviated_distance_3 > 20) {
-                                                     //    Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_3);
+                                                         Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_2);
                                                          isRouteDeviated = true;
                                                          isContinuoslyOutOfTrack=true;
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
@@ -1334,7 +1331,6 @@ import static java.lang.Math.sin;
                                                          routeDeviatedAlert.append("ROUTE DEVIATED" + " RouteDeviatedSourcePosition : " + RouteDeviatedSourcePosition);
                                                          sendData(MapEvents.ALERTVALUE_3, MapEvents.ALERTTYPE_3);
                                                          Log.e("Route Deviation", " Route Deviation Alert POSTED" + MapEvents.ALERTVALUE_3);
-                                                   //  }
                                                  }
                                              }
                                          }
