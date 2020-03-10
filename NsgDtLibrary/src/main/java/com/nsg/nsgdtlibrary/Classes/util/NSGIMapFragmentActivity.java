@@ -1317,7 +1317,6 @@ import static java.lang.Math.sin;
                                              double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
                                              double routeDeviated_distance_3 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 3);
 
-
                                              if (routeDeviated_distance_1 > 20) {
                                                  Log.e("Route Deviation", " Inside Route Deviation Distance " + routeDeviated_distance_1);
                                                  if (routeDeviated_distance_2 > 20) {
