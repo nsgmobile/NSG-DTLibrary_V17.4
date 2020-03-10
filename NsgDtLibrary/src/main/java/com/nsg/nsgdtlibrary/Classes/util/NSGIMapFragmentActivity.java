@@ -1592,7 +1592,7 @@ import static java.lang.Math.sin;
                          double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                          LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                          CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
-                        // verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                         verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
 
                          AlertDestination(currentGpsPosition);
                          if (bearing > 0.0) {
