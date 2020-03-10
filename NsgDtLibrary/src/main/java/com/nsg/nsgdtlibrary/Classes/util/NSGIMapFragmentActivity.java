@@ -351,7 +351,7 @@ import static java.lang.Math.sin;
                     }
                 }
             };
-            writeLogFile();
+           // writeLogFile();
         }
         @Override
         public void onAttach(Context context) {
@@ -376,6 +376,7 @@ import static java.lang.Math.sin;
             mMarkerIcon = BitmapFactory.decodeResource(getResources(), R.drawable.gps_transperent_98);
             //Initialise RootView
             View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+            writeLogFile();
             //Initialise Buttons
             re_center=(ImageButton)rootView.findViewById(R.id.re_center);
             re_center.setOnClickListener(NSGIMapFragmentActivity.this);
