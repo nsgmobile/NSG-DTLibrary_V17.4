@@ -1100,7 +1100,7 @@ import static java.lang.Math.sin;
                sendData(time.toString(), MapEvents.ALERTTYPE_2);
            }
         }
-    
+
      @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
      public void verifyRouteDeviationTask(final LatLng PrevousGpsPosition, final LatLng currentGpsPosition, final LatLng DestinationPosition, int markDistance, final List<LatLng>EdgeWithoutDuplicates){
          Log.e("Route Deviation", "CURRENT GPS ----" + currentGpsPosition);
