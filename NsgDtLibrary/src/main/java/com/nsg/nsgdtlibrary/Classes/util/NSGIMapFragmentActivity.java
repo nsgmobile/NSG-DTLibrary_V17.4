@@ -1187,9 +1187,9 @@ import static java.lang.Math.sin;
                                              double compare_distance_pt = distFrom(markerPosition.latitude, markerPosition.longitude, compare_pt.latitude, compare_pt.longitude);
                                              Log.e("Route Deviation", " IS ROUTE VERIFY   ###### Compare _ Distance" + compare_distance_pt);
                                              consRouteDeviatedDistList.add(compare_distance_pt);
-                                             double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
-                                             double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
                                              if(consRouteDeviatedDistList!=null && consRouteDeviatedDistList.size()>2) {
+                                                 double routeDeviated_distance_1 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 1);
+                                                 double routeDeviated_distance_2 = consRouteDeviatedDistList.get(consRouteDeviatedDistList.size() - 2);
                                                  if (routeDeviated_distance_1 > 20) {
                                                      if(routeDeviated_distance_2 > 20) {
                                                          LayoutInflater inflater1 = getActivity().getLayoutInflater();
