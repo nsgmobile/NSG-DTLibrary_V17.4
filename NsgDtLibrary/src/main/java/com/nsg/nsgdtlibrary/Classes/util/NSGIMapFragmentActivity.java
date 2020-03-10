@@ -649,7 +649,7 @@ import static java.lang.Math.sin;
                                                                 if (returnedDistance1 > routeDeviationDistance) {
                                                                     if (returnedDistance2 > routeDeviationDistance) {
                                                                         if (returnedDistance3 > routeDeviationDistance) {
-                                                                            verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                            verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
                                                                             //   verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
                                                                         }
                                                                     }
@@ -706,7 +706,7 @@ import static java.lang.Math.sin;
                                                         if (returnedDistance1 > routeDeviationDistance) {
                                                             if (returnedDistance2 > routeDeviationDistance) {
                                                                 if (returnedDistance3 > routeDeviationDistance) {
-                                                                    verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
+                                                                    verifyRouteDeviationTask(OldGPSPosition, currentGpsPosition, DestinationNode, routeDeviationDistance, null);
 
                                                                 }
                                                             }
