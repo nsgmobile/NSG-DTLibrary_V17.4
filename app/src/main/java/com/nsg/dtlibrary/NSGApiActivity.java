@@ -31,12 +31,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
     private  Button Start,Stop;
     private String jobId="1",routeId;
 
-    String SourcePosition="55.333149 25.268010";
-    String DestinationPosition="55.334725 25.270403";
-    private String routeData="{\"$id\": \"1\",\"Message\": \"Sucess\",\"Status\": \"Success\",\"TotalDistance\": 0.04324998409,\"Route\": [{\"$id\": \"114\",\"EdgeNo\": \"1817\",\"GeometryText\": \"-\",\"Geometry\": {\n" +
-            "\"$id\": \"115\",\"type\": \"LineString\",\"coordinates\": [[55.33314374,25.26798329],[55.33241445,25.2677146],[55.33114778,25.26727593],[55.33075297,25.26713884],[55.3307091,25.26713884],[55.33059943,25.26717174],[55.33056653,25.26721013],[55.33055008,25.26733625],[55.33056653,25.26755558],[55.33062685,25.26837261],[55.3306433,25.26901417],[55.33062685,25.26929383],[55.33056105,25.26984217],[55.3306104,25.26999571],[55.33072555,25.27018763],[55.33095037,25.27042341],[55.33112584,25.27051115],[55.33442027,25.27106067],[55.33471941,25.27034566],[55.33540524,25.26877701],[55.33459538,25.26849246]]}}]}\n" +
-            "\n" +
-            " ";
+
 /*
     private String GeoFenceCordinates="17.455565 78.555251,\n" +
             "17.455483 78.555368,\n" +
@@ -53,9 +48,14 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
             "24.979831 55.067185,\n" +
             "24.979895 55.067124,\n" +
             "24.979979 55.067136";
-
-
-
+/*
+    String SourcePosition="55.333149 25.268010";
+    String DestinationPosition="55.334725 25.270403";
+    private String routeData="{\"$id\": \"1\",\"Message\": \"Sucess\",\"Status\": \"Success\",\"TotalDistance\": 0.04324998409,\"Route\": [{\"$id\": \"114\",\"EdgeNo\": \"1817\",\"GeometryText\": \"-\",\"Geometry\": {\n" +
+            "\"$id\": \"115\",\"type\": \"LineString\",\"coordinates\": [[55.33314374,25.26798329],[55.33241445,25.2677146],[55.33114778,25.26727593],[55.33075297,25.26713884],[55.3307091,25.26713884],[55.33059943,25.26717174],[55.33056653,25.26721013],[55.33055008,25.26733625],[55.33056653,25.26755558],[55.33062685,25.26837261],[55.3306433,25.26901417],[55.33062685,25.26929383],[55.33056105,25.26984217],[55.3306104,25.26999571],[55.33072555,25.27018763],[55.33095037,25.27042341],[55.33112584,25.27051115],[55.33442027,25.27106067],[55.33471941,25.27034566],[55.33540524,25.26877701],[55.33459538,25.26849246]]}}]}\n" +
+            "\n" +
+            " ";
+*/
 
 /*
     String SourcePosition="78.570759 17.473453";
@@ -299,7 +299,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
             "}";
     */
 
-/*
+
     private String SourcePosition = "55.067291 24.978782";
     private String DestinationPosition = "55.067205 24.979878";
     // 25.26886,55.33279   25.27078,55.3327
@@ -331,7 +331,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
             "[55.066794299000037,24.98024651500009],[55.066816470000049,24.980249936000064],[55.066838951000079,24.980250405000049],\n" +
             "[55.066861270000061,24.980247913000085]]}},{\"$id\":\"6\",\"EdgeNo\":\"443\",\"GeometryText\":\"-\",\"Geometry\":\n" +
             "{\"$id\":\"7\",\"type\":\"LineString\",\"coordinates\":[[55.066861270000061,24.980247913000085],[55.0672260238388,24.9799000715094]]}}]}";
-*/
+
 
 /*
     String SourcePosition="55.077054 24.996333";
@@ -2290,7 +2290,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
 
         if(alertType==MapEvents.ALERTTYPE_6){
             // if alert recieved you can start navigation here
-           // test.startNavigation();
+            //test.startNavigation();
            // Log.e("Started","Started "+test.startNavigation());
         }else if(alertType==MapEvents.ALERTTYPE_1){
 
@@ -2299,6 +2299,7 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
         }else if(alertType==MapEvents.ALERTTYPE_3){
 
         }else if(alertType==MapEvents.ALERTTYPE_4){
+
             AlertDialog.Builder builder = new AlertDialog.Builder(NSGApiActivity.this, R.style.yourDialog);
             builder.setTitle("Alert");
             builder.setIcon(R.drawable.car_icon_32);
@@ -2306,12 +2307,13 @@ public class NSGApiActivity extends FragmentActivity implements NSGIMapFragmentA
                     .setCancelable(false)
                     .setPositiveButton("STOP", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
-                            test.stopNavigation();
+                           test.stopNavigation();
                         }
                     });
             AlertDialog alert = builder.create();
             alert.show();
+
+
 
         }else if(alertType==MapEvents.ALERTTYPE_5){
 
