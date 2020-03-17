@@ -148,6 +148,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
+import static com.nsg.nsgdtlibrary.Classes.util.NSGINavigationFragment.distFrom;
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -681,12 +682,15 @@ import static java.lang.Math.sin;
                                                 }else{
                                                     isContinuoslyOutOfTrack=true;
                                                     if (mPositionMarker == null) {
+                                                        /*
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                 .position(currentGPSPosition)
                                                                 .title("Nearest GpsPoint")
                                                                 .anchor(0.5f, 0.5f)
                                                                 .flat(true)
                                                                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
+
+                                                         */
                                                     } else {
                                                         animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
                                                         CameraPosition currentPlace = new CameraPosition.Builder()
@@ -1285,6 +1289,8 @@ import static java.lang.Math.sin;
 
                                  Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
                                  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
+
+                                 /*
                                  if (commonPoints.size() == 0) {
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
@@ -1298,9 +1304,7 @@ import static java.lang.Math.sin;
                                    //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + "NEW ROUTE");
                                    //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
                                      isRouteDeviated = true;
-                                 } else if (commonPoints.size() > 0) {
-                                     if (new_unCommonPoints.size() > 5) {
-
+                                 } else if (commonPoints.size() > 0 && new_unCommonPoints.size() >5 ) {
                                        //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                          if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                              PolylineOptions polylineOptions = new PolylineOptions();
@@ -1352,15 +1356,21 @@ import static java.lang.Math.sin;
                                                      //  }
                                                  }
                                              }
-                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-
-                                     } else {
-
-                                     }
-                                 } else if (new_unCommonPoints.size() == 0) {
+                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                 } else if (new_unCommonPoints.size() == 0 && commonPoints.size()>0) {
                                    //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + " OLD ROUTE");
+                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
+                                         PolylineOptions polylineOptions = new PolylineOptions();
+                                         // polylineOptions.add(OldGPSPosition);
+                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
+                                         Polyline polyline = mMap.addPolyline(polylineOptions);
+                                         polylineOptions.color(Color.CYAN).width(30);
+                                         mMap.addPolyline(polylineOptions);
+                                         polyline.setJointType(JointType.ROUND);
+                                     }
 
                                  }
+                                 */
                              }
 
 
