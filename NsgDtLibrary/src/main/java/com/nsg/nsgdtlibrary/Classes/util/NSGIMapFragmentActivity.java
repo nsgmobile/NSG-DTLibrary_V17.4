@@ -1220,7 +1220,9 @@ import static java.lang.Math.sin;
                                                  Log.e("Route Deviation", " ROUTE DEVIATED" + "ROUTE DEVIATED ALERT POSTED");
                                              }
                                              httpRequestFlag=false;
-                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                             if(currentGpsPosition!=null && currentGpsPosition.toString().equals("lat/lng: (17.")) {
+                                                 MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                             }
                                          }
                                      }else{
 
