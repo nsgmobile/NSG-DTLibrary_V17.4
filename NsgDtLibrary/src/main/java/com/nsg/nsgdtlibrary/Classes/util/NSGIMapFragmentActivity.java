@@ -1466,8 +1466,11 @@ import static java.lang.Math.sin;
          LatLng FirstCordinate = null,SecondCordinate=null;
          LatLng  OldGpsRouteDeviation=null;
          if(RouteDeviationConvertedPoints!=null) {
-           //  Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
-             Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
+             if(!currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
+                 //  Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
+
+                 Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
+             }
              List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
              for (int k = 0; k < EdgeWithoutDuplicatesInRouteDeviationPoints.size(); k++) {
                  //Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
