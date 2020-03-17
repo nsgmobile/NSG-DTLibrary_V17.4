@@ -593,7 +593,7 @@ import static java.lang.Math.sin;
                                     isContinue = true;
                                     stringBuilder = new StringBuilder();
                                     currentGpsPosition=getLocation();
-                                    if(currentGpsPosition!=null && !currentGpsPosition.toString().equals("lat/lng: (17.")) {
+                                    if(currentGpsPosition!=null && !currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
                                         Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
                                     }
                                     // Navigation code starts from here
