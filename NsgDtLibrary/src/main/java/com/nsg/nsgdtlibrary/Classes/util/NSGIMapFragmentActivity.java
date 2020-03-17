@@ -1122,10 +1122,10 @@ import static java.lang.Math.sin;
             // Log.e("Route Deviation","routeDiation SOURCE Position  ###### "+ RouteDeviatedSourcePosition);
            //  Log.e("returnedDistance", "RouteDiationPosition  ###### " + routeDiationPosition);
              if(getActivity()!=null) {
-                 dialog = new ProgressDialog(getContext(), R.style.ProgressDialog);
-                 dialog.setMessage("Fetching new Route");
-                 dialog.setMax(100);
-                 dialog.show();
+                 //dialog = new ProgressDialog(getContext(), R.style.ProgressDialog);
+                // dialog.setMessage("Fetching new Route");
+                // dialog.setMax(100);
+               //  dialog.show();
              }
              if(getActivity()!=null){
                  getActivity().runOnUiThread(new Runnable() {
@@ -1264,10 +1264,10 @@ import static java.lang.Math.sin;
                  //   Log.e("returnedDistance", "Destination Position --------- " + destPoint);
                  //  DestinationPosition = new LatLng(destLat, destLng);
                  if (getActivity() != null){
-                 dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
-                 dialog.setMessage("Fetching new Route");
-                 dialog.setMax(100);
-                 dialog.show();
+                // dialog = new ProgressDialog(getActivity(), R.style.ProgressDialog);
+                // dialog.setMessage("Fetching new Route");
+                // dialog.setMax(100);
+                // dialog.show();
                  getActivity().runOnUiThread(new Runnable() {
                      @Override
                      public void run() {
@@ -1283,8 +1283,8 @@ import static java.lang.Math.sin;
                              if (EdgeWithoutDuplicates != null && EdgeWithoutDuplicatesInRouteDeviationPoints != null) {
                                  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
 
-                                // Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
-                                // Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
+                                 Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
+                                 Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
                                  if (commonPoints.size() == 0) {
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
@@ -1415,9 +1415,9 @@ import static java.lang.Math.sin;
 
              }
              String ElementData=elementOfList1.replace("lat/lng: (","");
-             //Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData);
+             Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData);
              String ElementData1=ElementData.replace(")","");
-             // Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData1);
+             Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData1);
              String[]Elements =ElementData1.split(",");
              // Log.e("List Verification","List Verification commonPoints --  DATA "+ Elements);
              double lat= Double.parseDouble(Elements[0]);
@@ -1808,14 +1808,14 @@ import static java.lang.Math.sin;
                             }catch (Exception ex){
 
                             }
-                            dialog.dismiss();
+                           // dialog.dismiss();
                         }
                     }
                 });
             }catch(Exception e){
                 e.printStackTrace();
             }
-            dialog.dismiss();
+           // dialog.dismiss();
         }
         private String HttpPost(String myUrl,String latLng1,String latLng2) throws IOException, JSONException {
             StringBuilder sb = new StringBuilder();
