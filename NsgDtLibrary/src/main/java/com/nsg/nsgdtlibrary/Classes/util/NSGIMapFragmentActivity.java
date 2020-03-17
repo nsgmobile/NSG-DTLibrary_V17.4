@@ -169,8 +169,7 @@ import static java.lang.Math.sin;
         private SqlHandler sqlHandler;
         GoogleMap.CancelableCallback callback;
         private double TotalRouteDeviatedDistanceInMTS;
-        private List
-                points;
+        private List  points;
         private List<LatLng> convertedPoints;
         StringBuilder sb = new StringBuilder();
         private List LocationPerpedicularPoints=new ArrayList();
@@ -594,8 +593,9 @@ import static java.lang.Math.sin;
                                     isContinue = true;
                                     stringBuilder = new StringBuilder();
                                     currentGpsPosition=getLocation();
-
-                                    Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
+                                    if(currentGpsPosition!=null && !currentGpsPosition.toString().equals("lat/lng: (17.")) {
+                                        Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
+                                    }
                                     // Navigation code starts from here
                                     LatLng OldNearestPosition = null;
                                     if (isRouteDeviated == false) {
