@@ -1466,18 +1466,18 @@ import static java.lang.Math.sin;
          LatLng FirstCordinate = null,SecondCordinate=null;
          LatLng  OldGpsRouteDeviation=null;
          if(RouteDeviationConvertedPoints!=null) {
-             if(!currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
+             if (!currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
                  //  Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
 
                  Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
-             }
+
              List<LatLng> EdgeWithoutDuplicatesInRouteDeviationPoints = removeDuplicatesRouteDeviated(RouteDeviationConvertedPoints);
              for (int k = 0; k < EdgeWithoutDuplicatesInRouteDeviationPoints.size(); k++) {
                  //Log.e("Route Deviated----", "EdgeWithoutDuplicatesInRouteDeviationPoints ------- " + EdgeWithoutDuplicatesInRouteDeviationPoints.get(k));
              }
 
              if (EdgeWithoutDuplicatesInRouteDeviationPoints != null && EdgeWithoutDuplicatesInRouteDeviationPoints.size() > 0) {
-                 if(nearestPositionPoint!=null) {
+                 if (nearestPositionPoint != null) {
                      OldGpsRouteDeviation = nearestPositionPoint;
                  }
                  List distancesInDeviation = new ArrayList();
@@ -1504,16 +1504,16 @@ import static java.lang.Math.sin;
                      //  Log.e("Route Deviation", " FIRST Cordinate  From Route deviation" + FirstCordinate);
                      // key= String.valueOf(getKeysFromValue(EdgeWithoutDuplicatesInRouteDeviationPoints,FirstCordinate));
                      // distanceKey= String.valueOf(getKeysFromValue(AllPointEdgeDistaces,FirstCordinate));
-                     for(int i=0;i<geometryRouteDeviatedEdgesData.size();i++){
-                         GeometryT geometry=geometryRouteDeviatedEdgesData.get(i);
-                         String routeDeviationTextPoint= geometry.getPositionMarkingPoint();
+                     for (int i = 0; i < geometryRouteDeviatedEdgesData.size(); i++) {
+                         GeometryT geometry = geometryRouteDeviatedEdgesData.get(i);
+                         String routeDeviationTextPoint = geometry.getPositionMarkingPoint();
                          // Log.e("Route Deviation", " ST_VERTEX From Route deviation" + routeDeviationTextPoint);
 
-                         if(routeDeviationTextPoint.equals(FirstCordinate.toString())){
+                         if (routeDeviationTextPoint.equals(FirstCordinate.toString())) {
                              int index = geometryRouteDeviatedEdgesData.indexOf(routeDeviationTextPoint);
-                             st_vertex=geometry.getStartPoint();
-                             end_vertex=geometry.getEndPoint();
-                             directionTextRouteDeviation=geometry.getGeometryText();
+                             st_vertex = geometry.getStartPoint();
+                             end_vertex = geometry.getEndPoint();
+                             directionTextRouteDeviation = geometry.getGeometryText();
 
                          }
                      }
@@ -1543,7 +1543,7 @@ import static java.lang.Math.sin;
              Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
              nearestPointValuesList.add(nearestPositionPoint);
 
-             if ( OldGpsRouteDeviation  != null && nearestPositionPoint != null) {
+             if (OldGpsRouteDeviation != null && nearestPositionPoint != null) {
                  float bearing = (float) bearingBetweenLocations(OldGpsRouteDeviation, nearestPositionPoint); //correct method to change orientation of map
                  if (mPositionMarker == null) {
                      mPositionMarker = mMap.addMarker(new MarkerOptions()
@@ -1554,7 +1554,7 @@ import static java.lang.Math.sin;
                              .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
                              .flat(true));
                  } else {
-                     if(islocationControlEnabled==false) {
+                     if (islocationControlEnabled == false) {
                          animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
                          int height = 0;
                          if (getView() != null) {
@@ -1569,7 +1569,7 @@ import static java.lang.Math.sin;
                          double offsetDistance = SphericalUtil.computeDistanceBetween(centerLoc, offsetNewLoc);
                          LatLng shadowTgt = SphericalUtil.computeOffset(nearestPositionPoint, offsetDistance, bearing);
                          CaluculateETAInRouteDeviationDirection(TotalRouteDeviatedDistanceInMTS, RouteDeviatedSourcePosition, currentGpsPosition, DestinationNode);
-                        // verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
+                         // verifyRouteDeviation(OldGPSPosition, currentGpsPosition, DestinationNode,routeDeviationDistance, null);
                          AlertDestination(currentGpsPosition);
                          if (bearing > 0.0) {
                              CameraPosition currentPlace = new CameraPosition.Builder()
@@ -1580,7 +1580,7 @@ import static java.lang.Math.sin;
                          } else {
 
                          }
-                     }else if(islocationControlEnabled==true){
+                     } else if (islocationControlEnabled == true) {
 
                          animateCarMoveNotUpdateMarker(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
 
@@ -1589,6 +1589,7 @@ import static java.lang.Math.sin;
                  }
 
              }
+         }
              /*
              if (currentGpsPosition.equals(DestinationNode)) {
                  nearestPointValuesList.add(DestinationPosition);
