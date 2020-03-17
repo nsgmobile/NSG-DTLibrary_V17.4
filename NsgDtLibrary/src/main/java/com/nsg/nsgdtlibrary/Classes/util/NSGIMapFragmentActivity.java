@@ -169,7 +169,8 @@ import static java.lang.Math.sin;
         private SqlHandler sqlHandler;
         GoogleMap.CancelableCallback callback;
         private double TotalRouteDeviatedDistanceInMTS;
-        private List points;
+        private List
+                points;
         private List<LatLng> convertedPoints;
         StringBuilder sb = new StringBuilder();
         private List LocationPerpedicularPoints=new ArrayList();
@@ -1286,8 +1287,8 @@ import static java.lang.Math.sin;
                                  Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
                                  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
 
-
                                  if (commonPoints.size() == 0) {
+                                     /*
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
                                          PolylineOptions polylineOptions = new PolylineOptions();
                                          // polylineOptions.add(OldGPSPosition);
@@ -1297,9 +1298,12 @@ import static java.lang.Math.sin;
                                          mMap.addPolyline(polylineOptions);
                                          polyline.setJointType(JointType.ROUND);
                                      }
+
+
                                      //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + "NEW ROUTE");
                                      //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
                                      isRouteDeviated = true;
+                                       */
                                  } else if (commonPoints.size() > 0 && new_unCommonPoints.size() >5 ) {
                                      //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
@@ -1352,9 +1356,16 @@ import static java.lang.Math.sin;
                                              //  }
                                          }
                                      }
-                                     if(!currentGpsPosition.toString().equals("lat/lng: (17.")) {
-                                         MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                     }
+                                     getActivity().runOnUiThread(new Runnable() {
+                                         @Override
+                                         public void run() {
+                                             if(!currentGpsPosition.toString().equals("lat/lng: (17.")) {
+                                                 MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                             }
+
+                                         }
+                                     });
+
                                  } else if (new_unCommonPoints.size() == 0 && commonPoints.size()>0) {
                                      //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + " OLD ROUTE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
@@ -1376,10 +1387,7 @@ import static java.lang.Math.sin;
 
 
                      /*
-                 getActivity().runOnUiThread(new Runnable() {
-                     @Override
-                     public void run() {}
-                 });
+
 
                       */
              }
@@ -1526,8 +1534,8 @@ import static java.lang.Math.sin;
                  //  Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
                  OldNearestGpsList.add(nearestPositionPoint);
              }
-            // Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGpsRouteDeviation);
-            // Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
+             Log.e("Route Deviation", " OldGps POSITION From Route deviation " + OldGpsRouteDeviation);
+             Log.e("Route Deviation", " NEAREST POSITION From Route deviation " + nearestPositionPoint);
              nearestPointValuesList.add(nearestPositionPoint);
 
              if ( OldGpsRouteDeviation  != null && nearestPositionPoint != null) {
@@ -2723,6 +2731,7 @@ import static java.lang.Math.sin;
             double dl = Math.PI * (endLatLng.longitude - beginLatLng.longitude) / 180;
             return atan2(sin(dl) * cos(f2) , cos(f1) * sin(f2) - sin(f1) * cos(f2) * cos(dl));
         }
+        /*
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
         public void MoveWithGpsPointInBetWeenAllPoints(final LatLng PrevousGpsPosition ,final LatLng currentGpsPosition){
 
@@ -2800,18 +2809,6 @@ import static java.lang.Math.sin;
             }
             Log.e("nearestPositionPoint","nearestPositionPoint LIST "+ OldNearestGpsList.toString());
 
-/*
-      //  Log.e("EdgeSt Point", "End point" + OldNearestGpsList.size());
-        if(OldNearestGpsList.isEmpty() && OldNearestGpsList.size()==0){
-            OldGps=OldNearestGpsList.get(0);
-            int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
-            nayaGps=OldNearestGpsList.get(indexVal);
-        }else{
-            //int indexVal=OldNearestGpsList.indexOf(nearestPositionPoint);
-            OldGps=OldNearestGpsList.get(OldNearestGpsList.size() - 2);
-            nayaGps= new LatLng(nearestPositionPoint.latitude, nearestPositionPoint.longitude);//OldNearestGpsList.get(indexVal);
-        }
-        */
             nearestValuesMap.put(String.valueOf(nearestPositionPoint),geometryDirectionText);
             nearestPointValuesList.add(nearestPositionPoint);
             //  if(currentGpsPosition.equals(LatLngDataArray.get(LatLngDataArray.size()-1))){
@@ -2861,6 +2858,7 @@ import static java.lang.Math.sin;
                     .build();
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentPlace), 10000, null);
         }
+        */
         @Override
         public void onPause() {
             super.onPause();
