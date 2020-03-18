@@ -1552,7 +1552,6 @@ import static java.lang.Math.sin;
                              .rotation(bearing)
                              .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
                              .flat(true));
-
                       */
                  } else {
                      if (islocationControlEnabled == false) {
@@ -1604,11 +1603,9 @@ import static java.lang.Math.sin;
          @Override
          protected void onPreExecute() {
              super.onPreExecute();
-
          }
          @Override
          protected String doInBackground(String... params) {
-
              try {
                  String param1, param2;
 
@@ -1617,7 +1614,6 @@ import static java.lang.Math.sin;
                  if(httpRequestFlag==false) {
                      GetRouteDetails(param1, param2);
                  }
-
              }catch (Exception ex){
 
              }
