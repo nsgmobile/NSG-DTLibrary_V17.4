@@ -593,9 +593,9 @@ import static java.lang.Math.sin;
                                     isContinue = true;
                                     stringBuilder = new StringBuilder();
                                     currentGpsPosition=getLocation();
-                                    if(currentGpsPosition!=null && !currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
+                                   // if(currentGpsPosition!=null && !currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
                                         Log.v("APP DATA ", "START NAVI CURRENT GPS POSITION ----" + currentGpsPosition);
-                                    }
+                                   // }
                                     // Navigation code starts from here
                                     LatLng OldNearestPosition = null;
                                     if (isRouteDeviated == false) {
@@ -744,9 +744,9 @@ import static java.lang.Math.sin;
                                          }
                                     } else {
 
-                                        if(!currentGpsPosition.toString().equals("lat/lng: (17.")) {
+                                      //  if(!currentGpsPosition.toString().equals("lat/lng: (17.")) {
                                             MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                        }
+                                      //  }
                                     }
                                     //Navigation code ends here
                                     handler.postDelayed(this, delay);
@@ -1220,9 +1220,9 @@ import static java.lang.Math.sin;
                                                  Log.e("Route Deviation", " ROUTE DEVIATED" + "ROUTE DEVIATED ALERT POSTED");
                                              }
                                              httpRequestFlag=false;
-                                             if(currentGpsPosition!=null && currentGpsPosition.toString().equals("lat/lng: (17.")) {
+                                             //if(currentGpsPosition!=null && currentGpsPosition.toString().equals("lat/lng: (17.")) {
                                                  MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                             }
+                                           //  }
                                          }
                                      }else{
 
@@ -1361,9 +1361,22 @@ import static java.lang.Math.sin;
                                      getActivity().runOnUiThread(new Runnable() {
                                          @Override
                                          public void run() {
-                                             if(!currentGpsPosition.toString().equals("lat/lng: (17.")) {
-                                                 MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                             }
+                                             LatLng OldGpsRouteDeviation = null;
+
+                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                                /*
+                                                 if (currentGpsPosition != null) {
+                                                     OldGpsRouteDeviation = currentGpsPosition;
+
+                                                 }
+                                                 Log.e("Route Deviation", " OLD GPS Position" + OldGpsRouteDeviation);
+                                                 Log.e("Route Deviation", " Current GPS Position" + currentGpsPosition);
+
+                                                 if(currentGpsPosition!=null && OldGpsRouteDeviation!=null){
+                                                     animateCarMove(mPositionMarker,currentGpsPosition,OldGpsRouteDeviation,1000);
+                                                 }
+                                               */
+
 
                                          }
                                      });
@@ -1466,7 +1479,7 @@ import static java.lang.Math.sin;
          LatLng FirstCordinate = null,SecondCordinate=null;
          LatLng  OldGpsRouteDeviation=null;
          if(RouteDeviationConvertedPoints!=null) {
-             if (!currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
+           //  if (!currentGpsPosition.toString().startsWith("lat/lng: (17.")) {
                  //  Log.e("Route Deviated", "Route Deviated EdgesList ------- " + RouteDeviationConvertedPoints.size());
 
                  Log.e("Route Deviated", "Current GPS position ------- " + currentGpsPosition);
@@ -1589,7 +1602,7 @@ import static java.lang.Math.sin;
                  }
 
              }
-         }
+       //  }
              /*
              if (currentGpsPosition.equals(DestinationNode)) {
                  nearestPointValuesList.add(DestinationPosition);
