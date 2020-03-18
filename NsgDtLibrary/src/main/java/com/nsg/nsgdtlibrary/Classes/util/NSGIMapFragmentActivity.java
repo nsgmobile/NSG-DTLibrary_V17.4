@@ -684,7 +684,7 @@ import static java.lang.Math.sin;
                                                 }else{
                                                     isContinuoslyOutOfTrack=true;
                                                     if (mPositionMarker == null) {
-                                                        /*
+
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                 .position(currentGPSPosition)
                                                                 .title("Nearest GpsPoint")
@@ -692,7 +692,7 @@ import static java.lang.Math.sin;
                                                                 .flat(true)
                                                                 .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98)));
 
-                                                         */
+
                                                     } else {
                                                         animateCarMove(mPositionMarker, OldGPSPosition, currentGPSPosition, 1000);
                                                         CameraPosition currentPlace = new CameraPosition.Builder()
