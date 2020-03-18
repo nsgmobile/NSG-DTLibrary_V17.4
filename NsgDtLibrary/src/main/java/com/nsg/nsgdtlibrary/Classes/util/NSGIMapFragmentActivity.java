@@ -350,7 +350,7 @@ import static java.lang.Math.sin;
                                 stringBuilder.append("-");
                                 stringBuilder.append(wayLongitude);
                                 stringBuilder.append("\n\n");
-                                 currentGPSPosition = new LatLng(wayLatitude, wayLongitude);
+                               currentGPSPosition = new LatLng(wayLatitude, wayLongitude);
                             }
                         }
                     }
@@ -612,7 +612,7 @@ import static java.lang.Math.sin;
                                                 double distance_movement = distFrom(nPosition.latitude, nPosition.longitude, currentGpsPosition.latitude, currentGpsPosition.longitude);
                                               //  Log.e("Distance_movement", " Distance_movement" + distance_movement);
                                                 if (distance_movement <40) {
-                                                    if (mPositionMarker == null) {
+                                                    if (mPositionMarker == null && currentGpsPosition!=null) {
                                                         mPositionMarker = mMap.addMarker(new MarkerOptions()
                                                                 .position(SourceNode)
                                                                 .title("Nearest GpsPoint")
