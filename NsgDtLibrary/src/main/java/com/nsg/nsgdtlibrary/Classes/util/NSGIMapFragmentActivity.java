@@ -1363,30 +1363,13 @@ import static java.lang.Math.sin;
                                                   //  }
                                               }
                                           }
+                                          getActivity().runOnUiThread(new Runnable() {
+                                              @Override
+                                              public void run() {
+                                                  MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
+                                              }
+                                          });
                                       }
-                                     getActivity().runOnUiThread(new Runnable() {
-                                         @Override
-                                         public void run() {
-                                             LatLng OldGpsRouteDeviation = null;
-
-                                                MoveWithGpsPointInRouteDeviatedPoints(currentGpsPosition);
-                                                /*
-                                                 if (currentGpsPosition != null) {
-                                                     OldGpsRouteDeviation = currentGpsPosition;
-
-                                                 }
-                                                 Log.e("Route Deviation", " OLD GPS Position" + OldGpsRouteDeviation);
-                                                 Log.e("Route Deviation", " Current GPS Position" + currentGpsPosition);
-
-                                                 if(currentGpsPosition!=null && OldGpsRouteDeviation!=null){
-                                                     animateCarMove(mPositionMarker,currentGpsPosition,OldGpsRouteDeviation,1000);
-                                                 }
-                                               */
-
-
-                                         }
-                                     });
-
                                  } else if (new_unCommonPoints.size() == 0 && commonPoints.size()>0) {
                                      //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + " OLD ROUTE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
