@@ -1626,7 +1626,6 @@ import static java.lang.Math.sin;
          @Override
          protected void onPostExecute(String result) {
 
-
          }
      }
 
