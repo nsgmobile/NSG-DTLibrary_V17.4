@@ -1544,7 +1544,7 @@ import static java.lang.Math.sin;
              if (OldGpsRouteDeviation != null && nearestPositionPoint != null) {
                  float bearing = (float) bearingBetweenLocations(OldGpsRouteDeviation, nearestPositionPoint); //correct method to change orientation of map
                  if (mPositionMarker == null) {
-                     /*
+
                      mPositionMarker = mMap.addMarker(new MarkerOptions()
                              .position(currentGpsPosition)
                              .title("currentLocation")
@@ -1552,7 +1552,7 @@ import static java.lang.Math.sin;
                              .rotation(bearing)
                              .icon(bitmapDescriptorFromVector(getContext(), R.drawable.gps_transperent_98))
                              .flat(true));
-                      */
+
                  } else {
                      if (islocationControlEnabled == false) {
                          animateCarMove(mPositionMarker, OldGpsRouteDeviation, nearestPositionPoint, 1000);
