@@ -1286,8 +1286,8 @@ import static java.lang.Math.sin;
                              if (EdgeWithoutDuplicates != null && EdgeWithoutDuplicatesInRouteDeviationPoints != null) {
                                  checkPointsOfExistingRoutewithNewRoute(EdgeWithoutDuplicates, RouteDeviationPointsForComparision);
 
-                                 Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
-                                 Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
+                               //  Log.e("List Verification", "List Verification commonPoints --  DATA " + commonPoints.size());
+                               //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
 
                                  if (commonPoints.size() == 0) {
 
@@ -1436,9 +1436,9 @@ import static java.lang.Math.sin;
 
              }
              String ElementData=elementOfList1.replace("lat/lng: (","");
-             Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData);
+            // Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData);
              String ElementData1=ElementData.replace(")","");
-             Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData1);
+            //Log.e("List Verification","List Verification commonPoints --  DATA "+ ElementData1);
              String[]Elements =ElementData1.split(",");
              // Log.e("List Verification","List Verification commonPoints --  DATA "+ Elements);
              double lat= Double.parseDouble(Elements[0]);
