@@ -177,7 +177,7 @@ import static java.lang.Math.sin;
         private Marker sourceMarker,destinationMarker;
         private List<EdgeDataT> edgeDataList;
         private List<GeometryT> geometryRouteDeviatedEdgesData;
-        List RouteDeviationConvertedPoints;
+        private List RouteDeviationConvertedPoints;
         private List<LatLng>RouteDeviationPointsForComparision;
         private List<RouteT> RouteDataList;
         private List PreviousGpsList;
