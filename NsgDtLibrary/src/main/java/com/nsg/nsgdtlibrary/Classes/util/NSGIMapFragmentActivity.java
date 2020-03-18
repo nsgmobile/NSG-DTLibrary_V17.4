@@ -1290,22 +1290,7 @@ import static java.lang.Math.sin;
                                  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + new_unCommonPoints.size());
 
                                  if (commonPoints.size() == 0) {
-                                     /*
-                                     if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
-                                         PolylineOptions polylineOptions = new PolylineOptions();
-                                         // polylineOptions.add(OldGPSPosition);
-                                         polylineOptions.addAll(RouteDeviationConvertedPoints);
-                                         Polyline polyline = mMap.addPolyline(polylineOptions);
-                                         polylineOptions.color(Color.RED).width(30);
-                                         mMap.addPolyline(polylineOptions);
-                                         polyline.setJointType(JointType.ROUND);
-                                     }
 
-
-                                     //  Log.e("List Verification", "List Verification  new_unCommonPoints -- DATA " + "NEW ROUTE");
-                                     //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route NOT EQUAL");
-                                     isRouteDeviated = true;
-                                       */
                                  } else if (commonPoints.size() > 0 && new_unCommonPoints.size() >5 ) {
                                      //  Log.e("Route Deviation", " IS ROUTE VERIFY  ###### " + " Route COINSIDENCE");
                                      if (mPositionMarker != null && mPositionMarker.isVisible() == true) {
