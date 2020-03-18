@@ -1324,7 +1324,7 @@ import static java.lang.Math.sin;
                                      LatLng RouteDeviation_RouteSt_point=new LatLng(lat,longi);
                                      Log.e("Route Deviation", "RouteDeviation_RouteSt_point " + Route_st);
 
-                                     // drawMarkerWithCircle(RouteDeviation_RouteSt_point,20);
+                                     drawMarkerWithCircle(RouteDeviation_RouteSt_point,40);
                                      double rd_ditance=distFrom(RouteDeviation_RouteSt_point.latitude,RouteDeviation_RouteSt_point.longitude,markerPosition.latitude,markerPosition.longitude);
                                      Log.e("Route Deviation", "RouteDeviation_RouteSt_point Distance Buffer" + rd_ditance);
                                       if(rd_ditance<40) {
